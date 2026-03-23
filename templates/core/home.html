@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VocabAssistant | Modo Lectura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #f43f5e;
+            --glass: rgba(255, 255, 255, 0.7);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f9f9f9 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            z-index: 10;
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .nav-links {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Modo Lectura Interactivo */
+        #read-display {
+            width: 100%;
+            min-height: 300px;
+            padding: 20px;
+            border-radius: 16px;
+            background: white;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            display: none;
+            overflow-y: auto;
+            border: 2px solid #e2e8f0;
+            text-align: left;
+        }
+
+        .word-span {
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .word-span:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+           
+        }
+
+        .word-span.loading {
+            background: rgba(99, 102, 241, 0.2);
+            cursor: wait;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: #e2e8f0;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mode-btn {
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        /* Popup Estilo Premium */
+        #popup {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            display: none;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            max-width: 350px;
+            width: max-content;
+            min-width: 200px;
+            z-index: 1000;
+            transition: max-width 0.3s ease;
+            transform-origin: top left;
+            animation: scaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .p-header { border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 12px; }
+        .p-word { font-size: 1.4rem; font-weight: 700; color: var(--text-main); }
+        .p-phonetic { color: var(--text-muted); font-size: 0.9rem; margin-top: 2px; }
+        
+        .p-translation { 
+            color: var(--primary); 
+            font-weight: 600; 
+            font-size: 1.05rem; 
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        #btn-expand {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 0;
+            margin-bottom: 10px;
+            display: none;
+            text-decoration: underline;
+        }
+
+        .p-definition { color: var(--text-main); font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px; }
+        .p-example { font-style: italic; color: var(--text-muted); font-size: 0.9rem; border-left: 3px solid #e2e8f0; padding-left: 10px; margin-bottom: 15px; }
+
+        .btn-save {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-save:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-save:active { transform: translateY(0); }
+
+        /* Lista de guardados */
+        .saved-section { margin-top: 40px; }
+        .saved-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .saved-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s;
+        }
+        .saved-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .sc-word { font-weight: 700; color: var(--text-main); }
+        .sc-trans { color: var(--primary); font-size: 0.9rem; margin-top: 4px; }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Notificación Toast */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            display: none;
+            animation: slideInRight 0.3s ease-out;
+            z-index: 2000;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>VocabAssistant</h1>
+        <div class="nav-links">
+            <a href="/" class="active">📖 Lectura</a>
+            <a href="/review/">🧠 Repaso</a>
+        </div>
+        <p style="color: var(--text-muted)">Pega un texto y selecciona palabras para aprenderlas.</p>
+    </header>
+
+    <div class="main-card">
+        <div class="mode-toggle">
+            <button id="edit-mode-btn" class="mode-btn active" onclick="setMode('edit')">🖊️ Editar</button>
+            <button id="read-mode-btn" class="mode-btn" onclick="setMode('read')">📖 Leer</button>
+        </div>
+        <textarea id="text-input" placeholder="Escribe o pega tu texto aquí..."></textarea>
+        <div id="read-display"></div>
+    </div>
+
+    <div id="popup">
+        <div class="p-header">
+            <div class="p-word" id="p-word"></div>
+            <div class="p-phonetic" id="p-phonetic"></div>
+        </div>
+        <div class="p-translation" id="p-translation"></div>
+        <button id="btn-expand" onclick="expandModal()">↔️ Expandir Modal</button>
+        <div class="p-definition" id="p-definition"></div>
+        <div class="p-synonyms" id="p-synonyms" style="font-size: 0.85rem; color: var(--primary); margin-bottom: 10px; font-weight: 500;"></div>
+        <div class="p-example" id="p-example"></div>
+        <div class="p-example" id="p-example2"></div>
+        <button class="btn-save" onclick="saveCurrentWord()">
+            <span>💾</span> Guardar Flashcard
+        </button>
+    </div>
+
+    <div class="saved-section">
+        <h3 style="margin-left: 10px; font-weight: 700;">Recientemente Guardadas</h3>
+        <div class="saved-grid" id="saved-items"></div>
+    </div>
+</div>
+
+<div id="toast">Cargando...</div>
+
+<script>
+    let currentData = null;
+
+    // Obtener cookie CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const textarea = document.getElementById("text-input");
+    const readDisplay = document.getElementById("read-display");
+    let currentMode = 'edit';
+
+    function setMode(mode) {
+        currentMode = mode;
+        if (mode === 'read') {
+            document.getElementById("edit-mode-btn").classList.remove('active');
+            document.getElementById("read-mode-btn").classList.add('active');
+            textarea.style.display = 'none';
+            readDisplay.style.display = 'block';
+            renderReadMode();
+        } else {
+            document.getElementById("read-mode-btn").classList.remove('active');
+            document.getElementById("edit-mode-btn").classList.add('active');
+            textarea.style.display = 'block';
+            readDisplay.style.display = 'none';
+        }
+    }
+
+    function renderReadMode() {
+        const text = textarea.value;
+        readDisplay.innerHTML = '';
+        
+        if (!text.trim()) {
+            readDisplay.innerHTML = '<p style="color:var(--text-muted); text-align:center;">Pega un texto en el modo Editar primero.</p>';
+            return;
+        }
+
+        const lines = text.split('\n');
+        lines.forEach((line, lineIdx) => {
+            // Tokenización más inteligente que separa puntuación
+            const tokens = line.split(/(\s+)/);
+            tokens.forEach(token => {
+                if (token.trim()) {
+                    const span = document.createElement('span');
+                    span.className = 'word-span';
+                    span.textContent = token;
+                    readDisplay.appendChild(span);
+                } else {
+                    readDisplay.appendChild(document.createTextNode(token));
+                }
+            });
+            if (lineIdx < lines.length - 1) readDisplay.appendChild(document.createElement('br'));
+        });
+    }
+
+    // Event Delegation para un hover más robusto
+    let hoverTimer;
+    let activeRequest = null;
+
+    readDisplay.addEventListener('mousemove', function(e) {
+        const span = e.target.closest('.word-span');
+        if (!span || currentMode !== 'read') return;
+
+        // Limpiar puntuación para la búsqueda
+        const cleanWord = span.textContent.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").trim();
+        if (!cleanWord) return;
+
+        // Si ya estamos sobre este mismo span, no reiniciar el timer si ya está corriendo
+        if (span.dataset.hovering === "true") return;
+        
+        // Limpiar otros spans
+        readDisplay.querySelectorAll('.word-span').forEach(s => s.dataset.hovering = "false");
+        span.dataset.hovering = "true";
+
+        clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
+            if (window.getSelection().toString().length === 0) {
+                span.classList.add('loading');
+                triggerHoverTranslation(cleanWord, e.pageX, e.pageY, span);
+            }
+        }, 200); // Más rápido: 200ms
+    });
+
+    readDisplay.addEventListener('mouseleave', function() {
+        clearTimeout(hoverTimer);
+        readDisplay.querySelectorAll('.word-span').forEach(s => {
+            s.classList.remove('loading');
+            s.dataset.hovering = "false";
+        });
+    });
+
+    function triggerHoverTranslation(word, x, y, span) {
+        if (activeRequest) activeRequest.abort();
+        
+        const controller = new AbortController();
+        activeRequest = controller;
+
+        fetch(`/define/?word=${encodeURIComponent(word)}&target=es`, { signal: controller.signal })
+            .then(res => res.json())
+            .then(data => {
+                span.classList.remove('loading');
+                if (data.error) return;
+                
+                showPopup(data, x, y);
+            })
+            .catch(err => {
+                if (err.name !== 'AbortError') span.classList.remove('loading');
+            });
+    }
+
+    function showPopup(data, x, y) {
+        currentData = data;
+        const popup = document.getElementById("popup");
+        const pHeader = document.querySelector(".p-header");
+        const pWord = document.getElementById("p-word");
+        
+        // Si es una frase (o palabra sin definición), simplificamos
+        const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' '));
+        
+        if (isPhrase) {
+            pWord.style.display = 'none';
+            document.getElementById("p-phonetic").style.display = 'none';
+            document.getElementById("p-translation").style.fontSize = '1.15rem';
+        } else {
+            pWord.style.display = 'block';
+            pWord.textContent = data.original;
+            document.getElementById("p-phonetic").style.display = 'block';
+            document.getElementById("p-phonetic").textContent = data.phonetic || '';
+            document.getElementById("p-translation").style.fontSize = '1.05rem';
+        }
+
+        const translation = data.translation || '';
+        document.getElementById("p-translation").innerHTML = `<span>🌐</span> ${translation}`;
+        document.getElementById("p-definition").textContent = data.definition ? '📖 ' + data.definition : '';
+        document.getElementById("p-synonyms").textContent = data.synonyms ? '🔗 ' + data.synonyms : '';
+        document.getElementById("p-example").textContent = data.example ? '“' + data.example + '”' : '';
+        document.getElementById("p-example2").textContent = data.example_2 ? '“' + data.example_2 + '”' : '';
+
+        // Lógica de expansión
+        const wordCount = translation.split(' ').length;
+        const btnExpand = document.getElementById("btn-expand");
+        popup.style.maxWidth = "350px";
+        if (wordCount > 10) {
+            btnExpand.style.display = "block";
+        } else {
+            btnExpand.style.display = "none";
+        }
+
+        popup.style.display = "block";
+        popup.style.top = (y + 15) + "px";
+        
+        // Ajuste fino de posición horizontal
+        updatePopupPosition(x);
+    }
+
+    function expandModal() {
+        const popup = document.getElementById("popup");
+        popup.style.maxWidth = "600px";
+        document.getElementById("btn-expand").style.display = "none";
+    }
+
+    function updatePopupPosition(x) {
+        const popup = document.getElementById("popup");
+        let left = x;
+        const popupWidth = popup.offsetWidth || 350;
+        if (left + popupWidth > window.innerWidth - 20) {
+            left = window.innerWidth - popupWidth - 20;
+        }
+        popup.style.left = left + "px";
+    }
+
+    // Selección en modo lectura para frases
+    readDisplay.addEventListener('mouseup', function(e) {
+        const selection = window.getSelection().toString().trim();
+        if (selection && selection.includes(' ')) {
+            clearTimeout(hoverTimer);
+            triggerTranslation(selection, e.pageX, e.pageY);
+        }
+    });
+
+    function triggerTranslation(text, x, y) {
+        showToast("Buscando...", "#6366f1");
+        fetch(`/define/?word=${encodeURIComponent(text)}&target=es`)
+            .then(res => res.json())
+            .then(data => {
+                showPopup(data, x, y);
+                hideToast();
+            })
+            .catch(() => showToast("Error al conectar", "#f43f5e"));
+    }
+
+    // Mantener la funcionalidad de selección en el textarea (modo editar)
+    textarea.addEventListener("mouseup", function(e) {
+        if (currentMode !== 'edit') return;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selected = textarea.value.substring(start, end).trim();
+        if (!selected || selected.length < 1) return;
+        triggerTranslation(selected, e.pageX, e.pageY);
+    });
+
+    // Cerrar popup
+    document.addEventListener("mousedown", function(e) {
+        const popup = document.getElementById("popup");
+        if (popup.style.display === "block" && !popup.contains(e.target)) {
+            popup.style.display = "none";
+        }
+    });
+
+    function saveCurrentWord() {
+        if (!currentData) return;
+
+        fetch('/save/', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') // SEGURIDAD: CSRF Token
+            },
+            body: JSON.stringify(currentData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                showToast("¡Guardado!", "#10b981");
+                addSavedToGrid(currentData.original, currentData.translation);
+            } else if (data.status === 'duplicate') {
+                showToast("Ya existe", "#f59e0b");
+            }
+            document.getElementById("popup").style.display = "none";
+        })
+        .catch(() => showToast("Error al guardar", "#f43f5e"));
+    }
+
+    function addSavedToGrid(word, trans) {
+        const grid = document.getElementById("saved-items");
+        const card = document.createElement("div");
+        card.className = "saved-card";
+        card.innerHTML = `
+            <div class="sc-word">${word}</div>
+            <div class="sc-trans">${trans}</div>
+        `;
+        if (grid.firstChild) grid.insertBefore(card, grid.firstChild);
+        else grid.appendChild(card);
+    }
+
+    function showToast(msg, color) {
+        const toast = document.getElementById("toast");
+        toast.textContent = msg;
+        toast.style.background = color;
+        toast.style.display = "block";
+    }
+
+    function hideToast() {
+        setTimeout(() => {
+            document.getElementById("toast").style.display = "none";
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
