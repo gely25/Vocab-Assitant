@@ -41,8 +41,9 @@ class DictionaryService:
                     'definition': main_definition,
                     'example': examples[0] if len(examples) > 0 else None,
                     'example_2': examples[1] if len(examples) > 1 else None,
-                    'synonyms': ", ".join(synonyms[:5]), # Tomamos los primeros 5
-                    'phonetic': entry.get('phonetic', '')
+                    'synonyms': ", ".join(synonyms[:5]),
+                    'phonetic': entry.get('phonetic', ''),
+                    'meanings': entry.get('meanings', [])
                 }
         except Exception:
             pass

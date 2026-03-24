@@ -3,6 +3,22 @@ from django.http import JsonResponse
 from ..services.translation_service import TranslationService
 from ..services.dictionary_service import DictionaryService
 from ..services.flashcard_service import FlashcardService
+from ..services.ocr_service import OCRService
+
+def ocr_upload(request):
+    """Procesa una imagen y devuelve el texto extraído"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+    image = request.FILES.get('image')
+    if not image:
+        return JsonResponse({'error': 'No se proporcionó imagen'}, status=400)
+    
+    text = OCRService.extract_text(image)
+    if text is None:
+        return JsonResponse({'error': 'Fallo al procesar OCR (¿Tesseract instalado?)'}, status=500)
+    
+    return JsonResponse({'text': text})
 
 def define_word(request):
     """Obtiene traducción y definición de una palabra o frase"""
@@ -31,7 +47,8 @@ def define_word(request):
         'translation': translation,
         'definition': None,
         'example': None,
-        'phonetic': None
+        'phonetic': None,
+        'meanings': []
     }
 
     if definition_data:

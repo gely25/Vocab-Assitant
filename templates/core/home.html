@@ -7,328 +7,386 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg: #f8fafc;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --accent: #f43f5e;
-            --glass: rgba(255, 255, 255, 0.7);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --primary: #94a3b8;
+            --accent: #818cf8;
+            --accent-glow: rgba(129, 140, 248, 0.4);
+            --bg: #1a1a1a;
+            --sidebar-bg: #222222;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border: #333333;
+            --highlight: rgba(129, 140, 248, 0.15);
+            --pill-bg: #ffffff;
+            --pill-text: #1a1a1a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f4ff 0%, #f9f9f9 100%);
+            background-color: var(--bg);
             color: var(--text-main);
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
+            overflow: hidden;
         }
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            z-index: 10;
-        }
-
-        header {
-            margin-bottom: 30px;
-            text-align: center;
-            animation: fadeInDown 0.8s ease-out;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #6366f1, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .nav-links {
-            margin-bottom: 20px;
+        /* Top Bar Redesign */
+        .top-navbar {
+            height: 64px;
             display: flex;
-            gap: 15px;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
         }
 
-        .nav-links a {
-            text-decoration: none;
+        .logo {
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: all 0.3s;
+            text-transform: uppercase;
         }
 
-        .nav-links a.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        .nav-center {
+            display: flex;
+            background: #252525;
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
-        .main-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.4);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            animation: fadeInUp 0.8s ease-out;
+        .nav-btn {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
         }
 
-        textarea {
-            width: 100%;
-            min-height: 300px;
-            padding: 20px;
-            border-radius: 16px;
-            border: 2px solid transparent;
-            background: rgba(255, 255, 255, 0.5);
-            font-size: 1.1rem;
-            line-height: 1.6;
+        .nav-btn.active {
+            background: #333333;
+            color: #ffffff;
+            border: 1px solid #444444;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: #252525;
+            border: 1px solid var(--border);
             color: var(--text-main);
-            resize: vertical;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .icon-btn:hover { background: #333; }
+
+        .mode-switch {
+            display: flex;
+            background: #252525;
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .switch-btn {
+            padding: 6px 18px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-btn.active {
+            background: #f8fafc;
+            color: #1a1a1a;
+        }
+
+        /* Layout Grid */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1px 380px;
+            flex-grow: 1;
+            height: calc(100vh - 64px);
+        }
+
+        .reading-side {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg);
+        }
+
+        .side-header {
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mode-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mode-label .dot {
+            width: 8px;
+            height: 8px;
+            background: #f59e0b;
+            border-radius: 50%;
+        }
+
+        .helper-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .content-area {
+            padding: 40px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        #text-input {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.4rem;
+            line-height: 1.6;
+            resize: none;
             outline: none;
-            transition: all 0.3s;
             font-family: inherit;
         }
 
-        textarea:focus {
-            background: white;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-
-        /* Modo Lectura Interactivo */
         #read-display {
-            width: 100%;
-            min-height: 300px;
-            padding: 20px;
-            border-radius: 16px;
-            background: white;
-            font-size: 1.1rem;
+            font-size: 1.4rem;
             line-height: 1.6;
-            color: var(--text-main);
+            white-space: pre-wrap;
             display: none;
-            overflow-y: auto;
-            border: 2px solid #e2e8f0;
-            text-align: left;
         }
 
         .word-span {
             cursor: pointer;
+            padding: 0 2px;
             border-radius: 4px;
             transition: all 0.2s;
-            display: inline-block;
+        }
+        .word-span:hover { background: rgba(255, 255, 255, 0.05); }
+        .word-span.active {
+            background: var(--highlight);
+            color: #818cf8;
+            font-weight: 500;
         }
 
-        .word-span:hover {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-           
+        /* Resizer */
+        .resizer {
+            background: var(--border);
+            cursor: col-resize;
+            width: 1px;
+            position: relative;
         }
+        .resizer:hover { background: var(--accent); }
 
-        .word-span.loading {
-            background: rgba(99, 102, 241, 0.2);
-            cursor: wait;
-        }
-
-        .mode-toggle {
+        /* Sidebar */
+        .definition-side {
+            background-color: var(--sidebar-bg);
             display: flex;
-            background: #e2e8f0;
-            padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
+            flex-direction: column;
         }
 
-        .mode-btn {
-            border: none;
-            padding: 8px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
+        .sidebar-content {
+            padding: 40px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .empty-state {
             display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .mode-btn.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
-
-        /* Popup Estilo Premium */
-        #popup {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 16px;
-            padding: 20px;
-            display: none;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            max-width: 350px;
-            width: max-content;
-            min-width: 200px;
-            z-index: 1000;
-            transition: max-width 0.3s ease;
-            transform-origin: top left;
-            animation: scaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .p-header { border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 12px; }
-        .p-word { font-size: 1.4rem; font-weight: 700; color: var(--text-main); }
-        .p-phonetic { color: var(--text-muted); font-size: 0.9rem; margin-top: 2px; }
-        
-        .p-translation { 
-            color: var(--primary); 
-            font-weight: 600; 
-            font-size: 1.05rem; 
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            line-height: 1.4;
-        }
-
-        #btn-expand {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 5px 0;
-            margin-bottom: 10px;
-            display: none;
-            text-decoration: underline;
-        }
-
-        .p-definition { color: var(--text-main); font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px; }
-        .p-example { font-style: italic; color: var(--text-muted); font-size: 0.9rem; border-left: 3px solid #e2e8f0; padding-left: 10px; margin-bottom: 15px; }
-
-        .btn-save {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-save:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn-save:active { transform: translateY(0); }
-
-        /* Lista de guardados */
-        .saved-section { margin-top: 40px; }
-        .saved-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            height: 100%;
+            color: var(--text-muted);
+            text-align: center;
             gap: 15px;
-            margin-top: 15px;
-        }
-        .saved-card {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s;
-        }
-        .saved-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .sc-word { font-weight: 700; color: var(--text-main); }
-        .sc-trans { color: var(--primary); font-size: 0.9rem; margin-top: 4px; }
-
-        @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Notificación Toast */
+        .empty-state i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            max-width: 200px;
+            line-height: 1.5;
+        }
+
+        .empty-state span.highlight { color: #fff; font-weight: 600; }
+
+        .word-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .translation-pill {
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-weight: 700;
+            width: fit-content;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .pos-label {
+            color: #818cf8;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+        }
+
+        .def-item {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .example-box {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 1px solid #444;
+        }
+
+        /* Notifications / Toasts */
         #toast {
             position: fixed;
             bottom: 30px;
-            right: 30px;
-            background: #10b981;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
             color: white;
             padding: 12px 24px;
             border-radius: 12px;
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            z-index: 1000;
             display: none;
-            animation: slideInRight 0.3s ease-out;
-            z-index: 2000;
-        }
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>VocabAssistant</h1>
-        <div class="nav-links">
-            <a href="/" class="active">📖 Lectura</a>
-            <a href="/review/">🧠 Repaso</a>
-        </div>
-        <p style="color: var(--text-muted)">Pega un texto y selecciona palabras para aprenderlas.</p>
-    </header>
-
-    <div class="main-card">
-        <div class="mode-toggle">
-            <button id="edit-mode-btn" class="mode-btn active" onclick="setMode('edit')">🖊️ Editar</button>
-            <button id="read-mode-btn" class="mode-btn" onclick="setMode('read')">📖 Leer</button>
-        </div>
-        <textarea id="text-input" placeholder="Escribe o pega tu texto aquí..."></textarea>
-        <div id="read-display"></div>
+<nav class="top-navbar">
+    <div class="logo">VOCABASSISTANT</div>
+    
+    <div class="nav-center">
+        <a href="/" class="nav-btn active">lectura</a>
+        <a href="/review/" class="nav-btn">repaso</a>
     </div>
 
-    <div id="popup">
-        <div class="p-header">
-            <div class="p-word" id="p-word"></div>
-            <div class="p-phonetic" id="p-phonetic"></div>
+    <div class="nav-right">
+        <label id="ocr-btn" class="icon-btn" style="cursor: pointer;">
+            <input type="file" id="ocr-input" style="display: none;" accept="image/*" onchange="uploadImage()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            imagen a texto
+        </label>
+        
+        <div class="mode-switch">
+            <button id="edit-mode-btn" class="switch-btn active" onclick="setMode('edit')">editar</button>
+            <button id="read-mode-btn" class="switch-btn" onclick="setMode('read')">leer</button>
         </div>
-        <div class="p-translation" id="p-translation"></div>
-        <button id="btn-expand" onclick="expandModal()">↔️ Expandir Modal</button>
-        <div class="p-definition" id="p-definition"></div>
-        <div class="p-synonyms" id="p-synonyms" style="font-size: 0.85rem; color: var(--primary); margin-bottom: 10px; font-weight: 500;"></div>
-        <div class="p-example" id="p-example"></div>
-        <div class="p-example" id="p-example2"></div>
-        <button class="btn-save" onclick="saveCurrentWord()">
-            <span>💾</span> Guardar Flashcard
-        </button>
+        
+        <div class="icon-btn" style="padding: 8px 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+        </div>
     </div>
+</nav>
+
+<div class="split-container" id="split-container">
+    <div class="reading-side">
+        <div class="side-header">
+            <div class="mode-label" id="editor-status">
+                <div class="dot"></div>
+                modo <strong>edición</strong>
+            </div>
+            <div class="helper-text">escribe o pega tu texto</div>
+        </div>
+        
+        <div class="content-area">
+            <textarea id="text-input" placeholder="Comienza a escribir aquí..."></textarea>
+            <div id="read-display"></div>
+        </div>
+    </div>
+
+    <div class="resizer" id="dragMe"></div>
+
+    <div class="definition-side">
+        <div class="side-header">
+            <div class="logo" style="letter-spacing: 0.1em; font-size: 0.7rem; color: var(--text-muted);">DEFINICIÓN</div>
+        </div>
+        
+        <div class="sidebar-content" id="sidebar-content">
+            <div id="sidebar-default" class="empty-state">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 10px;"><path d="M12 19V5M12 5L5 12M12 5L19 12"/></svg>
+                <p>escribe tu texto y cambia a <span class="highlight">leer</span> para ver definiciones</p>
+            </div>
+
+            <div id="word-details" style="display: none;">
+                <div id="original-header">
+                    <div class="word-title" id="side-word">melancholy</div>
+                    <div id="side-phonetic" style="color: var(--text-muted); font-size: 0.9rem; margin-top: -15px; margin-bottom: 20px;"></div>
+                </div>
+                <div class="translation-pill" id="side-translation">melancolía</div>
+                
+                <div id="pos-container"></div>
+
+                <div style="margin-top: 40px;">
+                    <button class="nav-btn active" style="width: 100%; text-transform: lowercase;" onclick="saveCurrentWord()">
+                        guardar flashcard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="saved-section">
         <h3 style="margin-left: 10px; font-weight: 700;">Recientemente Guardadas</h3>
@@ -341,7 +399,64 @@
 <script>
     let currentData = null;
 
-    // Obtener cookie CSRF
+    // --- Resizer Logic ---
+    const resizer = document.getElementById('dragMe');
+    const leftSide = resizer.previousElementSibling;
+    const rightSide = resizer.nextElementSibling;
+
+    let x = 0;
+    let leftWidth = 0;
+
+    const mouseDownHandler = function (e) {
+        x = e.clientX;
+        leftWidth = leftSide.getBoundingClientRect().width;
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+        resizer.classList.add('resizing');
+    };
+
+    const mouseMoveHandler = function (e) {
+        const dx = e.clientX - x;
+        const newLeftWidth = (leftWidth + dx) * 100 / resizer.parentNode.getBoundingClientRect().width;
+        document.getElementById('split-container').style.gridTemplateColumns = `${newLeftWidth}% 8px 1fr`;
+    };
+
+    const mouseUpHandler = function () {
+        resizer.classList.remove('resizing');
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    resizer.addEventListener('mousedown', mouseDownHandler);
+
+    // --- OCR Logic ---
+    function uploadImage() {
+        const fileInput = document.getElementById('ocr-input');
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        showToast("Procesando imagen...", "#818cf8");
+        const formData = new FormData();
+        formData.append('image', file);
+
+        fetch('/ocr/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.text) {
+                document.getElementById('text-input').value = data.text;
+                showToast("Texto extraído con éxito", "#10b981");
+            } else {
+                showToast(data.error || "Error en OCR", "#f43f5e");
+            }
+        })
+        .catch(() => showToast("Error al conectar con el servidor OCR", "#f43f5e"));
+    }
+
+    // --- Core Interaction Logic ---
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -363,32 +478,33 @@
 
     function setMode(mode) {
         currentMode = mode;
+        document.getElementById("edit-mode-btn").classList.toggle('active', mode === 'edit');
+        document.getElementById("read-mode-btn").classList.toggle('active', mode === 'read');
+        
+        const status = document.getElementById("editor-status");
         if (mode === 'read') {
-            document.getElementById("edit-mode-btn").classList.remove('active');
-            document.getElementById("read-mode-btn").classList.add('active');
             textarea.style.display = 'none';
             readDisplay.style.display = 'block';
+            status.innerHTML = '<div class="dot" style="background:#10b981"></div>modo <strong>lectura</strong>';
+            document.getElementById('ocr-btn').style.display = 'none';
             renderReadMode();
         } else {
-            document.getElementById("read-mode-btn").classList.remove('active');
-            document.getElementById("edit-mode-btn").classList.add('active');
             textarea.style.display = 'block';
             readDisplay.style.display = 'none';
+            status.innerHTML = '<div class="dot" style="background:#f59e0b"></div>modo <strong>edición</strong>';
+            document.getElementById('ocr-btn').style.display = 'flex';
         }
     }
 
     function renderReadMode() {
         const text = textarea.value;
         readDisplay.innerHTML = '';
-        
         if (!text.trim()) {
-            readDisplay.innerHTML = '<p style="color:var(--text-muted); text-align:center;">Pega un texto en el modo Editar primero.</p>';
+            readDisplay.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top: 50px;">Pega un texto o sube una imagen primero.</p>';
             return;
         }
-
         const lines = text.split('\n');
         lines.forEach((line, lineIdx) => {
-            // Tokenización más inteligente que separa puntuación
             const tokens = line.split(/(\s+)/);
             tokens.forEach(token => {
                 if (token.trim()) {
@@ -404,194 +520,117 @@
         });
     }
 
-    // Event Delegation para un hover más robusto
     let hoverTimer;
     let activeRequest = null;
 
     readDisplay.addEventListener('mousemove', function(e) {
         const span = e.target.closest('.word-span');
         if (!span || currentMode !== 'read') return;
-
-        // Limpiar puntuación para la búsqueda
         const cleanWord = span.textContent.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").trim();
-        if (!cleanWord) return;
-
-        // Si ya estamos sobre este mismo span, no reiniciar el timer si ya está corriendo
-        if (span.dataset.hovering === "true") return;
+        if (!cleanWord || span.dataset.hovering === "true") return;
         
-        // Limpiar otros spans
-        readDisplay.querySelectorAll('.word-span').forEach(s => s.dataset.hovering = "false");
-        span.dataset.hovering = "true";
-
         clearTimeout(hoverTimer);
         hoverTimer = setTimeout(() => {
             if (window.getSelection().toString().length === 0) {
+                readDisplay.querySelectorAll('.word-span').forEach(s => s.classList.remove('active'));
+                span.classList.add('active');
                 span.classList.add('loading');
-                triggerHoverTranslation(cleanWord, e.pageX, e.pageY, span);
+                triggerSidebarUpdate(cleanWord, span);
             }
-        }, 200); // Más rápido: 200ms
+        }, 250);
+        readDisplay.querySelectorAll('.word-span').forEach(s => s.dataset.hovering = "false");
+        span.dataset.hovering = "true";
     });
 
-    readDisplay.addEventListener('mouseleave', function() {
-        clearTimeout(hoverTimer);
-        readDisplay.querySelectorAll('.word-span').forEach(s => {
-            s.classList.remove('loading');
-            s.dataset.hovering = "false";
-        });
-    });
-
-    function triggerHoverTranslation(word, x, y, span) {
+    function triggerSidebarUpdate(word, span) {
         if (activeRequest) activeRequest.abort();
-        
         const controller = new AbortController();
         activeRequest = controller;
 
         fetch(`/define/?word=${encodeURIComponent(word)}&target=es`, { signal: controller.signal })
             .then(res => res.json())
             .then(data => {
-                span.classList.remove('loading');
+                if (span && span.classList) span.classList.remove('loading');
                 if (data.error) return;
-                
-                showPopup(data, x, y);
+                updateSidebar(data);
             })
             .catch(err => {
-                if (err.name !== 'AbortError') span.classList.remove('loading');
+                if (err.name !== 'AbortError' && span && span.classList) span.classList.remove('loading');
             });
     }
 
-    function showPopup(data, x, y) {
+    function updateSidebar(data) {
         currentData = data;
-        const popup = document.getElementById("popup");
-        const pHeader = document.querySelector(".p-header");
-        const pWord = document.getElementById("p-word");
+        document.getElementById("sidebar-default").style.display = 'none';
+        document.getElementById("word-details").style.display = 'block';
         
-        // Si es una frase (o palabra sin definición), simplificamos
         const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' '));
         
+        // --- Refinement: Hide original/definitions for phrases ---
         if (isPhrase) {
-            pWord.style.display = 'none';
-            document.getElementById("p-phonetic").style.display = 'none';
-            document.getElementById("p-translation").style.fontSize = '1.15rem';
+            document.getElementById("original-header").style.display = 'none';
+            document.getElementById("pos-container").innerHTML = '<p style="color:var(--text-muted); font-style:italic;">Frase seleccionada</p>';
         } else {
-            pWord.style.display = 'block';
-            pWord.textContent = data.original;
-            document.getElementById("p-phonetic").style.display = 'block';
-            document.getElementById("p-phonetic").textContent = data.phonetic || '';
-            document.getElementById("p-translation").style.fontSize = '1.05rem';
+            document.getElementById("original-header").style.display = 'block';
+            document.getElementById("side-word").textContent = data.original;
+            document.getElementById("side-phonetic").textContent = data.phonetic || '';
+            const posContainer = document.getElementById("pos-container");
+            posContainer.innerHTML = '';
+            if (data.meanings && data.meanings.length > 0) {
+                data.meanings.forEach(meaning => {
+                    const section = document.createElement('div');
+                    section.className = 'pos-section';
+                    const label = document.createElement('div');
+                    label.className = 'pos-label';
+                    label.textContent = meaning.partOfSpeech;
+                    section.appendChild(label);
+                    meaning.definitions.forEach((defObj, idx) => {
+                        const item = document.createElement('div');
+                        item.className = 'def-item';
+                        item.innerHTML = `<strong>${idx+1}.</strong> ${defObj.definition}`;
+                        if (defObj.example) {
+                            const ex = document.createElement('div');
+                            ex.className = 'example-box';
+                            ex.textContent = `"${defObj.example}"`;
+                            item.appendChild(ex);
+                        }
+                        section.appendChild(item);
+                    });
+                    posContainer.appendChild(section);
+                });
+            } else {
+                const item = document.createElement('div');
+                item.className = 'def-item';
+                item.textContent = data.definition || 'Sin definición adicional.';
+                posContainer.appendChild(item);
+            }
         }
-
-        const translation = data.translation || '';
-        document.getElementById("p-translation").innerHTML = `<span>🌐</span> ${translation}`;
-        document.getElementById("p-definition").textContent = data.definition ? '📖 ' + data.definition : '';
-        document.getElementById("p-synonyms").textContent = data.synonyms ? '🔗 ' + data.synonyms : '';
-        document.getElementById("p-example").textContent = data.example ? '“' + data.example + '”' : '';
-        document.getElementById("p-example2").textContent = data.example_2 ? '“' + data.example_2 + '”' : '';
-
-        // Lógica de expansión
-        const wordCount = translation.split(' ').length;
-        const btnExpand = document.getElementById("btn-expand");
-        popup.style.maxWidth = "350px";
-        if (wordCount > 10) {
-            btnExpand.style.display = "block";
-        } else {
-            btnExpand.style.display = "none";
-        }
-
-        popup.style.display = "block";
-        popup.style.top = (y + 15) + "px";
         
-        // Ajuste fino de posición horizontal
-        updatePopupPosition(x);
+        document.getElementById("side-translation").textContent = data.translation;
     }
 
-    function expandModal() {
-        const popup = document.getElementById("popup");
-        popup.style.maxWidth = "600px";
-        document.getElementById("btn-expand").style.display = "none";
-    }
-
-    function updatePopupPosition(x) {
-        const popup = document.getElementById("popup");
-        let left = x;
-        const popupWidth = popup.offsetWidth || 350;
-        if (left + popupWidth > window.innerWidth - 20) {
-            left = window.innerWidth - popupWidth - 20;
-        }
-        popup.style.left = left + "px";
-    }
-
-    // Selección en modo lectura para frases
-    readDisplay.addEventListener('mouseup', function(e) {
+    readDisplay.addEventListener('mouseup', function() {
+        if (currentMode !== 'read') return;
         const selection = window.getSelection().toString().trim();
         if (selection && selection.includes(' ')) {
-            clearTimeout(hoverTimer);
-            triggerTranslation(selection, e.pageX, e.pageY);
-        }
-    });
-
-    function triggerTranslation(text, x, y) {
-        showToast("Buscando...", "#6366f1");
-        fetch(`/define/?word=${encodeURIComponent(text)}&target=es`)
-            .then(res => res.json())
-            .then(data => {
-                showPopup(data, x, y);
-                hideToast();
-            })
-            .catch(() => showToast("Error al conectar", "#f43f5e"));
-    }
-
-    // Mantener la funcionalidad de selección en el textarea (modo editar)
-    textarea.addEventListener("mouseup", function(e) {
-        if (currentMode !== 'edit') return;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const selected = textarea.value.substring(start, end).trim();
-        if (!selected || selected.length < 1) return;
-        triggerTranslation(selected, e.pageX, e.pageY);
-    });
-
-    // Cerrar popup
-    document.addEventListener("mousedown", function(e) {
-        const popup = document.getElementById("popup");
-        if (popup.style.display === "block" && !popup.contains(e.target)) {
-            popup.style.display = "none";
+            triggerSidebarUpdate(selection, null);
         }
     });
 
     function saveCurrentWord() {
         if (!currentData) return;
-
+        showToast("Guardando...", "#818cf8");
         fetch('/save/', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') // SEGURIDAD: CSRF Token
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
             body: JSON.stringify(currentData)
         })
         .then(res => res.json())
         .then(data => {
-            if (data.status === 'ok') {
-                showToast("¡Guardado!", "#10b981");
-                addSavedToGrid(currentData.original, currentData.translation);
-            } else if (data.status === 'duplicate') {
-                showToast("Ya existe", "#f59e0b");
-            }
-            document.getElementById("popup").style.display = "none";
+            if (data.status === 'ok') showToast("¡Flashcard guardada!", "#10b981");
+            else if (data.status === 'duplicate') showToast("Ya la tienes guardada", "#f59e0b");
         })
-        .catch(() => showToast("Error al guardar", "#f43f5e"));
-    }
-
-    function addSavedToGrid(word, trans) {
-        const grid = document.getElementById("saved-items");
-        const card = document.createElement("div");
-        card.className = "saved-card";
-        card.innerHTML = `
-            <div class="sc-word">${word}</div>
-            <div class="sc-trans">${trans}</div>
-        `;
-        if (grid.firstChild) grid.insertBefore(card, grid.firstChild);
-        else grid.appendChild(card);
+        .catch(() => showToast("Error al conectar", "#f43f5e"));
     }
 
     function showToast(msg, color) {
@@ -599,12 +638,7 @@
         toast.textContent = msg;
         toast.style.background = color;
         toast.style.display = "block";
-    }
-
-    function hideToast() {
-        setTimeout(() => {
-            document.getElementById("toast").style.display = "none";
-        }, 2000);
+        setTimeout(() => toast.style.display = "none", 2500);
     }
 </script>
 
