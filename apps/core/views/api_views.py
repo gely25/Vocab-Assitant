@@ -11,10 +11,12 @@ def ocr_upload(request):
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
     image = request.FILES.get('image')
+    lang = request.POST.get('lang', 'en') # Nuevo parámetro de idioma
+    
     if not image:
         return JsonResponse({'error': 'No se proporcionó imagen'}, status=400)
     
-    text = OCRService.extract_text(image)
+    text = OCRService.extract_text(image, lang=lang)
     if text is None:
         return JsonResponse({'error': 'Fallo al procesar OCR (¿Tesseract instalado?)'}, status=500)
     
@@ -26,11 +28,12 @@ def define_word(request):
     if not text:
         return JsonResponse({'error': 'No se proporcionó texto'}, status=400)
     
-    target_lang = request.GET.get('target', 'es')
+    source_lang = request.GET.get('source', 'en') # Idioma de origen
+    target_lang = request.GET.get('target', 'es') # Idioma de destino
 
     # Si es una frase (contiene espacios)
     if " " in text:
-        translation = TranslationService.translate(text, target_lang=target_lang)
+        translation = TranslationService.translate(text, target_lang=target_lang, source_lang=source_lang)
         return JsonResponse({
             'type': 'phrase',
             'original': text,
@@ -38,8 +41,8 @@ def define_word(request):
         })
 
     # Si es una palabra
-    definition_data = DictionaryService.get_definition(text)
-    translation = TranslationService.translate(text, target_lang=target_lang)
+    definition_data = DictionaryService.get_definition(text, lang=source_lang)
+    translation = TranslationService.translate(text, target_lang=target_lang, source_lang=source_lang)
 
     response_data = {
         'type': 'word',
@@ -80,7 +83,9 @@ def save_word(request):
         example=body.get('example', ''),
         example_2=body.get('example_2', ''),
         synonyms=body.get('synonyms', ''),
-        phonetic=body.get('phonetic', '')
+        phonetic=body.get('phonetic', ''),
+        source_lang=body.get('source_lang', 'en'), # Guardar idiomas
+        target_lang=body.get('target_lang', 'es')
     )
 
     if not created:

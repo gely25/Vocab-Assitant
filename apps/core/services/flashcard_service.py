@@ -10,7 +10,7 @@ class FlashcardService:
         return Flashcard.objects.filter(next_review__lte=timezone.now())
 
     @staticmethod
-    def create_flashcard(word, translation, definition='', example='', example_2='', synonyms='', phonetic=''):
+    def create_flashcard(word, translation, definition='', example='', example_2='', synonyms='', phonetic='', source_lang='en', target_lang='es'):
         """Crea una flashcard si no existe duplicada"""
         if Flashcard.objects.filter(word__iexact=word).exists():
             return None, False
@@ -22,7 +22,9 @@ class FlashcardService:
             example=example,
             example_2=example_2,
             synonyms=synonyms,
-            phonetic=phonetic
+            phonetic=phonetic,
+            source_lang=source_lang,
+            target_lang=target_lang
         )
         return card, True
 

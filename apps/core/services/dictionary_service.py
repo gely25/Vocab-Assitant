@@ -1,11 +1,11 @@
 import requests
 
 class DictionaryService:
-    API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
+    API_URL = "https://api.dictionaryapi.dev/api/v2/entries/"
 
     @classmethod
-    def get_definition(cls, word):
-        url = f"{cls.API_URL}{word}"
+    def get_definition(cls, word, lang='en'):
+        url = f"{cls.API_URL}{lang}/{word}"
         try:
             response = requests.get(url, timeout=5)
             if response.status_code == 200:
