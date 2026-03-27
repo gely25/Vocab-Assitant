@@ -1,7 +1,7 @@
 # VocabAssistant 🚀
 **Tu compañero inteligente para la lectura y el aprendizaje de idiomas.**
 
-VocabAssistant es una aplicación web diseñada para transformar la lectura de textos en idiomas extranjeros en una experiencia fluida y productiva. Combina herramientas de traducción en tiempo real, reconocimiento de texto desde imágenes (OCR) y un sistema de repetición espaciada (SM-2) para ayudarte a memorizar vocabulario nuevo de forma efectiva.
+VocabAssistant es una aplicación web diseñada para transformar la lectura de textos en idiomas extranjeros en una experiencia fluida y productiva. Combina herramientas de traducción en tiempo real, reconocimiento de texto desde imágenes (OCR), un sistema de repetición espaciada (SM-2), y **ahora cuenta con una integración de Inteligencia Artificial Local (Ollama) para explicar contextos y dar ejemplos nativos.**
 
 ---
 
@@ -11,16 +11,22 @@ VocabAssistant es una aplicación web diseñada para transformar la lectura de t
 - **Interfaz Dividida**: Un área de lectura amplia y una barra lateral de definiciones persistente y redimensionable para una experiencia sin interrupciones.
 - **Traducción al Hover**: Solo pasa el ratón sobre una palabra para ver su traducción y fonética instantáneamente.
 - **Selección de Frases**: Subraya frases completas para obtener traducciones precisas usando `deep-translator`.
-- **Diseño Premium**: Interfaz moderna (recientemente rediseñada) usando tipografías premium (Fraunces y Figtree) con un tema claro sofisticado y colores de acento sutiles (lila/lavanda), permitiendo una excelente legibilidad sin distracciones.
+- **Diseño Premium**: Interfaz moderna usando tipografías premium (Fraunces y Figtree) con un tema claro sofisticado. Cuenta con animaciones fluidas (Lottie) integradas nativamente para los estados de carga.
+
+### 🤖 Integración IA Local (Ollama)
+- **Privacidad Total**: Las explicaciones de gramática y los ejemplos se generan en tu propia máquina mediante modelos de lenguaje (LLM) locales, sin suscripciones ni fugas de datos.
+- **Contexto Avanzado**: Pide a la IA que te explique el matiz de una palabra específica en el contexto de tu lectura.
+- **Traducciones Híbridas (Oración por Oración)**: La IA genera la explicación nativa, la formatea como oraciones individuales y luego el sistema las traduce y las presenta en la UI con formato de "acordeón/subtítulos" interactivos debajo de cada bloque de texto.
+- **Generación de Ejemplos**: Crea oraciones contextuales adaptadas al idioma que estás aprendiendo.
 
 ### 📷 Módulo OCR (Imagen a Texto)
 - **Extracción Inteligente**: Sube fotos de libros o documentos y el sistema extraerá el texto automáticamente para que puedas leerlo y traducirlo en la app.
 - **Microservicio `ocr_service.py`**: Potenciado por el motor Tesseract OCR (vía `pytesseract`) capaz de detectar múltiples idiomas configurables y mapear códigos de idioma de manera eficiente.
 
 ### 🧠 Modo Repaso (Flashcards y SM-2)
-- **Sistema Leitner / SM-2**: Motor de repetición espaciada nativo. La lógica de cálculo de intervalos, factor de facilidad (`ease_factor`) y retención está encapsulada directamente en el modelo de base de datos y gestionada por `flashcard_service.py`.
-- **Diccionario Enriquecido**: Obtén definiciones, distintos contextos, sinónimos y fonética a través de `dictionary_service.py` (consumiendo `DictionaryAPI.dev` y apoyado en utilidades de red).
-- **Tarjetas Interactivas**: Flashcards fluidas con efecto de volteo 3D y atajos para evaluar rápidamente el grado de retención y programar el próximo repaso automáticamente.
+- **Sistema Leitner / SM-2**: Motor de repetición espaciada nativo gestionado por `flashcard_service.py`.
+- **Diccionario Enriquecido**: Obtén definiciones, distintos contextos, sinónimos y fonética a través de `dictionary_service.py` (consumiendo `DictionaryAPI.dev`).
+- **Tarjetas Interactivas**: Flashcards fluidas con efecto de volteo 3D y atajos para evaluar rápidamente el grado de retención y programar el próximo repaso.
 
 ---
 
@@ -30,80 +36,91 @@ VocabAssistant es una aplicación web diseñada para transformar la lectura de t
 - **Framework**: Django 6.0.3 (Python 3.12+)
 - **Base de Datos**: SQLite (por defecto, ligero y configurable)
 - **Librerías Clave**: 
-  - `deep-translator` (Traducción de Google Translate veloz y libre de API keys).
-  - `pytesseract` y `Pillow` (Extracción de texto y procesamiento de imágenes).
-  - `beautifulsoup4` y `requests` (Consultas externas y herramientas de scraping/parsing).
-  - `django-environ` (Manejo robusto de variables de entorno y configuración sensible).
+  - `requests` (Conexión asíncrona a modelos LLM locales).
+  - `deep-translator` (Traducción veloz y libre de API keys).
+  - `pytesseract` y `Pillow` (Procesamiento de imágenes y OCR).
+  - `django-environ` (Variables de entorno).
 
 ### Frontend
-- **Estructura y Estilos**: HTML5 Semántico, Vanilla CSS (CSS Grid, Flexbox, variables CSS para el sistema de diseño visual).
-- **Interactividad**: Vanilla JavaScript (ES6+), Fetch API para peticiones asíncronas fluidas (traducción al vuelo, OCR y creación de tarjetas).
-- **Integraciones Visuales**: Google Fonts (Fraunces Serif para elegancia, Figtree Sans para gran legibilidad).
+- **Estructura y Animaciones**: HTML5, Vanilla JavaScript (Fetch API), Web Components (`@dotlottie/player-component` para animaciones JSON ligeras sin dependencias pesadas).
+- **Estilos**: Variables CSS, Vanilla CSS, Google Fonts (Fraunces & Figtree).
 
 ---
 
 ## 📂 Estructura Arquitectónica del Proyecto
 
-La aplicación sigue principios de diseño orientados al dominio, separando claramente las responsabilidades en la app principal `core`:
+La aplicación separa las responsabilidades en su app central `core`:
 
 ```text
 VocabAssistant/
 ├── apps/
-│   └── core/                 # Aplicación central de la plataforma
-│       ├── models/           # Lógica de datos (Models)
-│       │   └── flashcard.py  # Modelo Flashcard con lógica SM-2 embebida (`review()` state machine)
-│       ├── services/         # Capa de Lógica de Negocio y API wrappers
-│       │   ├── dictionary_service.py   # Interacciones con DictionaryAPI
-│       │   ├── flashcard_service.py    # Gestión y agrupación de tarjetas de repaso
-│       │   ├── ocr_service.py          # Wrapper de Pytesseract para extracción de texto
-│       │   └── translation_service.py  # Adaptador de traducción para deep-translator
-│       └── views/            # Controladores web y API
-│           ├── api_views.py     # Endpoints JSON (Traducción AJAX, OCR, Guardado de Flashcards)
-│           ├── home.py          # Renderizado y contexto de la vista de lectura principal
-│           └── review_views.py  # Renderizado y lógica de presentación para los repasos
-├── config/                   # Carpeta de configuración de Django (settings, urls, asgi/wsgi)
-├── templates/
-│   └── core/                 # Componentes de presentación (home.html, review.html)
-└── requirements.txt          # Gestión de dependencias (bs4, django, pytesseract, etc.)
+│   └── core/                 
+│       ├── models/           
+│       │   └── flashcard.py  # Modelo SM-2 integrado
+│       ├── services/         
+│       │   ├── ai_service.py           # Conexión local a Ollama para generación de contexto
+│       │   ├── dictionary_service.py   # Consultas a diccionarios externos
+│       │   ├── flashcard_service.py    # SM-2 y revisión inteligente
+│       │   ├── ocr_service.py          # Wrapper de Pytesseract
+│       │   └── translation_service.py  # Traducciones rápidas
+│       └── views/            
+│           ├── api_views.py     
+│           ├── home.py          
+│           └── review_views.py  
+├── config/                   # Configuración y Settings
+├── static/                   # Recursos globales y animaciones (loading.lottie)
+├── templates/                # Motor de vistas de Django
+└── requirements.txt          # Dependencias
 ```
 
 ---
 
 ## ⚙️ Instalación y Configuración
 
-Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
+Sigue estos pasos detallados para configurar y levantar localmente todo el ecosistema de VocabAssistant.
 
-### 1. Clonar y Preparar el Entorno
+### 1. Clonar y Preparar el Entorno Python
 ```bash
-# Entrar al directorio
+# Entrar al directorio del proyecto
 cd VocabAssitant
 
-# Crear un entorno virtual
+# Crear y activar un entorno virtual (Windows)
 python -m venv venv
-
-# Activar el entorno virtual (Windows)
 .\venv\Scripts\activate
 
-# Instalar dependencias
+# Instalar dependencias backend
 pip install -r requirements.txt
 ```
 
-### 2. Instalar Tesseract OCR (Requerido para el OCR)
-Para que la funcionalidad de "Imagen a Texto" funcione correctamente en Windows:
-1.  **Descarga el instalador**: [Tesseract OCR Windows](https://github.com/UB-Mannheim/tesseract/wiki).
-2.  **Instala en la ruta por defecto**: `C:\Program Files\Tesseract-OCR\tesseract.exe`.
-3.  El módulo `ocr_service.py` ya está diseñado para ubicar esta ruta de forma transparente.
+### 2. Instalar Tesseract OCR (Requerido para leer imágenes)
+La extracción de texto desde capturas necesita tener instalado Tesseract nativamente.
+1. **Descarga el instalador de Windows**: [Tesseract OCR for Windows](https://github.com/UB-Mannheim/tesseract/wiki).
+2. **Instala forzosamente en la ruta por defecto**: `C:\Program Files\Tesseract-OCR\tesseract.exe`.
+3. El módulo `ocr_service.py` interceptará automáticamente este ejecutable. Si lo instalaste en otro lado, revisa ese archivo para cambiar la ruta.
 
-### 3. Migraciones y Ejecución del Servidor
+### 3. Instalar Ollama (Obligatorio para la IA / Explicaciones)
+VocabAssistant depende de Ollama para brindar ejemplos contextuales y explicaciones gramaticales generadas nativamente, cuidando la privacidad mediante el uso de LLMs 100% locales en tu PC.
+
+1. **Descarga Oficial**: Instala Ollama desde su sitio web [ollama.com](https://ollama.com).
+2. **Despliega el Modelo**: Una vez instalado, abre tu terminal principal (PowerShell o CMD) y descarga el motor de Llama 3.2. Ejecuta el comando:
+   ```bash
+   ollama run llama3.2:latest
+   ```
+   *Nota: La primera descarga pesa unos GB. Cuando el comando termine y te salude, significa que ya está listo.*
+3. Tu backend de Django en `VocabAssistant` está programado en `settings.py` para consultar la dirección estándar HTTP que usa este servicio (`http://127.0.0.1:11434/api/generate`). **Debes dejar corriendo Ollama en segundo plano** mientras uses VocabAssistant.
+
+### 4. Migraciones y Ejecución del Servidor
+Con tu motor OCR y tu LLM local encendidos, arranca el servidor web.
+
 ```bash
-# Sincronizar modelos con la base de datos
+# Sincronizar y generar la base de datos de tarjetas (SQLite)
 python manage.py migrate
 
-# Arrancar el servidor
+# Arrancar el servidor de VocabAssistant
 python manage.py runserver
 ```
 
-Abre tu navegador web en `http://127.0.0.1:8000` para comenzar.
+Abre tu navegador en `http://127.0.0.1:8000` y ¡disfruta aprendiendo idiomas asistido por IA Local!
 
 ---
 

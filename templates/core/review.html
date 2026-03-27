@@ -26,6 +26,9 @@
   --amber:     #F59E0B;
   --amber-lt:  #FEF3C7;
   --border:    rgba(17,17,24,0.09);
+  
+  --nav-bg:    #31094E;
+  --toolbar-bg: #240638;
   --r-sm: 8px;
   --r-md: 14px;
   --r-lg: 20px;
@@ -43,46 +46,38 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
 /* ── TOPBAR ─────────────────────────── */
 .topbar {
-  display: flex; align-items: center;
-  padding: 0 20px; height: 52px;
-  border-bottom: 1.5px solid var(--border);
-  background: var(--paper); gap: 12px;
-  flex-shrink: 0; position: relative; z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  height: 60px;
+  background: linear-gradient(90deg, #DDD5F3 0%, var(--nav-bg) 100%);
+  gap: 12px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
 }
 .logo {
-  font-family: 'Fraunces', serif; font-weight: 900;
-  font-size: 16px; letter-spacing: -0.03em; color: var(--ink);
-  display: flex; align-items: center; gap: 7px;
+  font-family: 'Figtree', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  display: flex; align-items: center; gap: 8px;
 }
-.logo-mark {
-  width: 24px; height: 24px; background: var(--lilac);
-  border-radius: 6px; display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-family: 'Fraunces', serif; font-weight: 900;
-  border: 1.5px solid rgba(17,17,24,0.15);
-}
-.mode-switcher {
+.top-nav-links {
   position: absolute; left: 50%; transform: translateX(-50%);
-  display: flex; background: var(--surface);
-  border: 1.5px solid var(--border); border-radius: var(--r-xl);
-  padding: 3px; gap: 2px;
+  display: flex; gap: 40px;
 }
-.mode-btn {
-  padding: 5px 20px; border-radius: 20px;
-  font-size: 13px; font-weight: 600; cursor: pointer; border: none;
-  background: transparent; color: var(--ink-2);
-  font-family: 'Figtree', sans-serif; transition: all .18s;
-  text-decoration: none; display: flex; align-items: center; gap: 6px;
-}
-.mode-btn.active { background: var(--ink); color: var(--lilac); }
-.mode-btn:not(.active):hover { background: var(--surface-2); color: var(--ink); }
-.topbar-right { margin-left: auto; }
+.nav-link { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 14px; border-radius: 8px; transition: all 0.15s; }
+.nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.nav-link.active { color: #fff; font-weight: 700; background: rgba(255,255,255,0.18); }
 .icon-btn {
-  width: 32px; height: 32px; border: 1.5px solid var(--border);
+  width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,0.2);
   border-radius: var(--r-sm); background: transparent;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--ink-2); transition: all .15s;
+  cursor: pointer; color: rgba(255,255,255,0.8); transition: all .15s;
 }
-.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+.icon-btn:hover { border-color: #fff; color: #fff; }
 
 /* ── REPASO LAYOUT ─────────────────── */
 .repaso-wrap {
@@ -272,20 +267,26 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 <!-- TOPBAR -->
 <nav class="topbar">
   <div class="logo">
-    <div class="logo-mark">V</div>
+    <svg width="45" height="32" viewBox="0 0 105 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M66.5621 9.11539L79.648 10.4552C81.4181 10.6365 83.1446 11.119 84.7525 11.881C89.1551 13.9676 92.3338 17.987 93.3492 22.7521L95.0074 30.5334C95.2483 31.6638 95.3697 32.817 95.3697 33.9728V40.672C95.3697 41.4865 95.3091 42.3001 95.189 43.1056L93.4488 54.7775C92.4198 61.6765 87.1636 67.1835 80.3199 68.5324L77.3248 69.1222L55.8267 71.3478C54.8602 71.4479 53.8866 71.462 52.9175 71.3908L24.7623 69.3205C23.0074 69.1914 21.2879 68.7594 19.6802 68.0441C14.5655 65.7684 11.1084 60.8734 10.6734 55.2921L9.72321 43.1095C9.662 42.3242 9.6571 41.5352 9.70856 40.7492L10.607 27.0363C11.0689 19.9817 15.9734 14.0051 22.8023 12.1759L26.6841 11.1359C27.6791 10.8694 28.697 10.697 29.7242 10.6203L49.8746 9.11539H66.5621Z" fill="#8474D9" stroke="black"/>
+      <path d="M51.9603 20.0808C60.3156 20.0314 68.6711 20.4209 75.1293 21.2791C78.3632 21.7088 81.0836 22.2513 83.0785 22.9002C84.0769 23.2249 84.8581 23.5654 85.4213 23.9099C85.9988 24.2633 86.2534 24.564 86.3451 24.7664C87.9625 28.3354 89.7241 35.7294 90.1879 43.1043C90.4191 46.781 90.3238 50.4019 89.7474 53.5007C89.1671 56.6207 88.122 59.0853 86.5609 60.5925C85.8542 61.2748 84.3904 61.9962 82.1674 62.6746C79.9868 63.3399 77.2153 63.9234 74.0355 64.4109C67.6791 65.3854 59.778 65.9621 51.89 66.0613C43.9999 66.1605 36.1598 65.7822 29.9213 64.8591C26.7996 64.3972 24.1104 63.8033 22.0277 63.0789C19.9022 62.3395 18.5773 61.5197 17.9808 60.7156C16.5504 58.7872 15.6343 56.0186 15.1429 52.7507C14.6539 49.4982 14.5978 45.839 14.8207 42.2078C15.2679 34.9235 16.8236 27.9129 18.1049 24.7263C18.1502 24.6137 18.3323 24.3644 18.8802 24.0369C19.405 23.7234 20.1516 23.4064 21.1205 23.0974C23.0546 22.4806 25.7239 21.9431 28.9164 21.5007C35.2913 20.6175 43.6057 20.1302 51.9603 20.0808Z" fill="#E8F0F7" stroke="black" stroke-width="2"/>
+      <path d="M77.6087 43.0586C77.6087 47.8066 74.2873 44.2765 70.1902 44.2765C66.0931 44.2765 62.7717 47.8066 62.7717 43.0586C62.7717 38.3106 66.0931 34.4615 70.1902 34.4615C74.2873 34.4615 77.6087 38.3106 77.6087 43.0586Z" fill="#31094E"/>
+      <path d="M47.9348 54.4055C47.9348 52.1654 49.851 53.1293 52.2147 53.1293C54.5784 53.1293 56.4946 52.1654 56.4946 54.4055C56.4946 56.6456 54.5784 58.4615 52.2147 58.4615C49.851 58.4615 47.9348 56.6456 47.9348 54.4055Z" fill="#31094E"/>
+      <path d="M40.5163 44.2893C40.5163 49.0373 37.3227 45.5073 33.3832 45.5073C29.4436 45.5073 26.25 49.0373 26.25 44.2893C26.25 39.5413 29.4436 35.6923 33.3832 35.6923C37.3227 35.6923 40.5163 39.5413 40.5163 44.2893Z" fill="#31094E"/>
+      <path d="M6.95703 30.6538C7.27053 30.6539 7.50043 30.7183 7.67578 30.8189C7.85066 30.9192 8.00101 31.0727 8.12988 31.2974C8.3989 31.7664 8.54794 32.4998 8.60352 33.5152C8.65837 34.5179 8.62035 35.7215 8.56641 37.0874C8.51278 38.4453 8.44434 39.9546 8.44434 41.5386C8.44434 43.1226 8.51278 44.6319 8.56641 45.9898C8.62034 47.3555 8.65835 48.5584 8.60352 49.5611C8.54796 50.5767 8.39894 51.3107 8.12988 51.7798C8.00104 52.0044 7.8506 52.1581 7.67578 52.2583C7.50045 52.3588 7.27045 52.4233 6.95703 52.4234C5.67585 52.4234 4.06704 51.3269 2.74316 49.314C1.44079 47.3337 0.500031 44.5826 0.5 41.5386C0.5 38.4946 1.44084 35.7435 2.74316 33.7632C4.06704 31.7503 5.67585 30.6538 6.95703 30.6538Z" fill="#31094E" stroke="black"/>
+      <path d="M98.043 30.6538C97.7295 30.6539 97.4996 30.7183 97.3242 30.8189C97.1493 30.9192 96.999 31.0727 96.8701 31.2974C96.6011 31.7664 96.4521 32.4998 96.3965 33.5152C96.3416 34.5179 96.3797 35.7215 96.4336 37.0874C96.4872 38.4453 96.5557 39.9546 96.5557 41.5386C96.5557 43.1226 96.4872 44.6319 96.4336 45.9898C96.3797 47.3555 96.3417 48.5584 96.3965 49.5611C96.452 50.5767 96.6011 51.3107 96.8701 51.7798C96.999 52.0044 97.1494 52.1581 97.3242 52.2583C97.4996 52.3588 97.7295 52.4233 98.043 52.4234C99.3241 52.4234 100.933 51.3269 102.257 49.314C103.559 47.3337 104.5 44.5826 104.5 41.5386C104.5 38.4946 103.559 35.7435 102.257 33.7632C100.933 31.7503 99.3241 30.6538 98.043 30.6538Z" fill="#31094E" stroke="black"/>
+      <path d="M38.7337 6.56445C38.7337 6.82818 38.8037 7.02058 38.9212 7.1748C39.0441 7.3361 39.2443 7.48872 39.553 7.62207C40.1847 7.89485 41.1501 8.037 42.4329 8.08984C43.7031 8.14215 45.2224 8.10553 46.9319 8.05469C48.6357 8.00402 50.5213 7.93945 52.5003 7.93945C54.479 7.93946 56.3641 8.00403 58.0677 8.05469C59.7774 8.10553 61.2975 8.14216 62.5677 8.08984C63.8501 8.037 64.815 7.89472 65.4466 7.62207C65.7553 7.48877 65.9555 7.33603 66.0784 7.1748C66.1959 7.02058 66.2659 6.82818 66.2659 6.56445C66.2659 6.0222 65.9627 5.36699 65.2845 4.66113C64.6136 3.96296 63.621 3.2643 62.3655 2.64258C59.8565 1.40011 56.3667 0.500046 52.5003 0.5C48.6336 0.5 45.1432 1.4 42.6341 2.64258C41.3786 3.26436 40.3861 3.9629 39.7151 4.66113C39.0369 5.36699 38.7337 6.0222 38.7337 6.56445Z" fill="#31094E" stroke="black"/>
+    </svg>
     VocabAssistant
   </div>
-  <div class="mode-switcher">
-    <a href="/" class="mode-btn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      lectura
-    </a>
-    <a href="/review/" class="mode-btn active">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-      repaso
-    </a>
+  
+  <div class="top-nav-links">
+    <a href="/" class="nav-link">Reading</a>
+    <a href="/live/" class="nav-link">Live Caption</a>
+    <a href="/review/" class="nav-link active">Review</a>
   </div>
-  <div class="topbar-right">
+  
+  <div style="margin-left: auto;">
     <button class="icon-btn" title="Ajustes">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M3 3l1 1M11 11l1 1M11 3l-1 1M4 11l-1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
