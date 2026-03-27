@@ -9,9 +9,10 @@ VocabAssistant es una aplicación web diseñada para transformar la lectura de t
 
 ### 📖 Modo Lectura (Split-View)
 - **Interfaz Dividida**: Un área de lectura amplia y una barra lateral de definiciones persistente y redimensionable para una experiencia sin interrupciones.
-- **Traducción al Hover**: Solo pasa el ratón sobre una palabra para ver su traducción y fonética instantáneamente.
-- **Selección de Frases**: Subraya frases completas para obtener traducciones precisas usando `deep-translator`.
-- **Diseño Premium**: Interfaz moderna usando tipografías premium (Fraunces y Figtree) con un tema claro sofisticado. Cuenta con animaciones fluidas (Lottie) integradas nativamente para los estados de carga.
+- **Traducción y Fonética al Instante**: Pasa el ratón o selecciona una palabra para ver su pronunciación oficial (incluye Pinyin con tonos y segmentación de palabras nativa para el Chino).
+- **Audio Nativo Integrado**: Escucha la pronunciación perfecta en cualquier idioma al instante utilizando el motor de audio de tu dispositivo (vía la **Web Speech API** integrada), completamente offline e incluyendo soporte a voces Neuronales con IA.
+- **Selección de Frases**: Subraya oraciones completas generadas por Intl.Segmenter y obtén traducciones de contexto.
+- **Diseño Premium**: Interfaz moderna usando tipografías premium (Fraunces y Figtree) con animaciones Lottie integradas.
 
 ### 🤖 Integración IA Local (Ollama)
 - **Privacidad Total**: Las explicaciones de gramática y los ejemplos se generan en tu propia máquina mediante modelos de lenguaje (LLM) locales, sin suscripciones ni fugas de datos.
@@ -38,12 +39,15 @@ VocabAssistant es una aplicación web diseñada para transformar la lectura de t
 - **Librerías Clave**: 
   - `requests` (Conexión asíncrona a modelos LLM locales).
   - `deep-translator` (Traducción veloz y libre de API keys).
+  - `pypinyin` (Para la correcta restitución fonética china con todos sus tonos).
   - `pytesseract` y `Pillow` (Procesamiento de imágenes y OCR).
   - `django-environ` (Variables de entorno).
 
 ### Frontend
-- **Estructura y Animaciones**: HTML5, Vanilla JavaScript (Fetch API), Web Components (`@dotlottie/player-component` para animaciones JSON ligeras sin dependencias pesadas).
-- **Estilos**: Variables CSS, Vanilla CSS, Google Fonts (Fraunces & Figtree).
+- **Estructura Arquitectónica**: HTML5, Vanilla JavaScript (Fetch API).
+- **Motor de Pronunciación**: Usa la **Web Speech API** del navegador (`window.speechSynthesis`) en lugar de servicios de pago para lograr respuestas inmediatas de audio multilingüe.
+- **Segmentación Inteligente**: Soporte para tokenización de caracteres CJK mediante la moderna API web `Intl.Segmenter`.
+- **Estética y Visuales**: Web Components (`@dotlottie/player-component`), Variables Vanilla CSS, y Google Fonts (Fraunces & Figtree).
 
 ---
 

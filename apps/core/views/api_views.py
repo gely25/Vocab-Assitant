@@ -35,6 +35,16 @@ def define_word(request):
     import re
     text = re.sub(r'\s+', ' ', text).strip()
 
+    pinyin_str = None
+    if source_lang == 'zh-CN':
+        try:
+            from pypinyin import pinyin, Style
+            pinyin_list = pinyin(text, style=Style.TONE)
+            # pinyin() returns a list of lists: [['nǐ'], ['hǎo']]
+            pinyin_str = " ".join([item[0] for item in pinyin_list])
+        except ImportError:
+            pass
+
     # Si es una frase (contiene espacios)
     if " " in text:
         translation = TranslationService.translate(text, target_lang=target_lang, source_lang=source_lang)
@@ -42,6 +52,7 @@ def define_word(request):
             'type': 'phrase',
             'original': text,
             'translation': translation,
+            'phonetic': pinyin_str,
         })
 
     # Si es una palabra
@@ -54,12 +65,15 @@ def define_word(request):
         'translation': translation,
         'definition': None,
         'example': None,
-        'phonetic': None,
+        'phonetic': pinyin_str,
         'meanings': []
     }
 
     if definition_data:
         response_data.update(definition_data)
+        
+    if pinyin_str:
+        response_data['phonetic'] = pinyin_str
 
     return JsonResponse(response_data)
 

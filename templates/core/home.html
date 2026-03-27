@@ -422,7 +422,7 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
     <!-- LOADING SKELETON -->
     <div id="sidebar-loading" style="display:none; flex:1; flex-direction:column; align-items:center; justify-content:center; padding: 40px 22px;">
-      <dotlottie-player src="/static/core/loading.lottie" background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></dotlottie-player>
+      <dotlottie-player src="/static/core/loading.lottie?v=2" background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></dotlottie-player>
       <div style="font-size: 14px; font-weight: 600; color: var(--ink-3); margin-top: -15px;">Buscando...</div>
     </div>
 
@@ -430,7 +430,12 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     <div id="word-details" style="display:none; flex:1; flex-direction:column; overflow:hidden;">
       <div class="def-top">
         <div class="def-panel-label">definición</div>
-        <div class="def-word-display" id="side-word"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <div class="def-word-display" id="side-word" style="word-break: break-word;"></div>
+          <button id="btn-play-audio" class="icon-btn" onclick="playWordAudio()" style="border:none; color:var(--lilac-dk); display:none; padding:4px;" title="Escuchar pronunciación">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          </button>
+        </div>
         <div class="def-phonetic" id="side-phonetic"></div>
         <div class="def-badges" id="side-badges">
           <span class="pill pill-lilac" id="side-pos" style="display:none;"></span>
@@ -538,23 +543,44 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
     function renderReadMode() {
         const text = textarea.value;
+        const sourceLang = srcSel.value;
         readDisplay.innerHTML = '';
         if (!text.trim()) {
             readDisplay.innerHTML = '<p style="color:var(--ink-3);font-family:Figtree,sans-serif;font-size:14px;text-align:center;margin-top:40px;">Pega un texto o sube una imagen primero.</p>';
             return;
         }
         const lines = text.split('\n');
+        
+        let segmenter = null;
+        try {
+            segmenter = new Intl.Segmenter(sourceLang, { granularity: 'word' });
+        } catch(e) {}
+
         lines.forEach((line, li) => {
-            line.split(/(\s+)/).forEach(token => {
-                if (token.trim()) {
-                    const span = document.createElement('span');
-                    span.className = 'word-span';
-                    span.textContent = token;
-                    readDisplay.appendChild(span);
-                } else {
-                    readDisplay.appendChild(document.createTextNode(token));
+            if (segmenter) {
+                const segments = segmenter.segment(line);
+                for (const {segment, isWordLike} of segments) {
+                    if (isWordLike || (segment.trim() !== '' && !/^[\s.,\/#!$%\^&\*;:{}=\-_`~()！？，。]+$/.test(segment))) {
+                        const span = document.createElement('span');
+                        span.className = 'word-span';
+                        span.textContent = segment;
+                        readDisplay.appendChild(span);
+                    } else {
+                        readDisplay.appendChild(document.createTextNode(segment));
+                    }
                 }
-            });
+            } else {
+                line.split(/(\s+)/).forEach(token => {
+                    if (token.trim()) {
+                        const span = document.createElement('span');
+                        span.className = 'word-span';
+                        span.textContent = token;
+                        readDisplay.appendChild(span);
+                    } else {
+                        readDisplay.appendChild(document.createTextNode(token));
+                    }
+                });
+            }
             if (li < lines.length - 1) readDisplay.appendChild(document.createElement('br'));
         });
     }
@@ -578,7 +604,10 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         if (currentMode !== 'read') return;
         setTimeout(() => {
             let sel = window.getSelection().toString().trim();
-            if (sel && /\s/.test(sel)) {
+            const isCjk = /[\u4e00-\u9fa5\u3040-\u30ff]/.test(sel);
+            const isPhraseSelection = isCjk ? sel.length >= 3 : /\s/.test(sel);
+            
+            if (sel && isPhraseSelection) {
                 sel = sel.replace(/\s+/g, ' ');
                 if (window.lastRequestedPhrase !== sel) {
                     window.lastRequestedPhrase = sel;
@@ -590,10 +619,10 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         }, 50);
     });
 
-    readDisplay.addEventListener('mousemove', e => {
+        readDisplay.addEventListener('mousemove', e => {
         const span = e.target.closest('.word-span');
         if (!span || currentMode !== 'read' || isMouseDown) return;
-        const word = span.textContent.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, '').trim();
+        const word = span.textContent.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()！？，。]/g, '').trim();
         if (!word || span.dataset.hovering === 'true') return;
         clearTimeout(hoverTimer);
         hoverTimer = setTimeout(() => {
@@ -666,18 +695,31 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
             aiActions.style.pointerEvents = 'auto';
         }
 
-        const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' '));
+        const isCjk = /[\u4e00-\u9fa5\u3040-\u30ff]/.test(data.original || '');
+        const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' ')) || (isCjk && data.original && data.original.length >= 3);
         const langName = LANG_NAMES[srcSel.value] || srcSel.value;
 
+        document.querySelector('.def-top').style.display = 'flex';
+        document.querySelector('.def-panel-label').textContent = isPhrase ? 'frase' : 'definición';
+        document.getElementById('side-word').textContent = data.original || '';
+        document.getElementById('side-phonetic').textContent = data.phonetic || '';
+        
+        const btnAudio = document.getElementById('btn-play-audio');
+        if (!isPhrase && data.original) {
+            btnAudio.style.display = 'flex';
+        } else {
+            btnAudio.style.display = 'none';
+        }
+        
         if (isPhrase) {
-            document.querySelector('.def-top').style.display = 'none';
+            document.getElementById('side-word').style.fontSize = '20px';
+            document.getElementById('side-word').style.lineHeight = '1.4';
             document.getElementById('side-translation').style.fontSize = '18px';
             document.getElementById('side-translation').style.fontWeight = '500';
             document.getElementById('side-translation').style.lineHeight = '1.5';
         } else {
-            document.querySelector('.def-top').style.display = 'flex';
-            document.getElementById('side-word').textContent = data.original || '';
-            document.getElementById('side-phonetic').textContent = data.phonetic || '';
+            document.getElementById('side-word').style.fontSize = '';
+            document.getElementById('side-word').style.lineHeight = '1';
             document.getElementById('side-translation').style.fontSize = '22px';
             document.getElementById('side-translation').style.fontWeight = '700';
             document.getElementById('side-translation').style.lineHeight = 'normal';
@@ -772,6 +814,21 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         .catch(() => showToast('Error de conexión', '#E63F3F'));
     }
 
+    // ── AUDIO PRONUNCIATION ───────────
+    function playWordAudio() {
+        if (!currentData || !currentData.original) return;
+        const text = currentData.original;
+        let langCode = srcSel.value;
+        // Adjust lang code for some browsers for better TTS compatibility
+        if (langCode === 'en') langCode = 'en-US';
+        if (langCode === 'es') langCode = 'es-ES';
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = langCode;
+        window.speechSynthesis.cancel(); // Stop any currently playing audio
+        window.speechSynthesis.speak(utterance);
+    }
+
     // ── OLLAMA AI ─────────────────────
     function askOllama(action) {
         if (!currentData || !currentData.original) return;
@@ -783,7 +840,7 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         resContainer.style.display = 'block';
         resContainer.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 20px 0;">
-                <dotlottie-player src="/static/core/loading.lottie" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="/static/core/loading.lottie?v=2" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></dotlottie-player>
                 <div style="font-size:12px; font-weight: 500; color:var(--ink-3); margin-top: -5px;">✨ Ollama está pensando...</div>
             </div>`;
         
