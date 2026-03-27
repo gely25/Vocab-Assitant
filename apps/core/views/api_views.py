@@ -31,6 +31,10 @@ def define_word(request):
     source_lang = request.GET.get('source', 'en') # Idioma de origen
     target_lang = request.GET.get('target', 'es') # Idioma de destino
 
+    # Normalizar espacios/saltos de línea ocultos
+    import re
+    text = re.sub(r'\s+', ' ', text).strip()
+
     # Si es una frase (contiene espacios)
     if " " in text:
         translation = TranslationService.translate(text, target_lang=target_lang, source_lang=source_lang)
@@ -98,3 +102,51 @@ def save_word(request):
         'status': 'ok',
         'message': f'"{word}" guardado en flashcards ✓'
     })
+
+def explain_context(request):
+    """Explica el matiz y pronunciación de una palabra en su contexto"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+    try:
+        body = json.loads(request.body)
+        word = body.get('word', '').strip()
+        context = body.get('context', '').strip()
+        source_lang = body.get('source_lang', 'en')
+        target_lang = body.get('target_lang', 'es')
+        
+        if not word:
+            return JsonResponse({'error': 'Palabra vacía'}, status=400)
+            
+        from ..services.ai_service import AIService
+        result = AIService.explain_context(word, context, source_lang, target_lang)
+        return JsonResponse(result)
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def generate_examples(request):
+    """Genera ejemplos de uso cotidiano para una palabra"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+    try:
+        body = json.loads(request.body)
+        word = body.get('word', '').strip()
+        context = body.get('context', '').strip()
+        source_lang = body.get('source_lang', 'en')
+        target_lang = body.get('target_lang', 'es')
+        
+        if not word:
+            return JsonResponse({'error': 'Palabra vacía'}, status=400)
+            
+        from ..services.ai_service import AIService
+        result = AIService.generate_examples(word, context, source_lang, target_lang)
+        return JsonResponse(result)
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

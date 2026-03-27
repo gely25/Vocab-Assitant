@@ -1,578 +1,562 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VocabAssistant | Modo Lectura</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #94a3b8;
-            --accent: #818cf8;
-            --accent-glow: rgba(129, 140, 248, 0.4);
-            --bg: #1a1a1a;
-            --sidebar-bg: #222222;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --border: #333333;
-            --highlight: rgba(129, 140, 248, 0.15);
-            --pill-bg: #ffffff;
-            --pill-text: #1a1a1a;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VocabAssistant | Lectura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+:root {
+  --ink:       #111118;
+  --ink-2:     #60607A;
+  --ink-3:     #AEAEC5;
+  --paper:     #FAFAF7;
+  --surface:   #F2F2EE;
+  --surface-2: #E8E8E2;
+  --lilac:     #C4B5FD;
+  --lilac-dk:  #7C3AED;
+  --lilac-lt:  #EDE9FE;
+  --green:     #1DB87A;
+  --green-lt:  #DCFAED;
+  --red:       #E63F3F;
+  --red-lt:    #FDEAEA;
+  --amber:     #F59E0B;
+  --border:    rgba(17,17,24,0.09);
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+}
 
-        /* Top Bar Redesign */
-        .top-navbar {
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg);
-        }
+html, body {
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Figtree', sans-serif;
+}
 
-        .logo {
-            font-weight: 800;
-            letter-spacing: 0.15em;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        .nav-center {
-            display: flex;
-            background: #252525;
-            padding: 4px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
+/* ── TOPBAR ─────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 52px;
+  border-bottom: 1.5px solid var(--border);
+  background: var(--paper);
+  gap: 12px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
 
-        .nav-btn {
-            padding: 8px 20px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
+.logo {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  display: flex; align-items: center; gap: 7px;
+}
+.logo-mark {
+  width: 24px; height: 24px;
+  background: var(--lilac);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  border: 1.5px solid rgba(17,17,24,0.15);
+}
 
-        .nav-btn.active {
-            background: #333333;
-            color: #ffffff;
-            border: 1px solid #444444;
-        }
+.mode-switcher {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  display: flex;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 3px; gap: 2px;
+}
+.mode-btn {
+  padding: 5px 20px;
+  border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none;
+  background: transparent; color: var(--ink-2);
+  font-family: 'Figtree', sans-serif;
+  transition: all .18s;
+  text-decoration: none;
+  display: flex; align-items: center; gap: 6px;
+}
+.mode-btn.active { background: var(--ink); color: var(--lilac); }
+.mode-btn:not(.active):hover { background: var(--surface-2); color: var(--ink); }
 
-        .nav-right {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
+.topbar-right {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 8px;
+}
 
-        .icon-btn {
-            background: #252525;
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-        .icon-btn:hover { background: #333; }
+/* ── LANG PILL ─────────────────────── */
+.lang-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 4px 12px;
+  font-size: 12px; font-weight: 600;
+  color: var(--ink);
+}
+.lang-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--ink-3); }
 
-        .lang-select {
-            background: #252525;
-            border: none;
-            color: #ffffff;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-        .lang-select option {
-            background: #2a2a2a;
-            color: #ffffff;
-        }
+.lang-select-inline {
+  background: transparent; border: none;
+  color: var(--ink); font-size: 12px;
+  font-weight: 600; cursor: pointer;
+  outline: none; font-family: 'Figtree', sans-serif;
+}
+.lang-select-inline option { background: #fff; color: var(--ink); }
 
-        .mode-switch {
-            display: flex;
-            background: #252525;
-            padding: 4px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
+.sep { width: 1px; height: 14px; background: var(--border); }
 
-        .switch-btn {
-            padding: 6px 18px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
+.icon-btn {
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink-2);
+  transition: all .15s;
+}
+.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+.icon-btn svg { pointer-events: none; }
 
-        .switch-btn.active {
-            background: #f8fafc;
-            color: #1a1a1a;
-        }
+/* ── SPLIT LAYOUT ──────────────────── */
+.split-view {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
 
-        /* Layout Grid */
-        .split-container {
-            display: grid;
-            grid-template-columns: 1fr 1px 380px;
-            flex-grow: 1;
-            height: calc(100vh - 64px);
-        }
+/* ── TEXT SIDE ─────────────────────── */
+.text-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
-        .reading-side {
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--bg);
-        }
+.text-toolbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 48px;
+  border-bottom: 1.5px solid var(--border);
+  flex-shrink: 0;
+}
 
-        .side-header {
-            padding: 15px 30px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.btn-secondary {
+  padding: 7px 16px; border-radius: var(--r-md);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--paper); color: var(--ink-2);
+  font-family: 'Figtree', sans-serif; transition: all .15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+.btn-secondary.active {
+  background: var(--ink); color: var(--lilac);
+  border-color: var(--ink);
+}
 
-        .mode-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .mode-label .dot {
-            width: 8px;
-            height: 8px;
-            background: #f59e0b;
-            border-radius: 50%;
-        }
+.btn-primary {
+  padding: 8px 20px; border-radius: var(--r-md);
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  border: 1.5px solid var(--ink); background: var(--ink); color: var(--lilac);
+  font-family: 'Figtree', sans-serif; transition: all .15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-primary:hover { background: #2a2a38; transform: translateY(-1px); }
 
-        .helper-text {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-style: italic;
-        }
+.content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 48px 56px;
+}
+.content-scroll::-webkit-scrollbar { width: 3px; }
+.content-scroll::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
 
-        .content-area {
-            padding: 40px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
+#text-input {
+  width: 100%; min-height: 300px;
+  background: transparent; border: none;
+  font-family: 'Fraunces', serif;
+  font-size: 26px; line-height: 2; font-weight: 300;
+  color: var(--ink); resize: none; outline: none;
+  letter-spacing: -0.01em;
+}
+#text-input::placeholder { color: var(--ink-3); }
 
-        #text-input {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.4rem;
-            line-height: 1.6;
-            resize: none;
-            outline: none;
-            font-family: inherit;
-        }
+#read-display {
+  font-family: 'Fraunces', serif;
+  font-size: 26px; line-height: 2;
+  font-weight: 300; color: var(--ink);
+  letter-spacing: -0.01em;
+  display: none; white-space: pre-wrap;
+}
 
-        #read-display {
-            font-size: 1.4rem;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            display: none;
-        }
+.word-span {
+  cursor: pointer; border-radius: 4px; padding: 0 2px;
+  transition: background .12s, color .12s;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  transition: all .15s;
+}
+.word-span:hover {
+  background: rgba(196,181,253,0.3);
+  text-decoration-color: var(--lilac-dk);
+}
+.word-span.active {
+  background: var(--lilac);
+  text-decoration-color: var(--lilac-dk);
+  color: var(--ink);
+}
 
-        .word-span {
-            cursor: pointer;
-            padding: 0 2px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        .word-span:hover { background: rgba(255, 255, 255, 0.05); }
-        .word-span.active {
-            background: var(--highlight);
-            color: #818cf8;
-            font-weight: 500;
-        }
+/* ── RESIZER ───────────────────────── */
+.resizer {
+  width: 1.5px; background: var(--border);
+  cursor: col-resize; flex-shrink: 0;
+  transition: background .15s;
+}
+.resizer:hover { background: var(--lilac-dk); }
 
-        /* Resizer */
-        .resizer {
-            background: var(--border);
-            cursor: col-resize;
-            width: 1px;
-            position: relative;
-        }
-        .resizer:hover { background: var(--accent); }
+/* ── DEF PANEL ─────────────────────── */
+.def-panel {
+  width: 300px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  border-left: 1.5px solid var(--border);
+  overflow: hidden;
+}
 
-        /* Sidebar */
-        .definition-side {
-            background-color: var(--sidebar-bg);
-            display: flex;
-            flex-direction: column;
-        }
+.def-top {
+  padding: 20px 22px;
+  border-bottom: 1.5px solid var(--border);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.def-panel-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+}
+.def-word-display {
+  font-family: 'Fraunces', serif;
+  font-size: 38px; font-weight: 700;
+  letter-spacing: -0.03em; color: var(--ink); line-height: 1;
+}
+.def-phonetic {
+  font-size: 14px; color: var(--ink-3);
+  font-style: italic; margin-top: -6px;
+}
+.def-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill {
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.pill-lilac { background: var(--lilac); color: var(--ink); }
+.pill-neutral { background: var(--surface); color: var(--ink-2); border: 1.5px solid var(--border); }
 
-        .sidebar-content {
-            padding: 40px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
+.def-body {
+  flex: 1; overflow-y: auto;
+  padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 18px;
+}
+.def-section-title {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 5px;
+}
+.def-translation-text { font-size: 22px; font-weight: 700; color: var(--ink); }
+.def-meaning-text { font-size: 14px; color: var(--ink-2); line-height: 1.65; }
+.def-example-block {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 12px 14px;
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 15px; color: var(--ink-2); line-height: 1.6;
+  border-left: 3px solid var(--lilac-dk);
+}
+.def-separator { height: 1.5px; background: var(--border); }
 
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: var(--text-muted);
-            text-align: center;
-            gap: 15px;
-        }
+.def-footer { padding: 16px 22px; border-top: 1.5px solid var(--border); flex-shrink: 0; }
+.btn-save-card {
+  width: 100%; padding: 12px; border-radius: var(--r-md);
+  border: 1.5px solid var(--ink); background: var(--ink); color: var(--lilac);
+  font-family: 'Figtree', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all .15s;
+}
+.btn-save-card:hover { background: #2a2a38; transform: translateY(-1px); }
+.btn-save-card.saved { background: var(--green-lt); color: var(--green); border-color: var(--green); }
 
-        .empty-state i {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
+/* ── EMPTY & LOADING STATES ────────── */
+.def-empty-state {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 22px; text-align: center; gap: 10px;
+}
+.def-empty-icon {
+  width: 48px; height: 48px; background: var(--surface);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 4px;
+}
+.def-empty-text { font-size: 13px; color: var(--ink-3); line-height: 1.65; }
 
-        .empty-state p {
-            font-size: 0.85rem;
-            max-width: 200px;
-            line-height: 1.5;
-        }
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+.skeleton-block {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+#sidebar-loading { display: none; padding: 4px 0; }
+.sk-title  { height: 40px; width: 60%; margin-bottom: 18px; }
+.sk-pill   { height: 28px; width: 40%; border-radius: 20px; margin-bottom: 30px; }
+.sk-line   { height: 13px; margin-bottom: 10px; }
+.sk-line.w80 { width: 80%; }
+.sk-line.w60 { width: 60%; }
+.sk-line.w90 { width: 90%; }
 
-        .empty-state span.highlight { color: #fff; font-weight: 600; }
-
-        .word-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .translation-pill {
-            background: #ffffff;
-            color: #1a1a1a;
-            padding: 12px 24px;
-            border-radius: 14px;
-            font-weight: 700;
-            width: fit-content;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-
-        .pos-label {
-            color: #818cf8;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            margin-bottom: 15px;
-        }
-
-        .def-item {
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-
-        .example-box {
-            font-style: italic;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 10px;
-            padding-left: 15px;
-            border-left: 1px solid #444;
-        }
-
-        /* Notifications / Toasts */
-        #toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        /* Skeleton Loader */
-        @keyframes shimmer {
-            0%   { background-position: -400px 0; }
-            100% { background-position: 400px 0; }
-        }
-        .skeleton-block {
-            border-radius: 8px;
-            background: linear-gradient(90deg, #2a2a2a 25%, #383838 50%, #2a2a2a 75%);
-            background-size: 800px 100%;
-            animation: shimmer 1.4s infinite linear;
-        }
-        #sidebar-loading {
-            display: none;
-            padding: 4px 0;
-        }
-        .sk-title  { height: 40px; width: 60%; margin-bottom: 18px; }
-        .sk-pill   { height: 44px; width: 45%; border-radius: 14px; margin-bottom: 30px; }
-        .sk-line   { height: 14px; margin-bottom: 10px; }
-        .sk-line.w80 { width: 80%; }
-        .sk-line.w60 { width: 60%; }
-        .sk-line.w90 { width: 90%; }
-    </style>
+/* ── TOAST ─────────────────────────── */
+#toast {
+  position: fixed; bottom: 30px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  padding: 10px 22px; border-radius: var(--r-lg);
+  font-size: 13px; font-weight: 600; z-index: 1000;
+  display: none; box-shadow: 0 8px 24px rgba(17,17,24,0.2);
+}
+</style>
 </head>
 <body>
 
-<nav class="top-navbar">
-    <div class="logo">VOCABASSISTANT</div>
-    
-    <div class="nav-center">
-        <a href="/" class="nav-btn active">lectura</a>
-        <a href="/review/" class="nav-btn">repaso</a>
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="logo">
+    <div class="logo-mark">V</div>
+    VocabAssistant
+  </div>
+
+  <div class="mode-switcher">
+    <a href="/" class="mode-btn active">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      lectura
+    </a>
+    <a href="/review/" class="mode-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      repaso
+    </a>
+  </div>
+
+  <div class="topbar-right">
+    <!-- Lang pill with selects -->
+    <div class="lang-pill">
+      <span class="lang-label">leer</span>
+      <select id="source-lang-select" class="lang-select-inline">
+        <option value="en">Inglés</option>
+        <option value="es">Español</option>
+        <option value="fr">Francés</option>
+        <option value="de">Alemán</option>
+        <option value="it">Italiano</option>
+        <option value="pt">Portugués</option>
+        <option value="zh-CN">Chino</option>
+        <option value="ja">Japonés</option>
+        <option value="ko">Coreano</option>
+        <option value="ru">Ruso</option>
+      </select>
+      <div class="sep"></div>
+      <span class="lang-label">ver</span>
+      <select id="target-lang-select" class="lang-select-inline">
+        <option value="es">Español</option>
+        <option value="en">Inglés</option>
+        <option value="fr">Francés</option>
+        <option value="de">Alemán</option>
+        <option value="it">Italiano</option>
+        <option value="pt">Portugués</option>
+        <option value="zh-CN">Chino</option>
+        <option value="ja">Japonés</option>
+        <option value="ko">Coreano</option>
+        <option value="ru">Ruso</option>
+      </select>
     </div>
 
-    <div class="nav-right">
-        <!-- Selectores de Idioma -->
-        <div style="display: flex; gap: 8px; align-items: center; background: #252525; padding: 4px 8px; border-radius: 10px; border: 1px solid var(--border);">
-            <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Leer</div>
-            <select id="source-lang-select" class="lang-select">
-                <option value="en">Inglés</option>
-                <option value="es">Español</option>
-                <option value="fr">Francés</option>
-                <option value="de">Alemán</option>
-                <option value="it">Italiano</option>
-                <option value="pt">Portugués</option>
-                <option value="zh-CN">Chino</option>
-                <option value="ja">Japonés</option>
-                <option value="ko">Coreano</option>
-                <option value="ru">Ruso</option>
-            </select>
-            <div style="width: 1px; height: 16px; background: var(--border); margin: 0 4px;"></div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Ver</div>
-            <select id="target-lang-select" class="lang-select">
-                <option value="es">Español</option>
-                <option value="en">Inglés</option>
-                <option value="fr">Francés</option>
-                <option value="de">Alemán</option>
-                <option value="it">Italiano</option>
-                <option value="pt">Portugués</option>
-                <option value="zh-CN">Chino</option>
-                <option value="ja">Japonés</option>
-                <option value="ko">Coreano</option>
-                <option value="ru">Ruso</option>
-            </select>
-        </div>
+    <!-- OCR button -->
+    <label class="icon-btn" style="cursor:pointer;" title="Imagen a texto">
+      <input type="file" id="ocr-input" style="display:none;" accept="image/*" onchange="uploadImage()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    </label>
 
-        <label id="ocr-btn" class="icon-btn" style="cursor: pointer;">
-            <input type="file" id="ocr-input" style="display: none;" accept="image/*" onchange="uploadImage()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            imagen a texto
-        </label>
-        
-        <div class="mode-switch">
-            <button id="edit-mode-btn" class="switch-btn active" onclick="setMode('edit')">editar</button>
-            <button id="read-mode-btn" class="switch-btn" onclick="setMode('read')">leer</button>
-        </div>
-        
-        <div class="icon-btn" style="padding: 8px 10px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-        </div>
-    </div>
+    <!-- Settings stub -->
+    <button class="icon-btn" title="Ajustes">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M3 3l1 1M11 11l1 1M11 3l-1 1M4 11l-1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
 </nav>
 
-<div class="split-container" id="split-container">
-    <div class="reading-side">
-        <div class="side-header">
-            <div class="mode-label" id="editor-status">
-                <div class="dot"></div>
-                modo <strong>edición</strong>
-            </div>
-            <div class="helper-text">escribe o pega tu texto</div>
-        </div>
-        
-        <div class="content-area">
-            <textarea id="text-input" placeholder="Comienza a escribir aquí..."></textarea>
-            <div id="read-display"></div>
-        </div>
+<!-- MAIN SPLIT VIEW -->
+<div class="split-view">
+
+  <!-- TEXT SIDE -->
+  <section class="text-side">
+    <div class="text-toolbar">
+      <button class="btn-secondary active" id="edit-mode-btn" onclick="setMode('edit')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        editar
+      </button>
+      <button class="btn-secondary" id="read-mode-btn" onclick="setMode('read')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        leer
+      </button>
+      <div style="flex:1"></div>
+      <button class="btn-primary" id="ocr-btn" onclick="document.getElementById('ocr-input').click()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        imagen a texto
+      </button>
     </div>
 
-    <div class="resizer" id="dragMe"></div>
-
-    <div class="definition-side">
-        <div class="side-header">
-            <div class="logo" style="letter-spacing: 0.1em; font-size: 0.7rem; color: var(--text-muted);">DEFINICIÓN</div>
-        </div>
-        
-        <div class="sidebar-content" id="sidebar-content">
-            <div id="sidebar-default" class="empty-state">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 10px;"><path d="M12 19V5M12 5L5 12M12 5L19 12"/></svg>
-                <p>escribe tu texto y cambia a <span class="highlight">leer</span> para ver definiciones</p>
-            </div>
-
-            <!-- Skeleton de carga -->
-            <div id="sidebar-loading">
-                <div class="skeleton-block sk-title"></div>
-                <div class="skeleton-block sk-pill"></div>
-                <div class="skeleton-block sk-line w80"></div>
-                <div class="skeleton-block sk-line w90"></div>
-                <div class="skeleton-block sk-line w60"></div>
-                <div class="skeleton-block sk-line w80" style="margin-top: 20px;"></div>
-                <div class="skeleton-block sk-line w90"></div>
-            </div>
-
-            <div id="word-details" style="display: none;">
-                <div id="original-header">
-                    <div class="word-title" id="side-word">melancholy</div>
-                    <div id="side-phonetic" style="color: var(--text-muted); font-size: 0.9rem; margin-top: -15px; margin-bottom: 20px;"></div>
-                </div>
-                <div class="translation-pill" id="side-translation">melancolía</div>
-                
-                <div id="pos-container"></div>
-
-                <div style="margin-top: 40px;">
-                    <button class="nav-btn active" style="width: 100%; text-transform: lowercase;" onclick="saveCurrentWord()">
-                        guardar flashcard
-                    </button>
-                </div>
-            </div>
-        </div>
+    <div class="content-scroll">
+      <textarea id="text-input" placeholder="Pega o escribe tu texto aquí…"></textarea>
+      <div id="read-display"></div>
     </div>
+  </section>
+
+  <div class="resizer" id="dragMe"></div>
+
+  <!-- DEFINITION PANEL -->
+  <aside class="def-panel" id="def-panel">
+
+    <!-- EMPTY STATE -->
+    <div class="def-empty-state" id="sidebar-default">
+      <div class="def-empty-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <div class="def-empty-text">Cambia a <strong>leer</strong> y toca una palabra para ver su definición</div>
+    </div>
+
+    <!-- LOADING SKELETON -->
+    <div id="sidebar-loading" style="padding: 20px 22px;">
+      <div class="skeleton-block sk-title"></div>
+      <div class="skeleton-block sk-pill"></div>
+      <div class="skeleton-block sk-line w80"></div>
+      <div class="skeleton-block sk-line w90"></div>
+      <div class="skeleton-block sk-line w60"></div>
+      <div class="skeleton-block sk-line w80" style="margin-top:20px;"></div>
+      <div class="skeleton-block sk-line w90"></div>
+    </div>
+
+    <!-- FILLED STATE -->
+    <div id="word-details" style="display:none; display:none; flex:1; flex-direction:column; overflow:hidden;">
+      <div class="def-top">
+        <div class="def-panel-label">definición</div>
+        <div class="def-word-display" id="side-word"></div>
+        <div class="def-phonetic" id="side-phonetic"></div>
+        <div class="def-badges" id="side-badges">
+          <span class="pill pill-lilac" id="side-pos" style="display:none;"></span>
+          <span class="pill pill-neutral" id="side-lang-badge"></span>
+        </div>
+      </div>
+
+      <div class="def-body" id="def-body">
+        <div>
+          <div class="def-section-title">traducción</div>
+          <div class="def-translation-text" id="side-translation"></div>
+        </div>
+        <div class="def-separator"></div>
+        <div id="pos-container"></div>
+        
+        <div id="ai-actions" style="margin-top: 15px; display: flex; gap: 8px;">
+          <button class="btn-secondary" onclick="askOllama('explain')" style="flex:1; justify-content:center; padding:10px; font-size: 12px; border-color: var(--lilac); color: var(--lilac-dk);">✨ Explicar contexto</button>
+          <button class="btn-secondary" onclick="askOllama('examples')" style="flex:1; justify-content:center; padding:10px; font-size: 12px; border-color: var(--amber); color: #c27b03;">🌟 Dar ejemplos</button>
+        </div>
+        <div id="ai-results" style="margin-top: 15px; display: none;"></div>
+      </div>
+
+      <div class="def-footer">
+        <button class="btn-save-card" id="save-btn" onclick="saveCurrentWord()">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="2" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 2v4l2-1.5L9 6V2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          guardar como tarjeta
+        </button>
+      </div>
+    </div>
+
+  </aside>
 </div>
 
-    <div class="saved-section">
-        <h3 style="margin-left: 10px; font-weight: 700;">Recientemente Guardadas</h3>
-        <div class="saved-grid" id="saved-items"></div>
-    </div>
-</div>
-
-<div id="toast">Cargando...</div>
+<div id="toast"></div>
 
 <script>
-    let currentData = null;
+    // Limpiar Service Workers fantasmas (por el error en consola 2sw.js)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) { registration.unregister(); }
+        });
+    }
 
-    // --- Resizer Logic ---
+    let currentData = null;
+    let currentMode = 'edit';
+
+    // ── RESIZER ────────────────────────
     const resizer = document.getElementById('dragMe');
     const leftSide = resizer.previousElementSibling;
     const rightSide = resizer.nextElementSibling;
-
-    let x = 0;
-    let leftWidth = 0;
-
-    const mouseDownHandler = function (e) {
-        x = e.clientX;
-        leftWidth = leftSide.getBoundingClientRect().width;
-        document.addEventListener('mousemove', mouseMoveHandler);
-        document.addEventListener('mouseup', mouseUpHandler);
-        resizer.classList.add('resizing');
-    };
-
-    const mouseMoveHandler = function (e) {
-        const dx = e.clientX - x;
-        const newLeftWidth = (leftWidth + dx) * 100 / resizer.parentNode.getBoundingClientRect().width;
-        document.getElementById('split-container').style.gridTemplateColumns = `${newLeftWidth}% 8px 1fr`;
-    };
-
-    const mouseUpHandler = function () {
-        resizer.classList.remove('resizing');
-        document.removeEventListener('mousemove', mouseMoveHandler);
-        document.removeEventListener('mouseup', mouseUpHandler);
-    };
-
-    resizer.addEventListener('mousedown', mouseDownHandler);
-
-    // --- OCR Logic ---
-    function uploadImage() {
-        const fileInput = document.getElementById('ocr-input');
-        const file = fileInput.files[0];
-        if (!file) return;
-
-        showToast("Procesando imagen...", "#818cf8");
-        const formData = new FormData();
-        formData.append('image', file);
-        formData.append('lang', document.getElementById('source-lang-select').value);
-
-        fetch('/ocr/', {
-            method: 'POST',
-            headers: { 'X-CSRFToken': getCookie('csrftoken') },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.text) {
-                document.getElementById('text-input').value = data.text;
-                showToast("Texto extraído con éxito", "#10b981");
-            } else {
-                showToast(data.error || "Error en OCR", "#f43f5e");
-            }
-        })
-        .catch(() => showToast("Error al conectar con el servidor OCR", "#f43f5e"));
+    let rx = 0, rightWidth = 0;
+    resizer.addEventListener('mousedown', e => {
+        rx = e.clientX;
+        rightWidth = rightSide.getBoundingClientRect().width;
+        document.addEventListener('mousemove', onResizerMove);
+        document.addEventListener('mouseup', onResizerUp);
+    });
+    function onResizerMove(e) {
+        const dx = rx - e.clientX; // Moving left increases right side width
+        const newW = Math.max(300, rightWidth + dx);
+        rightSide.style.width = newW + 'px';
+        rightSide.style.flex = 'none';
+    }
+    function onResizerUp() {
+        document.removeEventListener('mousemove', onResizerMove);
+        document.removeEventListener('mouseup', onResizerUp);
     }
 
-    // --- Core Interaction Logic ---
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
+    // ── LANG PERSISTENCE ──────────────
+    const srcSel = document.getElementById('source-lang-select');
+    const tgtSel = document.getElementById('target-lang-select');
+    if (localStorage.getItem('source-lang')) srcSel.value = localStorage.getItem('source-lang');
+    if (localStorage.getItem('target-lang')) tgtSel.value = localStorage.getItem('target-lang');
+    srcSel.onchange = () => localStorage.setItem('source-lang', srcSel.value);
+    tgtSel.onchange = () => localStorage.setItem('target-lang', tgtSel.value);
 
-    const textarea = document.getElementById("text-input");
-    const readDisplay = document.getElementById("read-display");
-    let currentMode = 'edit';
+    // ── MODE SWITCH ────────────────────
+    const textarea = document.getElementById('text-input');
+    const readDisplay = document.getElementById('read-display');
 
     function setMode(mode) {
         currentMode = mode;
-        document.getElementById("edit-mode-btn").classList.toggle('active', mode === 'edit');
-        document.getElementById("read-mode-btn").classList.toggle('active', mode === 'read');
-        
-        const status = document.getElementById("editor-status");
+        document.getElementById('edit-mode-btn').classList.toggle('active', mode === 'edit');
+        document.getElementById('read-mode-btn').classList.toggle('active', mode === 'read');
         if (mode === 'read') {
             textarea.style.display = 'none';
             readDisplay.style.display = 'block';
-            status.innerHTML = '<div class="dot" style="background:#10b981"></div>modo <strong>lectura</strong>';
             document.getElementById('ocr-btn').style.display = 'none';
             renderReadMode();
         } else {
             textarea.style.display = 'block';
             readDisplay.style.display = 'none';
-            status.innerHTML = '<div class="dot" style="background:#f59e0b"></div>modo <strong>edición</strong>';
             document.getElementById('ocr-btn').style.display = 'flex';
         }
     }
@@ -581,13 +565,12 @@
         const text = textarea.value;
         readDisplay.innerHTML = '';
         if (!text.trim()) {
-            readDisplay.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top: 50px;">Pega un texto o sube una imagen primero.</p>';
+            readDisplay.innerHTML = '<p style="color:var(--ink-3);font-family:Figtree,sans-serif;font-size:14px;text-align:center;margin-top:40px;">Pega un texto o sube una imagen primero.</p>';
             return;
         }
         const lines = text.split('\n');
-        lines.forEach((line, lineIdx) => {
-            const tokens = line.split(/(\s+)/);
-            tokens.forEach(token => {
+        lines.forEach((line, li) => {
+            line.split(/(\s+)/).forEach(token => {
                 if (token.trim()) {
                     const span = document.createElement('span');
                     span.className = 'word-span';
@@ -597,16 +580,14 @@
                     readDisplay.appendChild(document.createTextNode(token));
                 }
             });
-            if (lineIdx < lines.length - 1) readDisplay.appendChild(document.createElement('br'));
+            if (li < lines.length - 1) readDisplay.appendChild(document.createElement('br'));
         });
     }
 
-    let hoverTimer;
-    let activeRequest = null;
-    let isMouseDown = false;
+    // ── HOVER + SELECTION ─────────────
+    let hoverTimer, activeRequest = null, isMouseDown = false;
 
-    // Al presionar el mouse: cancelar hover, limpiar estado activo, liberar selección
-    readDisplay.addEventListener('mousedown', function(e) {
+    readDisplay.addEventListener('mousedown', () => {
         if (currentMode !== 'read') return;
         isMouseDown = true;
         clearTimeout(hoverTimer);
@@ -617,161 +598,314 @@
         });
     });
 
-    document.addEventListener('mouseup', function() { isMouseDown = false; });
+    document.addEventListener('mouseup', () => { 
+        isMouseDown = false; 
+        if (currentMode !== 'read') return;
+        setTimeout(() => {
+            let sel = window.getSelection().toString().trim();
+            if (sel && /\s/.test(sel)) {
+                sel = sel.replace(/\s+/g, ' ');
+                if (window.lastRequestedPhrase !== sel) {
+                    window.lastRequestedPhrase = sel;
+                    triggerLookup(sel, null);
+                }
+            } else {
+                window.lastRequestedPhrase = "";
+            }
+        }, 50);
+    });
 
-    readDisplay.addEventListener('mousemove', function(e) {
+    readDisplay.addEventListener('mousemove', e => {
         const span = e.target.closest('.word-span');
         if (!span || currentMode !== 'read' || isMouseDown) return;
-        const cleanWord = span.textContent.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").trim();
-        if (!cleanWord || span.dataset.hovering === "true") return;
-        
+        const word = span.textContent.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, '').trim();
+        if (!word || span.dataset.hovering === 'true') return;
         clearTimeout(hoverTimer);
         hoverTimer = setTimeout(() => {
             if (!isMouseDown && window.getSelection().toString().length === 0) {
                 readDisplay.querySelectorAll('.word-span').forEach(s => s.classList.remove('active'));
                 span.classList.add('active');
-                span.classList.add('loading');
-                triggerSidebarUpdate(cleanWord, span);
+                triggerLookup(word, span);
             }
         }, 250);
-        readDisplay.querySelectorAll('.word-span').forEach(s => s.dataset.hovering = "false");
-        span.dataset.hovering = "true";
+        readDisplay.querySelectorAll('.word-span').forEach(s => s.dataset.hovering = 'false');
+        span.dataset.hovering = 'true';
     });
 
-    function triggerSidebarUpdate(word, span) {
+    // ── LOOKUP ────────────────────────
+    function triggerLookup(word, span) {
         if (activeRequest) activeRequest.abort();
         const controller = new AbortController();
         activeRequest = controller;
 
-        // Mostrar skeleton de carga
+        // Show skeleton
         document.getElementById('sidebar-default').style.display = 'none';
         document.getElementById('word-details').style.display = 'none';
         document.getElementById('sidebar-loading').style.display = 'block';
 
-        const sourceLang = document.getElementById('source-lang-select').value;
-        const targetLang = document.getElementById('target-lang-select').value;
+        const source = srcSel.value;
+        const target = tgtSel.value;
 
-        fetch(`/define/?word=${encodeURIComponent(word)}&source=${sourceLang}&target=${targetLang}`, { signal: controller.signal })
-            .then(res => res.json())
+        fetch(`/define/?word=${encodeURIComponent(word)}&source=${source}&target=${target}`, { signal: controller.signal })
+            .then(r => r.json())
             .then(data => {
-                if (span && span.classList) span.classList.remove('loading');
+                if (span) span.classList.remove('loading');
                 document.getElementById('sidebar-loading').style.display = 'none';
-                if (data.error) {
-                    document.getElementById('sidebar-default').style.display = 'flex';
-                    return;
-                }
+                if (data.error) { showDefault(); return; }
                 updateSidebar(data);
             })
             .catch(err => {
-                if (err.name !== 'AbortError' && span && span.classList) span.classList.remove('loading');
-                document.getElementById('sidebar-loading').style.display = 'none';
-                document.getElementById('sidebar-default').style.display = 'flex';
+                if (err.name !== 'AbortError') {
+                    if (span) span.classList.remove('loading');
+                    document.getElementById('sidebar-loading').style.display = 'none';
+                    showDefault();
+                    showToast('Network error: ' + err.message, '#E63F3F');
+                }
             });
     }
 
-    function updateSidebar(data) {
-        currentData = data;
-        document.getElementById("sidebar-default").style.display = 'none';
-        document.getElementById("word-details").style.display = 'block';
-        
-        const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' '));
-        
-        // --- Refinement: Hide original/definitions for phrases ---
-        if (isPhrase) {
-            document.getElementById("original-header").style.display = 'none';
-            document.getElementById("pos-container").innerHTML = '<p style="color:var(--text-muted); font-style:italic;">Frase seleccionada</p>';
-        } else {
-            document.getElementById("original-header").style.display = 'block';
-            document.getElementById("side-word").textContent = data.original;
-            document.getElementById("side-phonetic").textContent = data.phonetic || '';
-            const posContainer = document.getElementById("pos-container");
-            posContainer.innerHTML = '';
-            if (data.meanings && data.meanings.length > 0) {
-                data.meanings.forEach(meaning => {
-                    const section = document.createElement('div');
-                    section.className = 'pos-section';
-                    const label = document.createElement('div');
-                    label.className = 'pos-label';
-                    label.textContent = meaning.partOfSpeech;
-                    section.appendChild(label);
-                    meaning.definitions.forEach((defObj, idx) => {
-                        const item = document.createElement('div');
-                        item.className = 'def-item';
-                        item.innerHTML = `<strong>${idx+1}.</strong> ${defObj.definition}`;
-                        if (defObj.example) {
-                            const ex = document.createElement('div');
-                            ex.className = 'example-box';
-                            ex.textContent = `"${defObj.example}"`;
-                            item.appendChild(ex);
-                        }
-                        section.appendChild(item);
-                    });
-                    posContainer.appendChild(section);
-                });
-            } else {
-                const item = document.createElement('div');
-                item.className = 'def-item';
-                item.textContent = data.definition || 'Sin definición adicional.';
-                posContainer.appendChild(item);
-            }
-        }
-        
-        document.getElementById("side-translation").textContent = data.translation;
+    function showDefault() {
+        document.getElementById('sidebar-default').style.display = 'flex';
+        document.getElementById('word-details').style.display = 'none';
     }
 
-    readDisplay.addEventListener('mouseup', function() {
-        if (currentMode !== 'read') return;
-        const selection = window.getSelection().toString().trim();
-        if (selection && selection.includes(' ')) {
-            triggerSidebarUpdate(selection, null);
-        }
-    });
+    // ── SIDEBAR UPDATE ────────────────
+    const LANG_NAMES = { en:'Inglés', es:'Español', fr:'Francés', de:'Alemán', it:'Italiano', pt:'Portugués', 'zh-CN':'Chino', ja:'Japonés', ko:'Coreano', ru:'Ruso' };
 
+    function updateSidebar(data) {
+        currentData = data;
+        document.getElementById('sidebar-default').style.display = 'none';
+        document.getElementById('sidebar-loading').style.display = 'none';
+        const wd = document.getElementById('word-details');
+        wd.style.display = 'flex';
+        wd.style.flexDirection = 'column';
+        wd.style.flex = '1';
+        wd.style.overflow = 'hidden';
+
+        document.getElementById('ai-results').style.display = 'none';
+        document.getElementById('ai-results').innerHTML = '';
+        const aiActions = document.getElementById('ai-actions');
+        if (aiActions) {
+            aiActions.style.display = 'flex';
+            aiActions.style.opacity = '1';
+            aiActions.style.pointerEvents = 'auto';
+        }
+
+        const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' '));
+        const langName = LANG_NAMES[srcSel.value] || srcSel.value;
+
+        if (isPhrase) {
+            document.querySelector('.def-top').style.display = 'none';
+            document.getElementById('side-translation').style.fontSize = '18px';
+            document.getElementById('side-translation').style.fontWeight = '500';
+            document.getElementById('side-translation').style.lineHeight = '1.5';
+        } else {
+            document.querySelector('.def-top').style.display = 'flex';
+            document.getElementById('side-word').textContent = data.original || '';
+            document.getElementById('side-phonetic').textContent = data.phonetic || '';
+            document.getElementById('side-translation').style.fontSize = '22px';
+            document.getElementById('side-translation').style.fontWeight = '700';
+            document.getElementById('side-translation').style.lineHeight = 'normal';
+        }
+
+        document.getElementById('side-translation').textContent = data.translation || '';
+        document.getElementById('side-lang-badge').textContent = langName;
+
+        const posEl = document.getElementById('side-pos');
+        if (data.meanings && data.meanings.length > 0 && !isPhrase) {
+            posEl.textContent = data.meanings[0].partOfSpeech;
+            posEl.style.display = 'inline-block';
+        } else { posEl.style.display = 'none'; }
+
+        const posContainer = document.getElementById('pos-container');
+        posContainer.innerHTML = '';
+        if (isPhrase) {
+            const p = document.createElement('p');
+            p.style.cssText = 'color:var(--ink-3);font-style:italic;font-size:13px;';
+            p.textContent = 'Frase seleccionada. Usa los botones de abajo para generar ejemplos con IA.';
+            posContainer.appendChild(p);
+
+        } else if (data.meanings && data.meanings.length > 0) {
+            data.meanings.forEach(meaning => {
+                const sec = document.createElement('div');
+                const lbl = document.createElement('div');
+                lbl.className = 'def-section-title';
+                lbl.textContent = meaning.partOfSpeech;
+                sec.appendChild(lbl);
+                meaning.definitions.forEach((def, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'def-meaning-text';
+                    item.style.marginBottom = '10px';
+                    item.innerHTML = `<strong>${i+1}.</strong> ${def.definition}`;
+                    if (def.example) {
+                        const ex = document.createElement('div');
+                        ex.className = 'def-example-block';
+                        ex.style.marginTop = '8px';
+                        ex.textContent = `"${def.example}"`;
+                        item.appendChild(ex);
+                    }
+                    sec.appendChild(item);
+                });
+                posContainer.appendChild(sec);
+            });
+        } else if (data.definition) {
+            const item = document.createElement('div');
+            item.className = 'def-meaning-text';
+            item.textContent = data.definition;
+            posContainer.appendChild(item);
+        }
+    }
+
+    // ── OCR ───────────────────────────
+    function uploadImage() {
+        const file = document.getElementById('ocr-input').files[0];
+        if (!file) return;
+        showToast('Procesando imagen…');
+        const fd = new FormData();
+        fd.append('image', file);
+        fd.append('lang', srcSel.value);
+        fetch('/ocr/', { method:'POST', headers:{'X-CSRFToken': getCookie('csrftoken')}, body: fd })
+            .then(r => r.json())
+            .then(data => {
+                if (data.text) { textarea.value = data.text; showToast('Texto extraído ✓', '#1DB87A'); }
+                else showToast(data.error || 'Error en OCR', '#E63F3F');
+            })
+            .catch(() => showToast('Error de conexión', '#E63F3F'));
+    }
+
+    // ── SAVE ──────────────────────────
     function saveCurrentWord() {
         if (!currentData) return;
-        showToast("Guardando...", "#818cf8");
-        const sourceLang = document.getElementById('source-lang-select').value;
-        const targetLang = document.getElementById('target-lang-select').value;
-        
-        const payload = {
-            ...currentData,
-            source_lang: sourceLang,
-            target_lang: targetLang
-        };
-
+        const btn = document.getElementById('save-btn');
+        showToast('Guardando…');
+        const payload = { ...currentData, source_lang: srcSel.value, target_lang: tgtSel.value };
         fetch('/save/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
             body: JSON.stringify(payload)
         })
-        .then(res => res.json())
+        .then(r => r.json())
         .then(data => {
-            if (data.status === 'ok') showToast("¡Flashcard guardada!", "#10b981");
-            else if (data.status === 'duplicate') showToast("Ya la tienes guardada", "#f59e0b");
+            if (data.status === 'ok') {
+                showToast('¡Tarjeta guardada!', '#1DB87A');
+                btn.classList.add('saved');
+                btn.innerHTML = '✓ guardada';
+            } else if (data.status === 'duplicate') {
+                showToast('Ya la tienes guardada', '#F59E0B');
+            }
         })
-        .catch(() => showToast("Error al conectar", "#f43f5e"));
+        .catch(() => showToast('Error de conexión', '#E63F3F'));
     }
 
-    function showToast(msg, color) {
-        const toast = document.getElementById("toast");
-        toast.textContent = msg;
-        toast.style.background = color;
-        toast.style.display = "block";
-        setTimeout(() => toast.style.display = "none", 2500);
+    // ── OLLAMA AI ─────────────────────
+    function askOllama(action) {
+        if (!currentData || !currentData.original) return;
+        const btnContainer = document.getElementById('ai-actions');
+        const resContainer = document.getElementById('ai-results');
+        
+        btnContainer.style.opacity = '0.5';
+        btnContainer.style.pointerEvents = 'none';
+        resContainer.style.display = 'block';
+        resContainer.innerHTML = '<div style="font-size:12px; color:var(--ink-3); font-style:italic;">✨ Ollama está pensando...</div>';
+        
+        const text = document.getElementById('text-input').value;
+        let context = "";
+        if (text && currentData.original) {
+            const idx = text.toLowerCase().indexOf(currentData.original.toLowerCase());
+            if (idx !== -1) {
+                const start = Math.max(0, idx - 50);
+                const end = Math.min(text.length, idx + currentData.original.length + 50);
+                context = text.substring(start, end).replace(/\\n/g, ' ');
+            }
+        }
+        
+        const payload = {
+            word: currentData.original,
+            context: context.trim(),
+            source_lang: srcSel.value,
+            target_lang: tgtSel.value
+        };
+        
+        const url = action === 'explain' ? '/api/ai/explain/' : '/api/ai/examples/';
+        
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+            body: JSON.stringify(payload)
+        })
+        .then(r => r.json())
+        .then(data => {
+            btnContainer.style.opacity = '1';
+            btnContainer.style.pointerEvents = 'auto';
+            if (data.error) {
+                resContainer.innerHTML = `<div style="color:var(--red); font-size:12px;">Error: ${data.error}</div>`;
+                return;
+            }
+            
+            let html = '';
+            if (action === 'explain') {
+                html += '<div class="def-section-title">✨ Explicación IA</div>';
+                if (data.phonetic) html += `<div class="def-phonetic" style="margin-bottom:8px;">${data.phonetic}</div>`;
+                
+                if (data.explanation_sentences && data.explanation_sentences.length > 0) {
+                    data.explanation_sentences.forEach(sent => {
+                        html += `
+                        <div class="def-example-block accordion-explain" style="margin-bottom:10px; cursor:pointer; background: transparent; border-left: 2px solid var(--lilac);" onclick="const t = this.querySelector('.ex-trans'); const h = this.querySelector('.ex-hint'); if(t.style.display === 'none') { t.style.display = 'block'; h.style.display = 'none'; } else { t.style.display = 'none'; h.style.display = 'inline'; }">
+                            <div style="font-weight: 500; display: inline; color: var(--ink);">${sent.original}</div>
+                            <span class="ex-hint" style="font-size: 11px; color: var(--lilac-dk); font-weight: 700; margin-left: 8px; text-transform: uppercase; float: right;">👀 Ver</span>
+                            <div class="ex-trans" style="font-size:14px; color:var(--ink-2); margin-top:8px; font-style:normal; display:none; padding-top: 8px; border-top: 1px dashed rgba(17,17,24,0.15);">${sent.translation}</div>
+                        </div>`;
+                    });
+                } else if (data.translation) {
+                    html += `
+                    <div class="def-example-block accordion-explain" style="margin-bottom:10px; cursor:pointer;" onclick="const t = this.querySelector('.ex-trans'); const h = this.querySelector('.ex-hint'); if(t.style.display === 'none') { t.style.display = 'block'; h.style.display = 'none'; } else { t.style.display = 'none'; h.style.display = 'inline'; }">
+                        <div style="font-weight: 500; display: inline;">${data.explanation || 'Sin explicación.'}</div>
+                        <span class="ex-hint" style="font-size: 11px; color: var(--lilac-dk); font-weight: 700; margin-left: 8px; text-transform: uppercase; float: right;">👀 Ver</span>
+                        <div class="ex-trans" style="font-size:14px; color:var(--ink-2); margin-top:8px; font-style:normal; display:none; padding-top: 8px; border-top: 1px dashed rgba(17,17,24,0.15);">${data.translation}</div>
+                    </div>`;
+                } else {
+                    html += `<div class="def-meaning-text" style="color: var(--ink);">${data.explanation || 'Sin explicación.'}</div>`;
+                }
+            } else {
+                html += '<div class="def-section-title">🌟 Ejemplos IA</div>';
+                if (data.examples && data.examples.length > 0) {
+                    data.examples.forEach(ex => {
+                        html += `
+                        <div class="def-example-block" style="margin-bottom:10px; cursor:pointer;" onclick="const t = this.querySelector('.ex-trans'); const h = this.querySelector('.ex-hint'); if(t.style.display === 'none') { t.style.display = 'block'; h.style.display = 'none'; } else { t.style.display = 'none'; h.style.display = 'inline'; }">
+                            <div style="font-weight: 500; display: inline;">${ex.sentence}</div>
+                            <span class="ex-hint" style="font-size: 11px; color: var(--lilac-dk); font-weight: 700; margin-left: 8px; text-transform: uppercase; float: right;">👀 Ver</span>
+                            <div class="ex-trans" style="font-size:14px; color:var(--ink-2); margin-top:8px; font-style:normal; display:none; padding-top: 8px; border-top: 1px dashed rgba(17,17,24,0.15);">${ex.translation}</div>
+                        </div>`;
+                    });
+                } else {
+                    html += '<div class="def-meaning-text">No se generaron ejemplos.</div>';
+                }
+            }
+            resContainer.innerHTML = html;
+        })
+        .catch(err => {
+            btnContainer.style.opacity = '1';
+            btnContainer.style.pointerEvents = 'auto';
+            resContainer.innerHTML = '<div style="color:var(--red); font-size:12px;">Error de conexión con Ollama</div>';
+        });
     }
 
-    // --- Persistencia de Idiomas ---
-    const sourceSelect = document.getElementById('source-lang-select');
-    const targetSelect = document.getElementById('target-lang-select');
+    // ── UTILS ─────────────────────────
+    function getCookie(name) {
+        for (const c of document.cookie.split(';')) {
+            const [k, v] = c.trim().split('=');
+            if (k === name) return decodeURIComponent(v);
+        }
+        return null;
+    }
 
-    // Cargar del localStorage
-    if (localStorage.getItem('source-lang')) sourceSelect.value = localStorage.getItem('source-lang');
-    if (localStorage.getItem('target-lang')) targetSelect.value = localStorage.getItem('target-lang');
-
-    // Guardar al cambiar
-    sourceSelect.onchange = () => localStorage.setItem('source-lang', sourceSelect.value);
-    targetSelect.onchange = () => localStorage.setItem('target-lang', targetSelect.value);
+    function showToast(msg, bg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.style.background = bg || 'var(--ink)';
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 2500);
+    }
 </script>
-
 </body>
 </html>

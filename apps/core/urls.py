@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.home import home
-from .views.api_views import define_word, save_word, ocr_upload
+from .views.api_views import define_word, save_word, ocr_upload, explain_context, generate_examples
 from .views.review_views import review_home, flashcards_due, review_action
 
 app_name = 'core'
@@ -13,4 +13,6 @@ urlpatterns = [
     path('review/', review_home, name='review_home'),
     path('api/due/', flashcards_due, name='flashcards_due'),
     path('api/review/<int:card_id>/', review_action, name='review_action'),
+    path('api/ai/explain/', explain_context, name='ai_explain'),
+    path('api/ai/examples/', generate_examples, name='ai_examples'),
 ]

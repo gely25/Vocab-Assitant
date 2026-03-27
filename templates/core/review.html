@@ -1,324 +1,462 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VocabAssistant | Modo Repaso</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #94a3b8;
-            --accent: #818cf8;
-            --accent-glow: rgba(129, 140, 248, 0.4);
-            --bg: #1a1a1a;
-            --sidebar-bg: #222222;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --border: #333333;
-            --highlight: rgba(129, 140, 248, 0.15);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VocabAssistant | Repaso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
+:root {
+  --ink:       #111118;
+  --ink-2:     #60607A;
+  --ink-3:     #AEAEC5;
+  --paper:     #FAFAF7;
+  --surface:   #F2F2EE;
+  --surface-2: #E8E8E2;
+  --lilac:     #C4B5FD;
+  --lilac-dk:  #7C3AED;
+  --lilac-lt:  #EDE9FE;
+  --green:     #1DB87A;
+  --green-lt:  #DCFAED;
+  --red:       #E63F3F;
+  --red-lt:    #FDEAEA;
+  --amber:     #F59E0B;
+  --amber-lt:  #FEF3C7;
+  --border:    rgba(17,17,24,0.09);
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+}
 
-        /* Top Bar Unified */
-        .top-navbar {
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg);
-            width: 100%;
-        }
+html, body {
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Figtree', sans-serif;
+}
 
-        .logo {
-            font-weight: 800;
-            letter-spacing: 0.15em;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        .nav-center {
-            display: flex;
-            background: #252525;
-            padding: 4px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
+/* ── TOPBAR ─────────────────────────── */
+.topbar {
+  display: flex; align-items: center;
+  padding: 0 20px; height: 52px;
+  border-bottom: 1.5px solid var(--border);
+  background: var(--paper); gap: 12px;
+  flex-shrink: 0; position: relative; z-index: 10;
+}
+.logo {
+  font-family: 'Fraunces', serif; font-weight: 900;
+  font-size: 16px; letter-spacing: -0.03em; color: var(--ink);
+  display: flex; align-items: center; gap: 7px;
+}
+.logo-mark {
+  width: 24px; height: 24px; background: var(--lilac);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-family: 'Fraunces', serif; font-weight: 900;
+  border: 1.5px solid rgba(17,17,24,0.15);
+}
+.mode-switcher {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  display: flex; background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: var(--r-xl);
+  padding: 3px; gap: 2px;
+}
+.mode-btn {
+  padding: 5px 20px; border-radius: 20px;
+  font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+  background: transparent; color: var(--ink-2);
+  font-family: 'Figtree', sans-serif; transition: all .18s;
+  text-decoration: none; display: flex; align-items: center; gap: 6px;
+}
+.mode-btn.active { background: var(--ink); color: var(--lilac); }
+.mode-btn:not(.active):hover { background: var(--surface-2); color: var(--ink); }
+.topbar-right { margin-left: auto; }
+.icon-btn {
+  width: 32px; height: 32px; border: 1.5px solid var(--border);
+  border-radius: var(--r-sm); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink-2); transition: all .15s;
+}
+.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
 
-        .nav-btn {
-            padding: 8px 20px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
+/* ── REPASO LAYOUT ─────────────────── */
+.repaso-wrap {
+  flex: 1; overflow: hidden;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+}
 
-        .nav-btn.active {
-            background: #333333;
-            color: #ffffff;
-            border: 1px solid #444444;
-        }
+/* Progress */
+.progress-section {
+  padding: 24px 48px 0; flex-shrink: 0;
+}
+.progress-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.progress-label { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.progress-count { font-size: 12px; font-weight: 700; color: var(--ink); }
+.progress-track {
+  height: 6px; background: var(--surface-2);
+  border-radius: 99px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--ink);
+  border-radius: 99px; transition: width .4s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
 
-        .review-container {
-            max-width: 700px;
-            width: 100%;
-            margin: 60px auto;
-            padding: 0 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* Stats */
+.stats-row {
+  display: flex; gap: 8px;
+  padding: 14px 48px 0; flex-shrink: 0;
+}
+.stat-chip {
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; gap: 5px;
+}
+.stat-green { background: var(--green-lt); color: var(--green); }
+.stat-red   { background: var(--red-lt);   color: var(--red); }
+.stat-amber { background: var(--amber-lt); color: var(--amber); }
 
-        #progress {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-        }
+/* Card stage */
+.card-stage {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 28px; padding: 24px 48px 16px;
+  width: 100%; max-width: 660px; margin: 0 auto;
+}
 
-        /* Card Design */
-        .card {
-            width: 100%;
-            background: var(--sidebar-bg);
-            border-radius: 24px;
-            padding: 60px 40px;
-            border: 1px solid var(--border);
-            position: relative;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
+/* 3D flip card */
+.flip-card-wrapper { width: 100%; perspective: 1200px; }
+.flip-card {
+  width: 100%; height: 220px;
+  position: relative; transform-style: preserve-3d;
+  transition: transform .55s cubic-bezier(.4,0,.2,1); cursor: pointer;
+}
+.flip-card.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: var(--r-xl); border: 1.5px solid var(--border);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 32px;
+}
+.card-front { background: var(--paper); }
+.card-back  { background: var(--ink); transform: rotateY(180deg); }
 
-        .card.is-flipped { transform: rotateY(180deg); }
+.card-tag {
+  position: absolute; top: 16px; left: 20px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.card-front .card-tag { color: var(--ink-3); }
+.card-back  .card-tag { color: rgba(196,181,253,0.5); }
 
-        .card-face {
-            position: absolute;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            padding: 40px;
-            text-align: center;
-        }
+.card-word {
+  font-family: 'Fraunces', serif; font-size: 52px;
+  font-weight: 700; letter-spacing: -0.03em; line-height: 1; text-align: center;
+}
+.card-front .card-word { color: var(--ink); }
+.card-back  .card-word { color: var(--lilac); }
 
-        .card-back { transform: rotateY(180deg); }
+.card-context {
+  font-size: 13px; color: var(--ink-3); margin-top: 10px;
+  font-style: italic; text-align: center;
+}
+.card-back .card-context { color: rgba(255,255,255,0.3); }
 
-        .word { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
-        .phonetic { color: var(--text-muted); font-size: 1.1rem; }
+.card-hint {
+  position: absolute; bottom: 14px; right: 18px;
+  font-size: 11px; font-weight: 600; color: var(--ink-3);
+}
+.card-back .card-hint { color: rgba(255,255,255,0.22); }
+.card-phonetic { font-size: 14px; color: var(--ink-3); margin-top: 6px; font-style: italic; }
 
-        .translation-text { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 15px; }
-        .definition-text { font-size: 1.1rem; color: #ccc; margin-bottom: 20px; line-height: 1.5; max-width: 80%; }
-        .example-text { font-style: italic; color: var(--text-muted); border-left: 2px solid #444; padding-left: 20px; font-size: 1rem; }
+/* Action zone */
+.action-zone {
+  width: 100%; display: flex;
+  flex-direction: column; align-items: center; gap: 12px;
+}
 
-        /* Controls Block */
-        .controls {
-            margin-top: 40px;
-            display: none;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 12px;
-            width: 100%;
-            animation: fadeIn 0.4s ease-out;
-        }
+.btn-reveal {
+  width: 100%; padding: 18px; border-radius: var(--r-xl);
+  border: 1.5px solid var(--ink); background: var(--ink);
+  color: var(--lilac); font-family: 'Fraunces', serif;
+  font-size: 20px; font-weight: 700; cursor: pointer;
+  transition: all .15s; letter-spacing: -0.01em;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-reveal:hover { background: #2A2A38; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(17,17,24,0.18); }
 
-        .btn-q {
-            padding: 16px 5px;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 14px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
+.response-group { display: none; width: 100%; gap: 10px; }
+.response-group.visible { display: flex; }
 
-        .btn-q:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.btn-resp-no {
+  flex: 1; padding: 13px 10px; border-radius: var(--r-lg);
+  border: 1.5px solid #EDCFCF; background: var(--red-lt); color: var(--red);
+  font-family: 'Figtree', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .15s; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.btn-resp-no:hover { background: #FAD5D5; transform: translateY(-1px); }
 
-        .q0 { background: #ef4444; }
-        .q1 { background: #f87171; }
-        .q2 { background: #fb923c; }
-        .q3 { background: #fbbf24; }
-        .q4 { background: #10b981; }
-        .q5 { background: #059669; }
+.btn-resp-almost {
+  flex: 1.3; padding: 13px 10px; border-radius: var(--r-lg);
+  border: 1.5px solid #F3D9A0; background: var(--amber-lt); color: var(--amber);
+  font-family: 'Figtree', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all .15s; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.btn-resp-almost:hover { background: #fde9a0; transform: translateY(-1px); }
 
-        .q-label { font-size: 0.65rem; opacity: 0.9; font-weight: 500; }
+.btn-resp-yes {
+  flex: 2; padding: 13px 10px; border-radius: var(--r-lg);
+  border: 1.5px solid #8FDFBA; background: var(--green); color: #fff;
+  font-family: 'Figtree', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: all .15s; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.btn-resp-yes:hover { background: #18a56e; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,184,122,0.3); }
 
-        .empty-state {
-            padding: 60px;
-            text-align: center;
-            background: var(--sidebar-bg);
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            width: 100%;
-        }
-        .empty-state h2 { font-size: 2rem; margin-bottom: 15px; color: #fff; }
-        .empty-state p { color: var(--text-muted); margin-bottom: 30px; }
+.resp-emoji { font-size: 20px; display: flex; align-items: center; justify-content: center; height: 22px; }
+.resp-label { font-size: 11px; font-weight: 600; opacity: 0.7; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+.btn-skip {
+  font-size: 12px; font-weight: 600; color: var(--ink-3);
+  background: none; border: none; cursor: pointer; padding: 4px 8px;
+  font-family: 'Figtree', sans-serif; transition: color .15s;
+}
+.btn-skip:hover { color: var(--ink-2); }
+
+/* Footer */
+.repaso-footer {
+  padding: 12px 48px 20px;
+  display: flex; justify-content: center; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.footer-label { font-size: 12px; color: var(--ink-3); }
+.footer-label strong { color: var(--ink-2); font-weight: 700; }
+
+/* Empty state */
+.empty-card {
+  width: 100%; padding: 60px 40px;
+  background: var(--paper); border-radius: var(--r-xl);
+  border: 1.5px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; gap: 16px;
+}
+.empty-icon { font-size: 40px; }
+.empty-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--ink); }
+.empty-text { font-size: 14px; color: var(--ink-3); line-height: 1.6; max-width: 280px; }
+.btn-go-read {
+  padding: 10px 24px; border-radius: var(--r-md);
+  border: 1.5px solid var(--ink); background: var(--ink);
+  color: var(--lilac); font-family: 'Figtree', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: all .15s; display: inline-block;
+}
+.btn-go-read:hover { background: #2a2a38; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn .3s ease-out; }
+</style>
 </head>
 <body>
 
-<nav class="top-navbar">
-    <div class="logo">VOCABASSISTANT</div>
-    
-    <div class="nav-center">
-        <a href="/" class="nav-btn">lectura</a>
-        <a href="/review/" class="nav-btn active">repaso</a>
-    </div>
-
-    <div class="nav-right">
-        <div class="icon-btn" style="padding: 8px 10px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-        </div>
-    </div>
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="logo">
+    <div class="logo-mark">V</div>
+    VocabAssistant
+  </div>
+  <div class="mode-switcher">
+    <a href="/" class="mode-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      lectura
+    </a>
+    <a href="/review/" class="mode-btn active">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      repaso
+    </a>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" title="Ajustes">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M3 3l1 1M11 11l1 1M11 3l-1 1M4 11l-1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
 </nav>
 
-<div class="review-container">
-    <div id="progress">Cargando flashcards...</div>
+<!-- REPASO -->
+<div class="repaso-wrap">
 
-    <div id="flashcard-container" style="width: 100%;">
-        <!-- La tarjeta se insertará aquí via JS -->
+  <div class="progress-section" id="progress-section">
+    <div class="progress-meta">
+      <span class="progress-label">Progreso de sesión</span>
+      <span class="progress-count" id="progress-count">–</span>
     </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
 
-    <div class="controls" id="controls">
-        <button class="btn-q q0" onclick="handleReview(0)">0<span class="q-label">Olvido</span></button>
-        <button class="btn-q q1" onclick="handleReview(1)">1<span class="q-label">Error</span></button>
-        <button class="btn-q q2" onclick="handleReview(2)">2<span class="q-label">Duda</span></button>
-        <button class="btn-q q3" onclick="handleReview(3)">3<span class="q-label">Bien</span></button>
-        <button class="btn-q q4" onclick="handleReview(4)">4<span class="q-label">Fácil</span></button>
-        <button class="btn-q q5" onclick="handleReview(5)">5<span class="q-label">Perfecto</span></button>
+  <div class="stats-row">
+    <div class="stat-chip stat-green">✓ <span id="stat-ok">0</span> sabidas</div>
+    <div class="stat-chip stat-amber">≈ <span id="stat-almost">0</span> casi</div>
+    <div class="stat-chip stat-red">✗ <span id="stat-no">0</span> repasar</div>
+  </div>
+
+  <div class="card-stage" id="card-stage">
+    <div class="empty-card fade-in">
+      <div class="empty-icon">⏳</div>
+      <div class="empty-title">Cargando…</div>
+      <div class="empty-text">Obteniendo tus tarjetas pendientes.</div>
     </div>
+  </div>
+
+  <div class="repaso-footer" id="repaso-footer">
+    <span class="footer-label" id="footer-remaining"></span>
+  </div>
+
 </div>
 
 <script>
     let cards = [];
     let currentIndex = 0;
+    let stats = { ok: 0, almost: 0, no: 0 };
+    let totalCards = 0;
 
-    // Cargar tarjetas pendientes
     fetch('/api/due/')
-        .then(res => res.json())
+        .then(r => r.json())
         .then(data => {
-            cards = data.flashcards;
+            cards = data.flashcards || [];
+            totalCards = cards.length;
             updateUI();
+        })
+        .catch(() => {
+            document.getElementById('card-stage').innerHTML = `
+              <div class="empty-card fade-in">
+                <div class="empty-icon">⚠️</div>
+                <div class="empty-title">Error de conexión</div>
+                <div class="empty-text">No se pudo cargar las tarjetas. Recarga la página.</div>
+              </div>`;
         });
 
     function updateUI() {
-        const container = document.getElementById("flashcard-container");
-        const progress = document.getElementById("progress");
-        const controls = document.getElementById("controls");
+        const stage = document.getElementById('card-stage');
+        const filled = Math.min(currentIndex, totalCards);
+        document.getElementById('progress-count').textContent = `${filled} / ${totalCards}`;
+        document.getElementById('progress-fill').style.width = totalCards > 0 ? `${(filled / totalCards) * 100}%` : '0%';
+        document.getElementById('footer-remaining').innerHTML = `<strong>${Math.max(0, totalCards - currentIndex)}</strong> tarjetas restantes`;
 
         if (currentIndex >= cards.length) {
-            progress.textContent = "Sesión Completada";
-            container.innerHTML = `
-                <div class="empty-state">
-                    <h2>🎉 ¡Increíble!</h2>
-                    <p>Has terminado todas tus revisiones de hoy. Tu vocabulario está creciendo.</p>
-                    <a href="/" class="nav-btn active" style="display:inline-block; text-decoration:none;">Volver al modo lectura</a>
-                </div>
-            `;
-            controls.style.display = "none";
+            showComplete(stage);
             return;
         }
 
         const card = cards[currentIndex];
-        progress.textContent = `TARJETA ${currentIndex + 1} DE ${cards.length}`;
-        
-        container.innerHTML = `
-            <div class="card" id="card" onclick="flipCard()">
-                <div class="card-face card-front">
-                    <div class="word">${card.word}</div>
-                    <div class="phonetic">${card.phonetic || ''}</div>
-                    <p style="margin-top: 60px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.1em; font-weight: 700;">CLICK PARA VOLTEAR</p>
-                </div>
-                <div class="card-face card-back">
-                    <div class="translation-text">${card.translation}</div>
-                    <div class="definition-text">${card.definition || ''}</div>
-                    <div class="example-text">${card.example ? '“' + card.example + '”' : ''}</div>
-                </div>
+        stage.innerHTML = `
+          <div class="flip-card-wrapper fade-in">
+            <div class="flip-card" id="flip-card" onclick="flipCard()">
+              <div class="card-face card-front">
+                <div class="card-tag">${card.source_lang || 'en'}</div>
+                <div class="card-word">${escHtml(card.word)}</div>
+                ${card.phonetic ? `<div class="card-phonetic">${escHtml(card.phonetic)}</div>` : ''}
+                <div class="card-hint">toca para revelar ↓</div>
+              </div>
+              <div class="card-face card-back">
+                <div class="card-tag">${card.target_lang || 'es'}</div>
+                <div class="card-word">${escHtml(card.translation)}</div>
+                ${card.definition ? `<div class="card-context">${escHtml(card.definition.substring(0, 80))}${card.definition.length > 80 ? '…' : ''}</div>` : ''}
+                <div class="card-hint">¿lo sabías?</div>
+              </div>
             </div>
-        `;
-        controls.style.display = "none";
+          </div>
+
+          <div class="action-zone">
+            <button class="btn-reveal" id="btn-reveal" onclick="flipCard()">
+              Revelar respuesta
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v12M3 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="response-group" id="response-group">
+              <button class="btn-resp-no" onclick="respond(1)">
+                <span class="resp-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+                no lo sabía
+                <span class="resp-label">repasar pronto</span>
+              </button>
+              <button class="btn-resp-almost" onclick="respond(3)">
+                <span class="resp-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M5 8h14"/></svg></span>
+                casi
+                <span class="resp-label">repasar mañana</span>
+              </button>
+              <button class="btn-resp-yes" onclick="respond(5)">
+                <span class="resp-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                ¡lo sabía!
+                <span class="resp-label">siguiente tarjeta</span>
+              </button>
+            </div>
+            <button class="btn-skip" onclick="skipCard()">saltar tarjeta →</button>
+          </div>`;
+    }
+
+    function showComplete(stage) {
+        document.getElementById('progress-fill').style.width = '100%';
+        document.getElementById('footer-remaining').innerHTML = '<strong>0</strong> tarjetas restantes';
+        stage.innerHTML = `
+          <div class="empty-card fade-in">
+            <div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="empty-title">¡Sesión completa!</div>
+            <div class="empty-text">Has revisado todas tus tarjetas de hoy. Tu vocabulario está creciendo.</div>
+            <a href="/" class="btn-go-read">← Volver a lectura</a>
+          </div>`;
     }
 
     function flipCard() {
-        const cardElement = document.getElementById("card");
-        if (!cardElement.classList.contains('is-flipped')) {
-            cardElement.classList.add('is-flipped');
-            document.getElementById("controls").style.display = "grid";
-        }
+        const card = document.getElementById('flip-card');
+        if (!card || card.classList.contains('flipped')) return;
+        card.classList.add('flipped');
+        document.getElementById('btn-reveal').style.display = 'none';
+        document.getElementById('response-group').classList.add('visible');
     }
 
-    function handleReview(quality) {
+    function respond(quality) {
         const card = cards[currentIndex];
-        
+        if (quality >= 5) stats.ok++;
+        else if (quality >= 3) stats.almost++;
+        else stats.no++;
+        document.getElementById('stat-ok').textContent = stats.ok;
+        document.getElementById('stat-almost').textContent = stats.almost;
+        document.getElementById('stat-no').textContent = stats.no;
+
         fetch(`/api/review/${card.id}/`, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ quality: quality })
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+            body: JSON.stringify({ quality })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                currentIndex++;
-                updateUI();
-            }
-        });
+        .then(r => r.json())
+        .then(data => { if (data.status === 'ok') { currentIndex++; updateUI(); } })
+        .catch(() => { currentIndex++; updateUI(); });
     }
+
+    function skipCard() { currentIndex++; updateUI(); }
 
     function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+        for (const c of document.cookie.split(';')) {
+            const [k, v] = c.trim().split('=');
+            if (k === name) return decodeURIComponent(v);
         }
-        return cookieValue;
+        return null;
+    }
+
+    function escHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 </script>
-</body>
-</html>
-
 </body>
 </html>

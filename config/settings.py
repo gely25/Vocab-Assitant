@@ -116,3 +116,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Ollama AI Local Configuration
+OLLAMA_API_URL = "http://127.0.0.1:11434/api/generate"
+OLLAMA_MODEL = "llama3.2:latest"
