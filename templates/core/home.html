@@ -6,6 +6,7 @@
 <title>VocabAssistant | Lectura</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -450,18 +451,13 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     </div>
 
     <!-- LOADING SKELETON -->
-    <div id="sidebar-loading" style="padding: 20px 22px;">
-      <div class="skeleton-block sk-title"></div>
-      <div class="skeleton-block sk-pill"></div>
-      <div class="skeleton-block sk-line w80"></div>
-      <div class="skeleton-block sk-line w90"></div>
-      <div class="skeleton-block sk-line w60"></div>
-      <div class="skeleton-block sk-line w80" style="margin-top:20px;"></div>
-      <div class="skeleton-block sk-line w90"></div>
+    <div id="sidebar-loading" style="display:none; flex:1; flex-direction:column; align-items:center; justify-content:center; padding: 40px 22px;">
+      <dotlottie-player src="/static/core/loading.lottie" background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></dotlottie-player>
+      <div style="font-size: 14px; font-weight: 600; color: var(--ink-3); margin-top: -15px;">Buscando...</div>
     </div>
 
     <!-- FILLED STATE -->
-    <div id="word-details" style="display:none; display:none; flex:1; flex-direction:column; overflow:hidden;">
+    <div id="word-details" style="display:none; flex:1; flex-direction:column; overflow:hidden;">
       <div class="def-top">
         <div class="def-panel-label">definición</div>
         <div class="def-word-display" id="side-word"></div>
@@ -778,7 +774,7 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         if (!currentData) return;
         const btn = document.getElementById('save-btn');
         showToast('Guardando…');
-        const payload = { ...currentData, source_lang: srcSel.value, target_lang: tgtSel.value };
+        const payload = { ...currentData, word: currentData.original, source_lang: srcSel.value, target_lang: tgtSel.value };
         fetch('/save/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
@@ -806,7 +802,11 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         btnContainer.style.opacity = '0.5';
         btnContainer.style.pointerEvents = 'none';
         resContainer.style.display = 'block';
-        resContainer.innerHTML = '<div style="font-size:12px; color:var(--ink-3); font-style:italic;">✨ Ollama está pensando...</div>';
+        resContainer.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 20px 0;">
+                <dotlottie-player src="/static/core/loading.lottie" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></dotlottie-player>
+                <div style="font-size:12px; font-weight: 500; color:var(--ink-3); margin-top: -5px;">✨ Ollama está pensando...</div>
+            </div>`;
         
         const text = document.getElementById('text-input').value;
         let context = "";

@@ -70,38 +70,45 @@ def save_word(request):
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
     try:
+        if not request.body:
+            return JsonResponse({'error': 'Cuerpo de la petición vacío'}, status=400)
         body = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({'error': 'JSON inválido'}, status=400)
+        return JsonResponse({'error': 'JSON inválido en petición'}, status=400)
 
-    word = body.get('word', '').strip()
-    translation = body.get('translation', '').strip() # CORRECCIÓN: Usar el valor del body
+    # Evitamos error si get devuelve None
+    word = str(body.get('word') or body.get('original') or '').strip()
+    translation = str(body.get('translation') or '').strip()
     
     if not word:
-        return JsonResponse({'error': 'Palabra vacía'}, status=400)
+        return JsonResponse({'error': 'Falta la palabra original para guardar.'}, status=400)
+        
+    try:
+        card, created = FlashcardService.create_flashcard(
+            word=word,
+            translation=translation,
+            definition=str(body.get('definition') or ''),
+            example=str(body.get('context') or body.get('example') or ''),
+            example_2=str(body.get('example_2') or ''),
+            synonyms=str(body.get('synonyms') or ''),
+            phonetic=str(body.get('phonetic') or ''),
+            source_lang=str(body.get('source_lang', 'en') or 'en'),
+            target_lang=str(body.get('target_lang', 'es') or 'es')
+        )
 
-    card, created = FlashcardService.create_flashcard(
-        word=word,
-        translation=translation,
-        definition=body.get('definition', ''),
-        example=body.get('example', ''),
-        example_2=body.get('example_2', ''),
-        synonyms=body.get('synonyms', ''),
-        phonetic=body.get('phonetic', ''),
-        source_lang=body.get('source_lang', 'en'), # Guardar idiomas
-        target_lang=body.get('target_lang', 'es')
-    )
+        if not created:
+            return JsonResponse({
+                'status': 'duplicate',
+                'message': f'"{word}" ya está en tus flashcards'
+            })
 
-    if not created:
         return JsonResponse({
-            'status': 'duplicate',
-            'message': f'"{word}" ya está en tus flashcards'
+            'status': 'ok',
+            'message': f'"{word}" guardado en flashcards ✓'
         })
-
-    return JsonResponse({
-        'status': 'ok',
-        'message': f'"{word}" guardado en flashcards ✓'
-    })
+    except Exception as e:
+        print("Error saving flashcard:", e)
+        return JsonResponse({'error': 'Error interno al guardar: ' + str(e)}, status=500)
 
 def explain_context(request):
     """Explica el matiz y pronunciación de una palabra en su contexto"""
