@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QApplication, QMessageBox
 from PyQt6.QtCore import QObject, pyqtSignal
 
 class HoverWorker(QObject):
-    word_data_ready = pyqtSignal(dict, object)  # word_data, QPoint
+    word_data_ready = pyqtSignal(dict, object, bool)  # word_data, QPoint, pinned
 
 # Configurar logs para depuración
 log_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "debug.log")
@@ -46,7 +46,7 @@ class VocabAssistantDesktop:
         
         # Conectar señales del área de transcripción (SelectableCaptions)
         self.overlay.captions_view.word_hovered.connect(self.handle_hover)
-        self.overlay.captions_view.phrase_selected.connect(self.handle_hover)
+        self.overlay.captions_view.phrase_selected.connect(self.handle_phrase_hover)
         self.overlay.captions_view.word_clicked.connect(self.handle_mining_click)
         
         # Guardar desde el tooltip
@@ -64,40 +64,62 @@ class VocabAssistantDesktop:
         self.overlay.set_mining_mode(self.mining_mode)
 
     def handle_hover(self, word, pos):
-        # Cancelar petición anterior incrementando el ID
+        """Hover = preview mode (auto-hides)"""
         self._hover_request_id += 1
         my_id = self._hover_request_id
-        
-        # Cache hit: mostrar instantáneamente sin red
         cache_key = f"{word}:{self.stt.current_lang}"
         if cache_key in self._translation_cache:
-            self.overlay.custom_tooltip.show_data(self._translation_cache[cache_key], pos)
+            self.overlay.custom_tooltip.show_data(self._translation_cache[cache_key], pos, pinned=False)
             return
-        
-        # Cache miss: mostrar loading y lanzar hilo
-        self.overlay.custom_tooltip.show_loading(word, pos)
+        self.overlay.custom_tooltip.show_loading(word, pos, pinned=False)
         source_lang = self.stt.current_lang
         def fetch():
             try:
                 data = self.api.get_definition(word.lower().strip(), source_lang=source_lang)
-                # Si llegó una petición más nueva, descartar este resultado
                 if my_id != self._hover_request_id:
                     return
                 if data:
                     data['word'] = word
-                    self._translation_cache[cache_key] = data  # guardar en caché
-                    self.hover_worker.word_data_ready.emit(data, pos)
+                    self._translation_cache[cache_key] = data
+                    self.hover_worker.word_data_ready.emit(data, pos, False)
                 else:
                     if my_id == self._hover_request_id:
-                        self.hover_worker.word_data_ready.emit({'original': word, 'translation': '(No encontrado)'}, pos)
+                        self.hover_worker.word_data_ready.emit({'original': word, 'translation': '(No encontrado)'}, pos, False)
             except Exception as e:
                 print(f"Error en hover: {e}")
                 if my_id == self._hover_request_id:
-                    self.hover_worker.word_data_ready.emit({'original': word, 'translation': '(Sin conexión)'}, pos)
+                    self.hover_worker.word_data_ready.emit({'original': word, 'translation': '(Sin conexión)'}, pos, False)
         threading.Thread(target=fetch, daemon=True).start()
 
-    def show_hover_tooltip(self, word_data, pos):
-        self.overlay.custom_tooltip.show_data(word_data, pos)
+    def handle_phrase_hover(self, phrase, pos):
+        """Selection = pinned interactive modal with translation only"""
+        self._hover_request_id += 1
+        my_id = self._hover_request_id
+        cache_key = f"{phrase}:{self.stt.current_lang}"
+        if cache_key in self._translation_cache:
+            self.overlay.custom_tooltip.show_data(self._translation_cache[cache_key], pos, pinned=True)
+            return
+        self.overlay.custom_tooltip.show_loading(phrase, pos, pinned=True)
+        source_lang = self.stt.current_lang
+        def fetch():
+            try:
+                data = self.api.get_definition(phrase.strip(), source_lang=source_lang)
+                if my_id != self._hover_request_id:
+                    return
+                if data:
+                    data['word'] = phrase
+                    self._translation_cache[cache_key] = data
+                    self.hover_worker.word_data_ready.emit(data, pos, True)
+                else:
+                    if my_id == self._hover_request_id:
+                        self.hover_worker.word_data_ready.emit({'original': phrase, 'translation': '(No encontrado)', 'type': 'phrase'}, pos, True)
+            except Exception as e:
+                if my_id == self._hover_request_id:
+                    self.hover_worker.word_data_ready.emit({'original': phrase, 'translation': '(Sin conexión)', 'type': 'phrase'}, pos, True)
+        threading.Thread(target=fetch, daemon=True).start()
+
+    def show_hover_tooltip(self, word_data, pos, pinned):
+        self.overlay.custom_tooltip.show_data(word_data, pos, pinned=pinned)
 
     def handle_save(self, word_data):
         """Guarda la palabra del tooltip como flashcard"""

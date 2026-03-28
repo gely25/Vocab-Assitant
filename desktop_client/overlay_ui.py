@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer
 from PyQt6.QtGui import QColor, QFont, QTextCursor
 
 class TranslationTooltip(QFrame):
-    save_requested = pyqtSignal(dict)   # emits full word_data dict
+    save_requested = pyqtSignal(dict)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -16,6 +16,7 @@ class TranslationTooltip(QFrame):
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self._word_data = {}
+        self._pinned = False
 
         self.setStyleSheet("""
             QFrame {
@@ -23,39 +24,39 @@ class TranslationTooltip(QFrame):
                 border: 1px solid #3A3A3C;
                 border-radius: 12px;
             }
+            QLabel#pin_hint { color: #555; font-size: 11px; }
             QLabel#word_lbl  { color: #E0E0E0; font-size: 15px; font-weight: 700; }
             QLabel#phone_lbl { color: #8E8E93; font-size: 12px; font-style: italic; }
-            QLabel#trans_lbl { color: #F7B731; font-size: 15px; font-weight: 700; }
+            QLabel#trans_lbl { color: #F7B731; font-size: 16px; font-weight: 700; }
             QLabel#def_lbl   { color: #AEAEB2; font-size: 12px; }
             QPushButton#save_btn {
-                background-color: #8B6DD0;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                padding: 6px 16px;
-                font-size: 13px;
-                font-weight: 600;
+                background-color: #8B6DD0; color: white; border: none;
+                border-radius: 8px; padding: 6px 16px;
+                font-size: 13px; font-weight: 600;
             }
             QPushButton#save_btn:hover { background-color: #A98BE8; }
+            QPushButton#save_btn:disabled { background-color: #444; color: #888; }
         """)
 
         outer = QVBoxLayout(self)
-        outer.setContentsMargins(16, 14, 16, 14)
-        outer.setSpacing(6)
+        outer.setContentsMargins(16, 12, 16, 14)
+        outer.setSpacing(5)
 
-        # Row 1: word + close btn
-        row1 = QHBoxLayout()
+        # Header row: word + close
+        self._header_row = QWidget()
+        row1 = QHBoxLayout(self._header_row)
+        row1.setContentsMargins(0, 0, 0, 0)
         self.word_lbl = QLabel()
         self.word_lbl.setObjectName("word_lbl")
         row1.addWidget(self.word_lbl, 1)
-        close = QLabel("✕")
-        close.setStyleSheet("color:#555; font-size:12px;")
-        close.setCursor(Qt.CursorShape.PointingHandCursor)
-        close.mousePressEvent = lambda e: self.hide()
-        row1.addWidget(close)
-        outer.addLayout(row1)
+        self.close_btn = QLabel("✕")
+        self.close_btn.setStyleSheet("color:#666; font-size:12px;")
+        self.close_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.close_btn.mousePressEvent = lambda e: self._force_close()
+        row1.addWidget(self.close_btn)
+        outer.addWidget(self._header_row)
 
-        # Phonetic (IPA / pinyin)
+        # Phonetic
         self.phone_lbl = QLabel()
         self.phone_lbl.setObjectName("phone_lbl")
         self.phone_lbl.hide()
@@ -64,33 +65,69 @@ class TranslationTooltip(QFrame):
         # Divider
         sep = QFrame()
         sep.setFrameShape(QFrame.Shape.HLine)
-        sep.setStyleSheet("background:#333; margin: 2px 0;")
+        sep.setStyleSheet("background:#333;")
         sep.setFixedHeight(1)
         outer.addWidget(sep)
 
-        # Translation
+        # Translation (main content)
         self.trans_lbl = QLabel()
         self.trans_lbl.setObjectName("trans_lbl")
+        self.trans_lbl.setWordWrap(True)
+        self.trans_lbl.setMaximumWidth(340)
         outer.addWidget(self.trans_lbl)
 
-        # Definition snippet
+        # Definition
         self.def_lbl = QLabel()
         self.def_lbl.setObjectName("def_lbl")
         self.def_lbl.setWordWrap(True)
-        self.def_lbl.setMaximumWidth(320)
+        self.def_lbl.setMaximumWidth(340)
         self.def_lbl.hide()
         outer.addWidget(self.def_lbl)
 
-        # Save button
+        # Hint to click for full view (shown in hover mode)
+        self.pin_hint = QLabel("Click para fijar • Guardar con clic")
+        self.pin_hint.setObjectName("pin_hint")
+        outer.addWidget(self.pin_hint)
+
+        # Save button (hidden in hover mode)
         self.save_btn = QPushButton("＋ Guardar en mis tarjetas")
         self.save_btn.setObjectName("save_btn")
         self.save_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.save_btn.clicked.connect(self._on_save)
+        self.save_btn.hide()
         outer.addWidget(self.save_btn)
 
         self.hide_timer = QTimer()
         self.hide_timer.setSingleShot(True)
-        self.hide_timer.timeout.connect(self.hide)
+        self.hide_timer.timeout.connect(self._auto_hide)
+
+        # Install event filter to detect click-outside
+        QApplication.instance().installEventFilter(self)
+
+    def eventFilter(self, obj, event):
+        from PyQt6.QtCore import QEvent
+        if (self._pinned and self.isVisible() and
+                event.type() == QEvent.Type.MouseButtonPress):
+            if not self.geometry().contains(event.globalPosition().toPoint()):
+                self._force_close()
+        return False
+
+    def _force_close(self):
+        self._pinned = False
+        self.hide_timer.stop()
+        self.hide()
+
+    def _auto_hide(self):
+        if not self._pinned:
+            self.hide()
+
+    def pin(self):
+        """Switch from preview mode to pinned interactive modal."""
+        self._pinned = True
+        self.hide_timer.stop()
+        self.pin_hint.hide()
+        self.save_btn.show()
+        self.adjustSize()
 
     def _on_save(self):
         if self._word_data:
@@ -98,38 +135,67 @@ class TranslationTooltip(QFrame):
             self.save_btn.setText("✓ Guardada")
             self.save_btn.setEnabled(False)
 
-    def show_loading(self, word, global_pos):
+    def show_loading(self, word, global_pos, pinned=False):
+        self._pinned = pinned
         self.hide_timer.stop()
         self._word_data = {}
+        self._header_row.show()
         self.word_lbl.setText(word)
         self.phone_lbl.hide()
         self.trans_lbl.setText("Buscando traducción...")
         self.def_lbl.hide()
         self.save_btn.setText("＋ Guardar en mis tarjetas")
         self.save_btn.setEnabled(False)
+        if pinned:
+            self.pin_hint.hide()
+            self.save_btn.show()
+        else:
+            self.pin_hint.show()
+            self.save_btn.hide()
         self.adjustSize()
         self._reposition(global_pos)
         self.show()
 
-    def show_data(self, word_data, global_pos):
-        self.hide_timer.stop()
+    def show_data(self, word_data, global_pos, pinned=False):
+        if not self.isVisible() and not pinned:
+            return  # User moved away before response arrived
         self._word_data = word_data
-        self.word_lbl.setText(word_data.get('original', word_data.get('word', '')))
-        phonetic = word_data.get('phonetic', '')
-        if phonetic:
-            self.phone_lbl.setText(phonetic)
-            self.phone_lbl.show()
-        else:
+        is_phrase = word_data.get('type') == 'phrase' or len(word_data.get('original', '').split()) > 1
+
+        # Phrase mode: hide header row (original already visible in subtitles)
+        if is_phrase:
+            self._header_row.hide()
             self.phone_lbl.hide()
+        else:
+            self._header_row.show()
+            self.word_lbl.setText(word_data.get('original', word_data.get('word', '')))
+            phonetic = word_data.get('phonetic', '')
+            if phonetic:
+                self.phone_lbl.setText(phonetic)
+                self.phone_lbl.show()
+            else:
+                self.phone_lbl.hide()
+
         self.trans_lbl.setText(word_data.get('translation', '—'))
-        definition = word_data.get('definition', '')
+
+        definition = word_data.get('definition', '') if not is_phrase else ''
         if definition and len(definition) > 5:
             self.def_lbl.setText(definition[:140] + ('...' if len(definition) > 140 else ''))
             self.def_lbl.show()
         else:
             self.def_lbl.hide()
-        self.save_btn.setText("＋ Guardar en mis tarjetas")
-        self.save_btn.setEnabled(True)
+
+        if pinned or self._pinned:
+            self._pinned = True
+            self.pin_hint.hide()
+            self.save_btn.setText("＋ Guardar en mis tarjetas")
+            self.save_btn.setEnabled(True)
+            self.save_btn.show()
+        else:
+            self.pin_hint.show()
+            self.save_btn.hide()
+
+        self.hide_timer.stop()
         self.adjustSize()
         self._reposition(global_pos)
         self.show()
@@ -137,7 +203,7 @@ class TranslationTooltip(QFrame):
     def _reposition(self, global_pos):
         screen = QApplication.primaryScreen().geometry()
         x = global_pos.x()
-        y = global_pos.y() + 30
+        y = global_pos.y() + 28
         if x + self.width() > screen.right() - 10:
             x = screen.right() - self.width() - 10
         if y + self.height() > screen.bottom() - 10:
@@ -148,8 +214,15 @@ class TranslationTooltip(QFrame):
         self.hide_timer.stop()
         super().enterEvent(event)
 
+    def mousePressEvent(self, event):
+        """Clicking inside the tooltip pins it."""
+        if not self._pinned:
+            self.pin()
+        super().mousePressEvent(event)
+
     def leaveEvent(self, event):
-        self.hide_timer.start(800)   # 800ms to comfortably reach the tooltip
+        if not self._pinned:
+            self.hide_timer.start(600)
         super().leaveEvent(event)
 
 
