@@ -9,6 +9,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 
 class HoverWorker(QObject):
     word_data_ready = pyqtSignal(dict, object, bool)  # word_data, QPoint, pinned
+    save_result = pyqtSignal(dict)   # {status, message}
 
 # Configurar logs para depuración
 log_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "debug.log")
@@ -43,6 +44,7 @@ class VocabAssistantDesktop:
         # Worker para Tooltip asíncrono seguro
         self.hover_worker = HoverWorker()
         self.hover_worker.word_data_ready.connect(self.show_hover_tooltip)
+        self.hover_worker.save_result.connect(self.on_save_result)
         
         # Conectar señales del área de transcripción (SelectableCaptions)
         self.overlay.captions_view.word_hovered.connect(self.handle_hover)
@@ -123,18 +125,24 @@ class VocabAssistantDesktop:
 
     def handle_save(self, word_data):
         """Guarda la palabra del tooltip como flashcard"""
-        threading.Thread(
-            target=self.api.save_flashcard,
-            args=({
-                'word':       word_data.get('original', word_data.get('word', '')),
-                'translation': word_data.get('translation', ''),
-                'definition':  word_data.get('definition', ''),
-                'phonetic':    word_data.get('phonetic', ''),
-                'source_lang': self.stt.current_lang,
-                'target_lang': 'es'
-            },),
-            daemon=True
-        ).start()
+        print(f"[handle_save] Recibido: {word_data.get('word') or word_data.get('original')}")
+        payload = {
+            'word':       word_data.get('original', word_data.get('word', '')),
+            'translation': word_data.get('translation', ''),
+            'definition':  word_data.get('definition', ''),
+            'phonetic':    word_data.get('phonetic', ''),
+            'source_lang': self.stt.current_lang,
+            'target_lang': 'es'
+        }
+        def do_save():
+            result = self.api.save_flashcard(payload)
+            self.hover_worker.save_result.emit(result if isinstance(result, dict) else {'status': 'error', 'message': 'Error desconocido'})
+        threading.Thread(target=do_save, daemon=True).start()
+
+    def on_save_result(self, result):
+        """Actualiza el botón de guardar con el resultado del servidor"""
+        print(f"[on_save_result] {result}")
+        self.overlay.custom_tooltip.show_save_result(result)
 
     def handle_mining_click(self, word):
         """Click directo = guardar inmediatamente sin pasar por el modal"""

@@ -20,10 +20,12 @@ class VocabAPIClient:
         """Guarda una palabra en el mazo del usuario"""
         try:
             response = requests.post(f"{self.base_url}/save/", json=word_data, timeout=5)
-            return response.status_code == 200
+            if response.status_code == 200:
+                return response.json()  # {'status': 'ok'|'duplicate', 'message': '...'}
+            return {'status': 'error', 'message': f'HTTP {response.status_code}'}
         except Exception as e:
             print(f"API Error (save_flashcard): {e}")
-            return False
+            return {'status': 'error', 'message': str(e)}
 
     def get_stats(self):
         """Obtiene las estadísticas de estudio para mostrar en el overlay"""

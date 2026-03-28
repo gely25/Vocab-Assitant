@@ -3,227 +3,286 @@ from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLay
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer
 from PyQt6.QtGui import QColor, QFont, QTextCursor
 
-class TranslationTooltip(QFrame):
+class TranslationTooltip(QWidget):
+    """
+    Floating translation card.
+    - Hover → shows for HOVER_MS ms after mouse leaves
+    - Text selection → pinned (stays until ✕ or click-outside)
+    - Save button always visible (grayed while loading)
+    """
     save_requested = pyqtSignal(dict)
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint |
-            Qt.WindowType.WindowStaysOnTopHint |
-            Qt.WindowType.Tool |
-            Qt.WindowType.WindowDoesNotAcceptFocus
-        )
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self._word_data = {}
-        self._pinned = False
+    FIXED_W   = 300          # fixed width — avoids adjustSize() geometry errors
+    HOVER_MS  = 1200         # ms to keep visible after mouse leaves (hover mode)
 
+    def __init__(self, parent=None):
+        super().__init__(parent, Qt.WindowType.FramelessWindowHint |
+                                  Qt.WindowType.WindowStaysOnTopHint |
+                                  Qt.WindowType.Tool |
+                                  Qt.WindowType.WindowDoesNotAcceptFocus)
+        # NOTE: do NOT set WA_ShowWithoutActivating — it blocks mouse clicks on Windows
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setFixedWidth(self.FIXED_W)
+
+        self._word_data   = {}
+        self._current_word = ''
+        self._pinned      = False
+        self._last_pos    = QPoint()
+
+        # ── stylesheet ──────────────────────────────────────────────
         self.setStyleSheet("""
-            QFrame {
-                background-color: #1C1C1E;
-                border: 1px solid #3A3A3C;
-                border-radius: 12px;
+            QWidget#card {
+                background: #1E1E24;
+                border: 1px solid #3A3A4C;
+                border-radius: 14px;
             }
-            QLabel#pin_hint { color: #555; font-size: 11px; }
-            QLabel#word_lbl  { color: #E0E0E0; font-size: 15px; font-weight: 700; }
-            QLabel#phone_lbl { color: #8E8E93; font-size: 12px; font-style: italic; }
-            QLabel#trans_lbl { color: #F7B731; font-size: 16px; font-weight: 700; }
-            QLabel#def_lbl   { color: #AEAEB2; font-size: 12px; }
+            QLabel#word_lbl  { color: #E8E8F0; font-size:15px; font-weight:700; }
+            QLabel#phone_lbl { color: #7E7E93; font-size:11px; font-style:italic; }
+            QLabel#trans_lbl { color: #F7B731; font-size:16px; font-weight:700; }
+            QLabel#def_lbl   { color: #AEAEB2; font-size:12px; }
+            QLabel#status_lbl{ color: #6E6E7E; font-size:11px; }
             QPushButton#save_btn {
-                background-color: #8B6DD0; color: white; border: none;
-                border-radius: 8px; padding: 6px 16px;
-                font-size: 13px; font-weight: 600;
+                background:#7B5EA7; color:white; border:none;
+                border-radius:8px; padding:7px 0; font-size:13px; font-weight:600;
             }
-            QPushButton#save_btn:hover { background-color: #A98BE8; }
-            QPushButton#save_btn:disabled { background-color: #444; color: #888; }
+            QPushButton#save_btn:hover   { background:#9B7EC8; }
+            QPushButton#save_btn:disabled{ background:#3A3A4A; color:#666; }
         """)
 
-        outer = QVBoxLayout(self)
-        outer.setContentsMargins(16, 12, 16, 14)
-        outer.setSpacing(5)
+        # ── card container ───────────────────────────────────────────
+        card = QWidget(self)
+        card.setObjectName("card")
+        card.setFixedWidth(self.FIXED_W)
 
-        # Header row: word + close
-        self._header_row = QWidget()
-        row1 = QHBoxLayout(self._header_row)
-        row1.setContentsMargins(0, 0, 0, 0)
+        vbox = QVBoxLayout(card)
+        vbox.setContentsMargins(16, 12, 16, 14)
+        vbox.setSpacing(4)
+
+        # header: word + ✕
+        hdr = QHBoxLayout()
         self.word_lbl = QLabel()
         self.word_lbl.setObjectName("word_lbl")
-        row1.addWidget(self.word_lbl, 1)
-        self.close_btn = QLabel("✕")
-        self.close_btn.setStyleSheet("color:#666; font-size:12px;")
-        self.close_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.close_btn.mousePressEvent = lambda e: self._force_close()
-        row1.addWidget(self.close_btn)
-        outer.addWidget(self._header_row)
+        self.word_lbl.setWordWrap(False)
+        self.word_lbl.setMaximumWidth(240)
+        hdr.addWidget(self.word_lbl, 1)
+        close_lbl = QLabel("✕")
+        close_lbl.setStyleSheet("color:#555; font-size:13px; padding:0 2px;")
+        close_lbl.setCursor(Qt.CursorShape.PointingHandCursor)
+        close_lbl.mousePressEvent = lambda _e: self._force_close()
+        hdr.addWidget(close_lbl)
+        vbox.addLayout(hdr)
 
-        # Phonetic
         self.phone_lbl = QLabel()
         self.phone_lbl.setObjectName("phone_lbl")
         self.phone_lbl.hide()
-        outer.addWidget(self.phone_lbl)
+        vbox.addWidget(self.phone_lbl)
 
-        # Divider
         sep = QFrame()
         sep.setFrameShape(QFrame.Shape.HLine)
-        sep.setStyleSheet("background:#333;")
+        sep.setStyleSheet("background:#333; margin:2px 0;")
         sep.setFixedHeight(1)
-        outer.addWidget(sep)
+        vbox.addWidget(sep)
 
-        # Translation (main content)
-        self.trans_lbl = QLabel()
+        self.trans_lbl = QLabel("…")
         self.trans_lbl.setObjectName("trans_lbl")
         self.trans_lbl.setWordWrap(True)
-        self.trans_lbl.setMaximumWidth(340)
-        outer.addWidget(self.trans_lbl)
+        self.trans_lbl.setFixedWidth(self.FIXED_W - 32)
+        vbox.addWidget(self.trans_lbl)
 
-        # Definition
         self.def_lbl = QLabel()
         self.def_lbl.setObjectName("def_lbl")
         self.def_lbl.setWordWrap(True)
-        self.def_lbl.setMaximumWidth(340)
+        self.def_lbl.setFixedWidth(self.FIXED_W - 32)
         self.def_lbl.hide()
-        outer.addWidget(self.def_lbl)
+        vbox.addWidget(self.def_lbl)
 
-        # Hint to click for full view (shown in hover mode)
-        self.pin_hint = QLabel("Click para fijar • Guardar con clic")
-        self.pin_hint.setObjectName("pin_hint")
-        outer.addWidget(self.pin_hint)
+        self.status_lbl = QLabel("Hover para ver • click para guardar")
+        self.status_lbl.setObjectName("status_lbl")
+        vbox.addWidget(self.status_lbl)
 
-        # Save button (hidden in hover mode)
         self.save_btn = QPushButton("＋ Guardar en mis tarjetas")
         self.save_btn.setObjectName("save_btn")
+        self.save_btn.setFixedWidth(self.FIXED_W - 32)
         self.save_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.save_btn.setEnabled(False)
         self.save_btn.clicked.connect(self._on_save)
-        self.save_btn.hide()
-        outer.addWidget(self.save_btn)
+        vbox.addWidget(self.save_btn)
 
-        self.hide_timer = QTimer()
-        self.hide_timer.setSingleShot(True)
-        self.hide_timer.timeout.connect(self._auto_hide)
+        # outer layout just holds the card — no margins so card fills all space
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setSpacing(0)
+        outer.addWidget(card)
 
-        # Install event filter to detect click-outside
+        # ── hide timer ───────────────────────────────────────────────
+        self._hide_timer = QTimer(self)
+        self._hide_timer.setSingleShot(True)
+        self._hide_timer.timeout.connect(self._auto_hide)
+
         QApplication.instance().installEventFilter(self)
 
+    # ── event filter: close pinned on click-outside ──────────────────
     def eventFilter(self, obj, event):
-        from PyQt6.QtCore import QEvent
-        if (self._pinned and self.isVisible() and
-                event.type() == QEvent.Type.MouseButtonPress):
-            if not self.geometry().contains(event.globalPosition().toPoint()):
-                self._force_close()
+        try:
+            from PyQt6.QtCore import QEvent
+            if (self._pinned and self.isVisible()
+                    and event.type() == QEvent.Type.MouseButtonPress
+                    and hasattr(event, 'globalPosition')):
+                if not self.geometry().contains(event.globalPosition().toPoint()):
+                    self._force_close()
+        except Exception:
+            pass
         return False
 
+    # ── internal helpers ─────────────────────────────────────────────
     def _force_close(self):
         self._pinned = False
-        self.hide_timer.stop()
+        self._hide_timer.stop()
+        self._reset_btn_style()
         self.hide()
 
     def _auto_hide(self):
         if not self._pinned:
             self.hide()
 
-    def pin(self):
-        """Switch from preview mode to pinned interactive modal."""
-        self._pinned = True
-        self.hide_timer.stop()
-        self.pin_hint.hide()
-        self.save_btn.show()
-        self.adjustSize()
-
-    def _on_save(self):
-        if self._word_data:
-            self.save_requested.emit(self._word_data)
-            self.save_btn.setText("✓ Guardada")
-            self.save_btn.setEnabled(False)
-
-    def show_loading(self, word, global_pos, pinned=False):
-        self._pinned = pinned
-        self.hide_timer.stop()
-        self._word_data = {}
-        self._header_row.show()
-        self.word_lbl.setText(word)
-        self.phone_lbl.hide()
-        self.trans_lbl.setText("Buscando traducción...")
-        self.def_lbl.hide()
+    def _reset_btn_style(self):
+        self.save_btn.setStyleSheet("")
         self.save_btn.setText("＋ Guardar en mis tarjetas")
         self.save_btn.setEnabled(False)
-        if pinned:
-            self.pin_hint.hide()
-            self.save_btn.show()
-        else:
-            self.pin_hint.show()
-            self.save_btn.hide()
-        self.adjustSize()
-        self._reposition(global_pos)
+
+    def _place(self, global_pos):
+        """Position ABOVE the given point without calling adjustSize()."""
+        screen = QApplication.primaryScreen().availableGeometry()
+        h = self.sizeHint().height()   # use sizeHint, not adjustSize()
+        x = max(screen.left() + 8,
+                min(global_pos.x() - self.FIXED_W // 2,
+                    screen.right() - self.FIXED_W - 8))
+        y = global_pos.y() - h - 10
+        if y < screen.top() + 8:
+            y = global_pos.y() + 20    # fallback below if near top
+        self.move(x, y)
+
+    # ── public API ───────────────────────────────────────────────────
+    def show_loading(self, word: str, global_pos, pinned: bool = False):
+        self._hide_timer.stop()
+        self._pinned      = pinned
+        self._word_data   = {}
+        self._current_word = word
+        self._reset_btn_style()
+
+        self.word_lbl.setText(word)
+        self.phone_lbl.hide()
+        self.trans_lbl.setText("Buscando traducción…")
+        self.def_lbl.hide()
+        self.status_lbl.setText("🔄 Traduciendo…" if pinned else "Hover para ver • click para guardar")
+        self._last_pos = global_pos
+        self._place(global_pos)
         self.show()
+        self.raise_()
 
-    def show_data(self, word_data, global_pos, pinned=False):
+    def show_data(self, word_data: dict, global_pos, pinned: bool = False):
         if not self.isVisible() and not pinned:
-            return  # User moved away before response arrived
-        self._word_data = word_data
-        is_phrase = word_data.get('type') == 'phrase' or len(word_data.get('original', '').split()) > 1
+            return   # user moved away; discard
 
-        # Phrase mode: hide header row (original already visible in subtitles)
+        self._word_data    = word_data
+        self._current_word = word_data.get('original', word_data.get('word', ''))
+        self._last_pos     = global_pos
+
+        is_phrase = (word_data.get('type') == 'phrase' or
+                     len(self._current_word.split()) > 1)
+
+        # header row visibility
         if is_phrase:
-            self._header_row.hide()
-            self.phone_lbl.hide()
+            self.word_lbl.setText("Selección")
         else:
-            self._header_row.show()
-            self.word_lbl.setText(word_data.get('original', word_data.get('word', '')))
-            phonetic = word_data.get('phonetic', '')
-            if phonetic:
-                self.phone_lbl.setText(phonetic)
-                self.phone_lbl.show()
-            else:
-                self.phone_lbl.hide()
+            self.word_lbl.setText(self._current_word)
+
+        phonetic = word_data.get('phonetic', '')
+        if phonetic and not is_phrase:
+            self.phone_lbl.setText(phonetic)
+            self.phone_lbl.show()
+        else:
+            self.phone_lbl.hide()
 
         self.trans_lbl.setText(word_data.get('translation', '—'))
 
-        definition = word_data.get('definition', '') if not is_phrase else ''
-        if definition and len(definition) > 5:
-            self.def_lbl.setText(definition[:140] + ('...' if len(definition) > 140 else ''))
+        defn = '' if is_phrase else word_data.get('definition', '')
+        if defn and len(defn) > 5:
+            self.def_lbl.setText(defn[:140] + ('…' if len(defn) > 140 else ''))
             self.def_lbl.show()
         else:
             self.def_lbl.hide()
 
         if pinned or self._pinned:
             self._pinned = True
-            self.pin_hint.hide()
-            self.save_btn.setText("＋ Guardar en mis tarjetas")
+            self.status_lbl.setText("📌 Fijado — click fuera para cerrar")
+            self._reset_btn_style()
             self.save_btn.setEnabled(True)
-            self.save_btn.show()
         else:
-            self.pin_hint.show()
-            self.save_btn.hide()
+            self.status_lbl.setText("Click para fijar y guardar")
 
-        self.hide_timer.stop()
-        self.adjustSize()
-        self._reposition(global_pos)
+        self._hide_timer.stop()
+        self._place(global_pos)
         self.show()
+        self.raise_()
 
-    def _reposition(self, global_pos):
-        screen = QApplication.primaryScreen().geometry()
-        x = global_pos.x()
-        y = global_pos.y() + 28
-        if x + self.width() > screen.right() - 10:
-            x = screen.right() - self.width() - 10
-        if y + self.height() > screen.bottom() - 10:
-            y = global_pos.y() - self.height() - 10
-        self.move(x, y)
+    def show_save_result(self, result: dict):
+        status = result.get('status', 'error')
+        if status == 'ok':
+            self.save_btn.setText("✓ Guardada en el mazo")
+            self.save_btn.setStyleSheet(
+                "QPushButton#save_btn{background:#2E7D32;color:white;border:none;"
+                "border-radius:8px;padding:7px 0;font-size:13px;font-weight:600;}")
+            self.status_lbl.setText("✅ Agregada a tus tarjetas")
+            QTimer.singleShot(1800, self._force_close)
+        elif status == 'duplicate':
+            self.save_btn.setText("↩ Ya está en tus tarjetas")
+            self.save_btn.setStyleSheet(
+                "QPushButton#save_btn{background:#4A3600;color:#FFA000;border:none;"
+                "border-radius:8px;padding:7px 0;font-size:13px;font-weight:600;}")
+            self.status_lbl.setText("Ya existe en tu mazo")
+        else:
+            self.save_btn.setText("✗ Error — reintentar")
+            self.save_btn.setEnabled(True)
+            self.save_btn.setStyleSheet(
+                "QPushButton#save_btn{background:#7D1010;color:white;border:none;"
+                "border-radius:8px;padding:7px 0;font-size:13px;font-weight:600;}")
+            self.status_lbl.setText(f"Error: {result.get('message','')[:60]}")
 
+    # ── hover events ─────────────────────────────────────────────────
     def enterEvent(self, event):
-        self.hide_timer.stop()
+        self._hide_timer.stop()
+        if not self._pinned and self._word_data:
+            self.save_btn.setEnabled(True)   # enable as soon as mouse enters & data ready
         super().enterEvent(event)
-
-    def mousePressEvent(self, event):
-        """Clicking inside the tooltip pins it."""
-        if not self._pinned:
-            self.pin()
-        super().mousePressEvent(event)
 
     def leaveEvent(self, event):
         if not self._pinned:
-            self.hide_timer.start(600)
+            self._hide_timer.start(self.HOVER_MS)
         super().leaveEvent(event)
+
+    # ── save ─────────────────────────────────────────────────────────
+    def _on_save(self):
+        # Pin the modal when saving
+        self._pinned = True
+        self._hide_timer.stop()
+        self.status_lbl.setText("💾 Guardando…")
+
+        word = (self._word_data.get('original') or
+                self._word_data.get('word') or
+                self._current_word or
+                self.word_lbl.text())
+        if not word:
+            print("[SAVE] Sin palabra")
+            self.status_lbl.setText("❌ Sin palabra para guardar")
+            return
+        payload = dict(self._word_data) if self._word_data else {}
+        if 'original' not in payload and 'word' not in payload:
+            payload['word'] = word
+        print(f"[SAVE] → emitiendo save_requested: word='{word}'")
+        self.save_btn.setText("Guardando…")
+        self.save_btn.setEnabled(False)
+        self.save_requested.emit(payload)
 
 
 class SelectableCaptions(QTextBrowser):

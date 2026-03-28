@@ -1,5 +1,6 @@
 import json
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from ..services.translation_service import TranslationService
 from ..services.dictionary_service import DictionaryService
 from ..services.flashcard_service import FlashcardService
@@ -78,6 +79,7 @@ def define_word(request):
     return JsonResponse(response_data)
 
 
+@csrf_exempt
 def save_word(request):
     """Guarda una palabra en las flashcards"""
     if request.method != 'POST':
