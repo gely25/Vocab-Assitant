@@ -10,7 +10,7 @@ Es una burbuja flotante que se superpone sobre cualquier ventana (YouTube, Netfl
 
 ---
 
-## Problemas que resolvimos
+################################# Problemas Resueltos ################################################
 
 ### 1. Crashes al iniciar (`faster-whisper` incompatible)
 - **Problema**: `faster-whisper` requería instrucciones AVX/AVX-512 del procesador. En tu CPU eso causaba un **crash fatal a nivel C** (no manejable por Python), cerrando la app silenciosamente sin ningún mensaje de error.
@@ -38,6 +38,17 @@ Es una burbuja flotante que se superpone sobre cualquier ventana (YouTube, Netfl
 ### 6. Traducciones fallando silenciosamente
 - **Problema**: Al hacer hover, si el backend Django tardaba o fallaba, la tarjeta nunca actualizaba su texto y se veía "rota" sin ningún feedback.
 - **Solución**: La tarjeta muestra **"Cargando..."** de forma inmediata y síncrona al hacer hover. La traducción llega asíncronamente desde un hilo de fondo y actualiza el texto cuando está lista, mostrando `(Error)` o `(No encontrado)` en caso de fallo.
+### 7. DDoS al servidor y bloqueos `Read timed out` (Debounce)
+- **Problema**: Pasar el ratón por el texto enviaba docenas de requests HTTP simultáneos a Django (`/define/`), agotando el pool de conexiones. Esto causaba "Read timed out" y que los clics de *Guardar* se quedaran encolados al infinito sin enviar.
+- **Solución**: Implementación de un patrón "Debounce" con `QTimer` (450ms). El cliente espera a que el cursor se detenga sobre una palabra o selección antes de disparar un único request HTTP. Además, en `api_client.py` se separó una `requests.Session()` exclusiva para `/save/`, de manera que el guardado siempre viaja por un túnel libre garantizado.
+
+### 8. Crashes y corrupción de memoria (`sipBadCatcherResult`)
+- **Problema**: El hilo de STT o el de descargas intentaban comunicar posiciones de pantalla (`QPoint`) al hilo principal (UI thread) usando un tipo genérico de Python (`object` en `pyqtSignal`). En PyQt6, enviar un wrapper de puntero C++ indiscriminado por una conexión encolada daña la memoria.
+- **Solución**: Tipado seguro y estricto en el puente de hilos: `pyqtSignal(dict, QPoint, bool)`. PyQt detecta el tipo C++ y se encarga de serializarlo sanamente antes de enviarlo al Event Loop principal.
+
+### 9. Clics nulos (Botón inerte en Windows)
+- **Problema**: La señal de clic no llegaba nunca tras un rediseño de UI porque se estaba instanciando erróneamente una lambda con referencias muertas, y porque el atributo de ventana `Qt.WindowDoesNotAcceptFocus` bloqueaba todo input de usuario en el modal.
+- **Solución**: Se eliminó la etiqueta restrictiva del OS y se arregló el sistema de propagación de eventos (`super().eventFilter()`). La interfaz ahora recibe y procesa interacciones correctamente sobre el overlay en Windows sin robar foco activo.
 
 ---
 

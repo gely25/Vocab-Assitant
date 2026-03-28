@@ -5,10 +5,10 @@ import threading
 import os
 import logging
 from PyQt6.QtWidgets import QApplication, QMessageBox
-from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal, Qt, QTimer, QPoint
 
 class HoverWorker(QObject):
-    word_data_ready = pyqtSignal(dict, object, bool)  # word_data, QPoint, pinned
+    word_data_ready = pyqtSignal(dict, QPoint, bool)  # word_data, pos, pinned
     save_result = pyqtSignal(dict)   # {status, message}
 
 # Configurar logs para depuración
@@ -41,8 +41,12 @@ class VocabAssistantDesktop:
         self.stt.status_received.connect(self.handle_status)
         self.overlay.lang_changed.connect(self.stt.set_language)
         
-        # Worker para Tooltip asíncrono seguro
+        # Worker para cross-thread signals seguros
+        # HoverWorker es QObject en el hilo principal → las señales cross-thread
+        # son encoladas automáticamente por Qt (Qt.ConnectionType.QueuedConnection)
         self.hover_worker = HoverWorker()
+        # Asegurar que el worker vive en el hilo principal de Qt
+        self.hover_worker.moveToThread(QApplication.instance().thread())
         self.hover_worker.word_data_ready.connect(self.show_hover_tooltip)
         self.hover_worker.save_result.connect(self.on_save_result)
         
@@ -54,10 +58,16 @@ class VocabAssistantDesktop:
         # Guardar desde el tooltip
         self.overlay.custom_tooltip.save_requested.connect(self.handle_save)
 
-        # Estado de cancelación de peticiones (evita resultados desordenados)
+        # Estado de cancelación de peticiones
         self._hover_request_id = 0
-        self._translation_cache = {}   # word -> word_data dict
-        
+        self._translation_cache = {}
+
+        # Debounce del hover: evita inundar el servidor con requests
+        self._hover_timer = QTimer()
+        self._hover_timer.setSingleShot(True)
+        self._hover_timer.timeout.connect(self._fire_hover_request)
+        self._hover_pending = None   # (word, pos, source_lang, my_id, is_pinned)
+
     def handle_status(self, msg):
         print(f"DEBUG: {msg}")
         
@@ -66,31 +76,54 @@ class VocabAssistantDesktop:
         self.overlay.set_mining_mode(self.mining_mode)
 
     def handle_hover(self, word, pos):
-        """Hover = preview mode (auto-hides)"""
+        """Hover → debounce 450ms antes de lanzar request al servidor."""
         self._hover_request_id += 1
         my_id = self._hover_request_id
         cache_key = f"{word}:{self.stt.current_lang}"
+
+        # Cache hit → instantáneo, sin tocar el servidor
         if cache_key in self._translation_cache:
-            self.overlay.custom_tooltip.show_data(self._translation_cache[cache_key], pos, pinned=False)
+            self.overlay.custom_tooltip.show_data(
+                self._translation_cache[cache_key], pos, pinned=False)
             return
+
+        # Mostrar "Buscando..." y programar el request con debounce
         self.overlay.custom_tooltip.show_loading(word, pos, pinned=False)
-        source_lang = self.stt.current_lang
+        self._hover_pending = (word, pos, self.stt.current_lang, my_id, False)
+        self._hover_timer.start(450)  # 450ms sin nuevo hover → dispara el request
+
+    def _fire_hover_request(self):
+        """Ejecuta el request HTTP tras el debounce."""
+        if not self._hover_pending:
+            return
+        word, pos, source_lang, my_id, is_pinned = self._hover_pending
+        self._hover_pending = None
+
         def fetch():
             try:
-                data = self.api.get_definition(word.lower().strip(), source_lang=source_lang)
+                data = self.api.get_definition(word.lower().strip(),
+                                               source_lang=source_lang)
                 if my_id != self._hover_request_id:
-                    return
+                    return  # Resultado desfasado, descartar
                 if data:
-                    data['word'] = word
-                    self._translation_cache[cache_key] = data
-                    self.hover_worker.word_data_ready.emit(data, pos, False)
+                    data['original'] = word
+                    if is_pinned and len(word.split()) > 1:
+                        data['type'] = 'phrase'
+                    self._translation_cache[f"{word}:{source_lang}"] = data
+                    self.hover_worker.word_data_ready.emit(data, pos, is_pinned)
                 else:
-                    if my_id == self._hover_request_id:
-                        self.hover_worker.word_data_ready.emit({'original': word, 'translation': '(No encontrado)'}, pos, False)
+                    err_data = {'original': word, 'translation': '(No encontrado)'}
+                    if is_pinned and len(word.split()) > 1:
+                        err_data['type'] = 'phrase'
+                    self.hover_worker.word_data_ready.emit(err_data, pos, is_pinned)
             except Exception as e:
-                print(f"Error en hover: {e}")
+                if 'timed out' not in str(e).lower():
+                    print(f"[hover] Error: {e}")
                 if my_id == self._hover_request_id:
-                    self.hover_worker.word_data_ready.emit({'original': word, 'translation': '(Sin conexión)'}, pos, False)
+                    err_data = {'original': word, 'translation': '(Sin conexión)'}
+                    if is_pinned and len(word.split()) > 1:
+                        err_data['type'] = 'phrase'
+                    self.hover_worker.word_data_ready.emit(err_data, pos, is_pinned)
         threading.Thread(target=fetch, daemon=True).start()
 
     def handle_phrase_hover(self, phrase, pos):
@@ -101,33 +134,21 @@ class VocabAssistantDesktop:
         if cache_key in self._translation_cache:
             self.overlay.custom_tooltip.show_data(self._translation_cache[cache_key], pos, pinned=True)
             return
+
         self.overlay.custom_tooltip.show_loading(phrase, pos, pinned=True)
-        source_lang = self.stt.current_lang
-        def fetch():
-            try:
-                data = self.api.get_definition(phrase.strip(), source_lang=source_lang)
-                if my_id != self._hover_request_id:
-                    return
-                if data:
-                    data['word'] = phrase
-                    self._translation_cache[cache_key] = data
-                    self.hover_worker.word_data_ready.emit(data, pos, True)
-                else:
-                    if my_id == self._hover_request_id:
-                        self.hover_worker.word_data_ready.emit({'original': phrase, 'translation': '(No encontrado)', 'type': 'phrase'}, pos, True)
-            except Exception as e:
-                if my_id == self._hover_request_id:
-                    self.hover_worker.word_data_ready.emit({'original': phrase, 'translation': '(Sin conexión)', 'type': 'phrase'}, pos, True)
-        threading.Thread(target=fetch, daemon=True).start()
+        self._hover_pending = (phrase, pos, self.stt.current_lang, my_id, True)
+        self._hover_timer.start(300)  # selección es más intencional, menor debounce
+
 
     def show_hover_tooltip(self, word_data, pos, pinned):
         self.overlay.custom_tooltip.show_data(word_data, pos, pinned=pinned)
 
     def handle_save(self, word_data):
-        """Guarda la palabra del tooltip como flashcard"""
-        print(f"[handle_save] Recibido: {word_data.get('word') or word_data.get('original')}")
+        """Guarda la palabra del tooltip como flashcard."""
+        word = word_data.get('original') or word_data.get('word', '')
+        print(f"[handle_save] Iniciando guardado de: '{word}'")
         payload = {
-            'word':       word_data.get('original', word_data.get('word', '')),
+            'word':        word,
             'translation': word_data.get('translation', ''),
             'definition':  word_data.get('definition', ''),
             'phonetic':    word_data.get('phonetic', ''),
@@ -135,8 +156,14 @@ class VocabAssistantDesktop:
             'target_lang': 'es'
         }
         def do_save():
+            print(f"[do_save] POST /save/ word='{word}'")
             result = self.api.save_flashcard(payload)
-            self.hover_worker.save_result.emit(result if isinstance(result, dict) else {'status': 'error', 'message': 'Error desconocido'})
+            print(f"[do_save] Respuesta del servidor: {result}")
+            if not isinstance(result, dict):
+                result = {'status': 'error', 'message': 'Respuesta inválida del servidor'}
+            # Emitir desde thread nativo está bien cuando el receptor (HoverWorker)
+            # vive en el hilo principal: Qt usa QueuedConnection automáticamente.
+            self.hover_worker.save_result.emit(result)
         threading.Thread(target=do_save, daemon=True).start()
 
     def on_save_result(self, result):

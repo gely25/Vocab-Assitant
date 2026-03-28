@@ -18,9 +18,8 @@ class TranslationTooltip(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent, Qt.WindowType.FramelessWindowHint |
                                   Qt.WindowType.WindowStaysOnTopHint |
-                                  Qt.WindowType.Tool |
-                                  Qt.WindowType.WindowDoesNotAcceptFocus)
-        # NOTE: do NOT set WA_ShowWithoutActivating — it blocks mouse clicks on Windows
+                                  Qt.WindowType.Tool)
+        # WindowDoesNotAcceptFocus removed: on Windows it blocks child widget clicks
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFixedWidth(self.FIXED_W)
 
@@ -132,7 +131,7 @@ class TranslationTooltip(QWidget):
                     self._force_close()
         except Exception:
             pass
-        return False
+        return super().eventFilter(obj, event)
 
     # ── internal helpers ─────────────────────────────────────────────
     def _force_close(self):
@@ -286,9 +285,9 @@ class TranslationTooltip(QWidget):
 
 
 class SelectableCaptions(QTextBrowser):
-    word_hovered = pyqtSignal(str, object)
+    word_hovered = pyqtSignal(str, QPoint)
     word_clicked = pyqtSignal(str)
-    phrase_selected = pyqtSignal(str, object)  # full selection text, QPoint
+    phrase_selected = pyqtSignal(str, QPoint)  # full selection text, QPoint
     
     def __init__(self):
         super().__init__()
@@ -405,7 +404,6 @@ class SubtitleOverlay(QWidget):
         self.current_lang_idx = 0
         self.caption_manager = CaptionManager(max_lines=2)
         self.custom_tooltip = TranslationTooltip()
-        self.custom_tooltip.save_btn.mousePressEvent = lambda e: self.on_word_clicked(self.custom_tooltip.src_label.text().lower()) if self.on_word_clicked else None
         self.initUI()
         self.mining_mode = True
         
