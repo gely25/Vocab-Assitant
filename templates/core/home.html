@@ -1,947 +1,447 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VocabAssistant | Lectura</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+{% extends 'core/base.html' %}
+{% load static %}
 
-:root {
-  --ink:       #111118;
-  --ink-2:     #60607A;
-  --ink-3:     #AEAEC5;
-  --paper:     #FAFAF7;
-  --surface:   #F2F2EE;
-  --surface-2: #E8E8E2;
-  --lilac:     #C4B5FD;
-  --lilac-dk:  #837a93ff;
-  --lilac-lt:  #EDE9FE;
-  --green:     #1DB87A;
-  --green-lt:  #DCFAED;
-  --red:       #E63F3F;
-  --red-lt:    #FDEAEA;
-  --amber:     #F59E0B;
-  --border:    rgba(17,17,24,0.09);
+{% block title %}VocabAssistant – Word Mining{% endblock %}
+
+{% block extra_css %}
+  .main { display:grid; grid-template-columns: 1fr 6px 340px; overflow:hidden; transition: grid-template-columns 0s; }
   
-  --nav-bg:    #31094E;
-  --toolbar-bg: #240638;
-  --r-sm: 8px;
-  --r-md: 14px;
-  --r-lg: 20px;
-  --r-xl: 28px;
-}
+  .resizer {
+    width: 6px;
+    background: transparent;
+    cursor: col-resize;
+    transition: background 0.2s;
+    z-index: 5;
+    position: relative;
+  }
+  .resizer::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 40px;
+    background: var(--purple-soft);
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .resizer:hover::after, .resizer.resizing::after { opacity: 1; }
+  .resizer:hover { background: rgba(139,109,208,0.05); }
 
-html, body {
-  height: 100%;
-  background: #E5E3E6;
-  color: var(--ink);
-  font-family: 'Figtree', sans-serif;
-}
+  .editor-panel { display:flex; flex-direction:column; padding:20px; gap:14px; overflow:hidden; }
+  .toolbar { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .tool-btn { display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:var(--radius-sm); border:1.5px solid rgba(139,109,208,.2); background:var(--white); color:var(--purple-mid); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; box-shadow:var(--shadow-sm); }
+  .tool-btn:hover { background:var(--purple-ghost); border-color:var(--purple-light); transform:translateY(-1px); }
+  .tool-btn svg { width:16px; height:16px; }
+  .toolbar-spacer { flex:1; }
+  .word-count { font-size:12px; color:var(--muted); }
 
-body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  .mode-switch { display:flex; align-items:center; background:var(--purple-ghost); border-radius:100px; padding:3px; gap:2px; }
+  .mode-btn { display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:100px; border:none; font-family:'DM Sans',sans-serif; font-size:12.5px; font-weight:600; cursor:pointer; transition:all .22s; color:var(--muted); background:transparent; white-space:nowrap; }
+  .mode-btn.active { background:var(--purple-deep); color:var(--white); box-shadow:0 3px 10px rgba(45,27,94,.25); }
 
-/* ── TOPBAR ─────────────────────────── */
-.topbar {
-  display: flex;
-  align-items: center;
-  padding: 0 30px;
-  height: 60px;
-  background: linear-gradient(90deg, #DDD5F3 0%, var(--nav-bg) 100%);
-  gap: 12px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 10;
-}
+  .text-area-wrapper { flex:1; background:var(--white); border-radius:var(--radius-lg); border:1.5px solid rgba(139,109,208,.15); box-shadow:var(--shadow-sm); overflow:hidden; display:flex; flex-direction:column; transition:border-color .2s,box-shadow .2s; }
+  .text-area-wrapper:focus-within { border-color:var(--purple-light); box-shadow:0 0 0 3px rgba(139,109,208,.1),var(--shadow-md); }
 
-.logo {
-  font-family: 'Figtree', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  display: flex; align-items: center; gap: 8px;
-}
+  .edit-area { flex:1; padding:24px 28px; font-size:15.5px; line-height:1.8; color:var(--ink); border:none; outline:none; resize:none; font-family:'DM Sans',sans-serif; background:transparent; }
+  .edit-area::placeholder { color:var(--muted); }
 
-.top-nav-links {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 40px;
-}
-.nav-link { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 14px; border-radius: 8px; transition: all 0.15s; }
-.nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
-.nav-link.active { color: #fff; font-weight: 700; background: rgba(255,255,255,0.18); }
+  .token-area { flex:1; padding:24px 28px; font-size:15.5px; line-height:1.8; color:var(--ink); overflow-y:auto; display:none; user-select: text; }
+  .word-span { display:inline; border-radius:4px; padding:1px 3px; cursor:default; transition:background .15s,color .15s; }
+  .word-span:hover { background:var(--purple-ghost); color:var(--purple-deep); }
+  .word-span.active { background:var(--purple-mid); color:var(--white); }
+  .word-span.saved { background:rgba(78,205,196,.15); color:#2a8a84; border-bottom:2px solid var(--accent-teal); }
 
-/* ── TEXT TOOLBAR ─────────────────────── */
-.text-toolbar {
-  background: var(--toolbar-bg);
-  padding: 10px 48px; border: none;
-  display: flex; align-items: center;
-  flex-shrink: 0;
-}
+  .textarea-footer { padding:10px 20px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(139,109,208,.1); flex-shrink:0; }
+  .footer-hint { font-size:11.5px; color:var(--muted); }
+  .btn-secondary { display:flex; align-items:center; gap:6px; padding:7px 16px; border-radius:var(--radius-sm); border:1.5px solid rgba(139,109,208,.2); background:var(--white); color:var(--purple-mid); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; }
 
-.toolbar-ocr-btn {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.7); cursor: pointer; transition: color 0.15s; font-size: 12px; font-weight: 600; gap: 4px;
-}
-.toolbar-ocr-btn:hover { color: #fff; }
-.toolbar-ocr-btn svg { width: 22px; height: 22px; color: #fff; }
+  .vocab-panel { background:var(--white); border-left:1px solid rgba(139,109,208,.1); display:flex; flex-direction:column; overflow:hidden; font-family: 'DM Sans', sans-serif; user-select: text; }
+  .vp-def-wrap { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  .vp-body { padding:24px; overflow-y: auto; flex: 1; text-align: center; scrollbar-gutter: stable; }
+  .sec-label { font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin:20px 0 10px; }
+  .def-word-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 4px; }
+  .def-word { font-family:'DM Sans',sans-serif; font-size:20px; font-weight:700; color:var(--ink); letter-spacing:-0.4px; line-height:1.2; }
+  .def-phonetic { font-size:12px; color:var(--muted); font-style:italic; margin-bottom:12px; }
+  .def-tags { display:flex; gap:6px; flex-wrap:wrap; justify-content: center; margin-bottom:4px; }
+  .def-tag { padding:3px 9px; border-radius:100px; font-size:10px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; }
+  .def-tag.pos { background:var(--purple-ghost); color:var(--purple-mid); }
+  .def-tag.lang { background:transparent; border:1px solid rgba(139,109,208,0.2); color:var(--muted); }
+  .def-translation-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
+  .def-translation { font-family:'DM Sans',sans-serif; font-size:18px; font-weight:700; color:var(--ink); line-height: 1.3; }
+  .def-list { list-style:none; text-align: left; background: var(--white); border-radius: var(--radius-sm); padding: 5px 0; }
+  .def-list li { padding:10px 0; border-bottom:1px solid rgba(139,109,208,.05); font-size:13px; line-height:1.55; color:var(--ink); display:flex; gap:10px; }
+  .def-num { font-weight:700; color:var(--purple-mid); flex-shrink:0; min-width:14px; }
+  .ex-card { background: var(--cream); border-radius:var(--radius-sm); border:1px solid rgba(139,109,208,.08); padding:12px 14px; margin:10px 0; text-align: left; }
+  .ex-section-label { display:flex; align-items:center; justify-content: center; gap:6px; font-size:9.5px; font-weight:800; letter-spacing:0.8px; text-transform:uppercase; color:var(--accent-warm); margin:20px 0 10px; }
+  .ex-original { font-style:italic; font-size:12.5px; line-height:1.5; color:var(--ink); margin-bottom:4px; }
+  .ex-translation { font-size:12px; color:var(--muted); line-height:1.45; }
 
-.mode-toggle-wrapper {
-  display: flex; align-items: center; background: #D9D2E9; border-radius: 40px;
-  padding: 4px; position: relative; width: 280px;
-}
-.mode-toggle-slider {
-  position: absolute; width: calc(50% - 4px); height: calc(100% - 8px);
-  background: var(--paper); border-radius: 30px;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  z-index: 1; left: 4px;
-}
-.mode-toggle-btn {
-  flex: 1; z-index: 2; background: transparent; border: none; cursor: pointer;
-  padding: 10px 0; font-size: 14px; font-weight: 700; color: var(--ink-2);
-  display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Figtree', sans-serif;
-  transition: color 0.3s ease;
-}
-.mode-toggle-btn.active { color: var(--nav-bg); }
+  .translate-toggle-btn { display: inline-flex; align-items: center; gap: 4px; border: none; background: rgba(139,109,208,0.1); color: var(--purple-mid); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; margin-top: 4px; transition: all 0.2s; }
+  .translate-toggle-btn:hover { background: var(--purple-ghost); color: var(--purple-deep); }
 
-/* ── CUSTOM LANG PILL ──────────────── */
-.custom-lang-pill {
-  display: inline-flex; align-items: center;
-  background: var(--nav-bg); border-radius: 30px;
-  padding: 8px 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.lang-label-light { color: #fff; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-right: 4px; opacity: 0.9;}
-.lang-select-dark {
-  background: transparent; color: #fff; border: none; outline: none;
-  font-size: 12px; font-weight: 600; cursor: pointer; appearance: none;
-}
-.lang-select-dark option { background: var(--nav-bg); color: #fff; }
-.sep-light { width: 1px; height: 14px; background: rgba(255,255,255,0.2); margin: 0 12px; }
+  .ai-actions { display:flex; gap:8px; margin:16px 0 10px; flex-wrap: wrap; justify-content: center; }
+  .ai-btn { flex: 0 1 auto; min-width: 120px; display:flex; align-items:center; justify-content:center; gap:6px; padding:8px 12px; border-radius:var(--radius-sm); font-size:11px; font-weight:700; cursor:pointer; transition:all .2s; font-family:'DM Sans',sans-serif; border:1px solid rgba(139,109,208,.15); background:var(--white); color:var(--purple-mid); }
+  .ai-btn:hover { background:var(--purple-ghost); border-color:var(--purple-light); transform: translateY(-1px); }
+  .ai-btn .spark { font-size:13px; }
 
-/* ── ICON BTN ──────────────────────── */
-.icon-btn {
-  width: 32px; height: 32px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--r-sm);
-  background: transparent;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--ink-2);
-  transition: all .15s;
-}
-.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
-.icon-btn svg { pointer-events: none; }
-
-/* ── SPLIT LAYOUT ──────────────────── */
-.split-view {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* ── TEXT SIDE ─────────────────────── */
-.text-side {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.content-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 48px 56px;
-}
-.content-scroll::-webkit-scrollbar { width: 3px; }
-.content-scroll::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
-
-#text-input {
-  width: 100%; min-height: 300px;
-  background: transparent; border: none;
-  font-family: 'Fraunces', serif;
-  font-size: 26px; line-height: 2; font-weight: 300;
-  color: var(--ink); resize: none; outline: none;
-  letter-spacing: -0.01em;
-}
-#text-input::placeholder { color: var(--ink-3); }
-
-#read-display {
-  font-family: 'Fraunces', serif;
-  font-size: 26px; line-height: 2;
-  font-weight: 300; color: var(--ink);
-  letter-spacing: -0.01em;
-  display: none; white-space: pre-wrap;
-}
-
-.word-span {
-  cursor: pointer; border-radius: 4px; padding: 0 2px;
-  transition: background .12s, color .12s;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 4px;
-  text-decoration-thickness: 2px;
-  transition: all .15s;
-}
-.word-span:hover {
-  background: rgba(196,181,253,0.3);
-  text-decoration-color: var(--lilac-dk);
-}
-.word-span.active {
-  background: var(--lilac);
-  text-decoration-color: var(--lilac-dk);
-  color: var(--ink);
-}
-
-/* ── RESIZER ───────────────────────── */
-.resizer {
-  width: 1.5px; background: var(--border);
-  cursor: col-resize; flex-shrink: 0;
-  transition: background .15s;
-}
-.resizer:hover { background: var(--lilac-dk); }
-
-/* ── DEF PANEL ─────────────────────── */
-.def-panel {
-  width: 340px; flex-shrink: 0;
-  display: flex; flex-direction: column;
-  background: var(--paper);
-  border-left: 1.5px solid var(--border);
-  overflow: hidden;
-}
-
-.def-top {
-  padding: 20px 22px;
-  border-bottom: 1.5px solid rgba(17,17,24,0.08);
-  display: flex; flex-direction: column; gap: 12px;
-}
-.def-panel-label {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2);
-}
-.def-word-display {
-  font-family: 'Fraunces', serif;
-  font-size: 38px; font-weight: 700;
-  letter-spacing: -0.03em; color: var(--ink); line-height: 1;
-}
-.def-phonetic {
-  font-size: 14px; color: var(--ink-3);
-  font-style: italic; margin-top: -6px;
-}
-.def-badges { display: flex; gap: 6px; flex-wrap: wrap; }
-.pill {
-  padding: 3px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.pill-lilac { background: var(--lilac); color: var(--ink); }
-.pill-neutral { background: var(--surface); color: var(--ink-2); border: 1.5px solid var(--border); }
-
-.def-body {
-  flex: 1; overflow-y: auto;
-  padding: 20px 22px;
-  display: flex; flex-direction: column; gap: 18px;
-}
-.def-section-title {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-3); margin-bottom: 5px;
-}
-.def-translation-text { font-size: 22px; font-weight: 700; color: var(--ink); }
-.def-meaning-text { font-size: 14px; color: var(--ink-2); line-height: 1.65; }
-.def-example-block {
-  background: var(--surface); border-radius: var(--r-md);
-  padding: 12px 14px;
-  font-family: 'Fraunces', serif; font-style: italic;
-  font-size: 15px; color: var(--ink-2); line-height: 1.6;
-  border-left: 3px solid var(--lilac-dk);
-}
-.def-separator { height: 1.5px; background: var(--border); }
-
-.def-footer { padding: 16px 22px; border-top: 1.5px solid var(--border); flex-shrink: 0; }
-.btn-save-card {
-  width: 100%; padding: 12px; border-radius: var(--r-md);
-  border: 1.5px solid var(--ink); background: var(--ink); color: var(--lilac);
-  font-family: 'Figtree', sans-serif; font-size: 14px; font-weight: 700;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all .15s;
-}
-.btn-save-card:hover { background: #2a2a38; transform: translateY(-1px); }
-.btn-save-card.saved { background: var(--green-lt); color: var(--green); border-color: var(--green); }
-
-/* ── EMPTY & LOADING STATES ────────── */
-.def-empty-state {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px 30px; text-align: center; gap: 16px;
-}
-.def-empty-icon {
-  width: 64px; height: 64px; background: var(--surface);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  color: var(--ink-3);
-}
-.def-empty-icon svg { width: 32px; height: 32px; }
-.def-empty-text { font-size: 14px; color: var(--ink-2); font-weight: 500; line-height: 1.6; }
-
-/* Skeleton shimmer */
-@keyframes shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
-}
-.skeleton-block {
-  border-radius: 8px;
-  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
-  background-size: 1200px 100%;
-  animation: shimmer 1.4s infinite linear;
-}
-#sidebar-loading { display: none; padding: 4px 0; }
-.sk-title  { height: 40px; width: 60%; margin-bottom: 18px; }
-.sk-pill   { height: 28px; width: 40%; border-radius: 20px; margin-bottom: 30px; }
-.sk-line   { height: 13px; margin-bottom: 10px; }
-.sk-line.w80 { width: 80%; }
-.sk-line.w60 { width: 60%; }
-.sk-line.w90 { width: 90%; }
-
-/* ── TOAST ─────────────────────────── */
-#toast {
-  position: fixed; bottom: 30px; left: 50%;
-  transform: translateX(-50%);
-  background: var(--ink); color: var(--paper);
-  padding: 10px 22px; border-radius: var(--r-lg);
-  font-size: 13px; font-weight: 600; z-index: 1000;
-  display: none; box-shadow: 0 8px 24px rgba(17,17,24,0.2);
-}
-</style>
-</head>
-<body>
-
-<!-- TOPBAR -->
-<nav class="topbar">
-  <div class="logo">
-    <svg width="45" height="32" viewBox="0 0 105 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M66.5621 9.11539L79.648 10.4552C81.4181 10.6365 83.1446 11.119 84.7525 11.881C89.1551 13.9676 92.3338 17.987 93.3492 22.7521L95.0074 30.5334C95.2483 31.6638 95.3697 32.817 95.3697 33.9728V40.672C95.3697 41.4865 95.3091 42.3001 95.189 43.1056L93.4488 54.7775C92.4198 61.6765 87.1636 67.1835 80.3199 68.5324L77.3248 69.1222L55.8267 71.3478C54.8602 71.4479 53.8866 71.462 52.9175 71.3908L24.7623 69.3205C23.0074 69.1914 21.2879 68.7594 19.6802 68.0441C14.5655 65.7684 11.1084 60.8734 10.6734 55.2921L9.72321 43.1095C9.662 42.3242 9.6571 41.5352 9.70856 40.7492L10.607 27.0363C11.0689 19.9817 15.9734 14.0051 22.8023 12.1759L26.6841 11.1359C27.6791 10.8694 28.697 10.697 29.7242 10.6203L49.8746 9.11539H66.5621Z" fill="#8474D9" stroke="black"/>
-      <path d="M51.9603 20.0808C60.3156 20.0314 68.6711 20.4209 75.1293 21.2791C78.3632 21.7088 81.0836 22.2513 83.0785 22.9002C84.0769 23.2249 84.8581 23.5654 85.4213 23.9099C85.9988 24.2633 86.2534 24.564 86.3451 24.7664C87.9625 28.3354 89.7241 35.7294 90.1879 43.1043C90.4191 46.781 90.3238 50.4019 89.7474 53.5007C89.1671 56.6207 88.122 59.0853 86.5609 60.5925C85.8542 61.2748 84.3904 61.9962 82.1674 62.6746C79.9868 63.3399 77.2153 63.9234 74.0355 64.4109C67.6791 65.3854 59.778 65.9621 51.89 66.0613C43.9999 66.1605 36.1598 65.7822 29.9213 64.8591C26.7996 64.3972 24.1104 63.8033 22.0277 63.0789C19.9022 62.3395 18.5773 61.5197 17.9808 60.7156C16.5504 58.7872 15.6343 56.0186 15.1429 52.7507C14.6539 49.4982 14.5978 45.839 14.8207 42.2078C15.2679 34.9235 16.8236 27.9129 18.1049 24.7263C18.1502 24.6137 18.3323 24.3644 18.8802 24.0369C19.405 23.7234 20.1516 23.4064 21.1205 23.0974C23.0546 22.4806 25.7239 21.9431 28.9164 21.5007C35.2913 20.6175 43.6057 20.1302 51.9603 20.0808Z" fill="#E8F0F7" stroke="black" stroke-width="2"/>
-      <path d="M77.6087 43.0586C77.6087 47.8066 74.2873 44.2765 70.1902 44.2765C66.0931 44.2765 62.7717 47.8066 62.7717 43.0586C62.7717 38.3106 66.0931 34.4615 70.1902 34.4615C74.2873 34.4615 77.6087 38.3106 77.6087 43.0586Z" fill="#31094E"/>
-      <path d="M47.9348 54.4055C47.9348 52.1654 49.851 53.1293 52.2147 53.1293C54.5784 53.1293 56.4946 52.1654 56.4946 54.4055C56.4946 56.6456 54.5784 58.4615 52.2147 58.4615C49.851 58.4615 47.9348 56.6456 47.9348 54.4055Z" fill="#31094E"/>
-      <path d="M40.5163 44.2893C40.5163 49.0373 37.3227 45.5073 33.3832 45.5073C29.4436 45.5073 26.25 49.0373 26.25 44.2893C26.25 39.5413 29.4436 35.6923 33.3832 35.6923C37.3227 35.6923 40.5163 39.5413 40.5163 44.2893Z" fill="#31094E"/>
-      <path d="M6.95703 30.6538C7.27053 30.6539 7.50043 30.7183 7.67578 30.8189C7.85066 30.9192 8.00101 31.0727 8.12988 31.2974C8.3989 31.7664 8.54794 32.4998 8.60352 33.5152C8.65837 34.5179 8.62035 35.7215 8.56641 37.0874C8.51278 38.4453 8.44434 39.9546 8.44434 41.5386C8.44434 43.1226 8.51278 44.6319 8.56641 45.9898C8.62034 47.3555 8.65835 48.5584 8.60352 49.5611C8.54796 50.5767 8.39894 51.3107 8.12988 51.7798C8.00104 52.0044 7.8506 52.1581 7.67578 52.2583C7.50045 52.3588 7.27045 52.4233 6.95703 52.4234C5.67585 52.4234 4.06704 51.3269 2.74316 49.314C1.44079 47.3337 0.500031 44.5826 0.5 41.5386C0.5 38.4946 1.44084 35.7435 2.74316 33.7632C4.06704 31.7503 5.67585 30.6538 6.95703 30.6538Z" fill="#31094E" stroke="black"/>
-      <path d="M98.043 30.6538C97.7295 30.6539 97.4996 30.7183 97.3242 30.8189C97.1493 30.9192 96.999 31.0727 96.8701 31.2974C96.6011 31.7664 96.4521 32.4998 96.3965 33.5152C96.3416 34.5179 96.3797 35.7215 96.4336 37.0874C96.4872 38.4453 96.5557 39.9546 96.5557 41.5386C96.5557 43.1226 96.4872 44.6319 96.4336 45.9898C96.3797 47.3555 96.3417 48.5584 96.3965 49.5611C96.452 50.5767 96.6011 51.3107 96.8701 51.7798C96.999 52.0044 97.1494 52.1581 97.3242 52.2583C97.4996 52.3588 97.7295 52.4233 98.043 52.4234C99.3241 52.4234 100.933 51.3269 102.257 49.314C103.559 47.3337 104.5 44.5826 104.5 41.5386C104.5 38.4946 103.559 35.7435 102.257 33.7632C100.933 31.7503 99.3241 30.6538 98.043 30.6538Z" fill="#31094E" stroke="black"/>
-      <path d="M38.7337 6.56445C38.7337 6.82818 38.8037 7.02058 38.9212 7.1748C39.0441 7.3361 39.2443 7.48872 39.553 7.62207C40.1847 7.89485 41.1501 8.037 42.4329 8.08984C43.7031 8.14215 45.2224 8.10553 46.9319 8.05469C48.6357 8.00402 50.5213 7.93945 52.5003 7.93945C54.479 7.93946 56.3641 8.00403 58.0677 8.05469C59.7774 8.10553 61.2975 8.14216 62.5677 8.08984C63.8501 8.037 64.815 7.89472 65.4466 7.62207C65.7553 7.48877 65.9555 7.33603 66.0784 7.1748C66.1959 7.02058 66.2659 6.82818 66.2659 6.56445C66.2659 6.0222 65.9627 5.36699 65.2845 4.66113C64.6136 3.96296 63.621 3.2643 62.3655 2.64258C59.8565 1.40011 56.3667 0.500046 52.5003 0.5C48.6336 0.5 45.1432 1.4 42.6341 2.64258C41.3786 3.26436 40.3861 3.9629 39.7151 4.66113C39.0369 5.36699 38.7337 6.0222 38.7337 6.56445Z" fill="#31094E" stroke="black"/>
-    </svg>
-    VocabAssistant
-  </div>
-
-  <div class="top-nav-links">
-    <a href="/" class="nav-link active">Reading</a>
-    <a href="/live/" class="nav-link">Live Caption</a>
-    <a href="/review/" class="nav-link">Review</a>
-  </div>
+  .vocab-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:32px 24px; text-align:center; }
+  .vocab-empty-icon { width:72px; height:72px; background:var(--purple-ghost); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--purple-light); }
   
-  <input type="file" id="ocr-input" style="display:none;" accept="image/*" onchange="uploadImage()">
-</nav>
+  #sidebar-loading { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
+  .centered-lottie { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 10px; margin: 20px 0; }
+  
+  .action-btn { border:none; color:var(--purple-mid); background:var(--purple-ghost); border-radius:10px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition: all .24s cubic-bezier(0.175, 0.885, 0.32, 1.275); flex-shrink: 0; box-shadow: 0 1px 3px rgba(45,27,94,0.05); }
+  .action-btn:hover { background: var(--purple-soft); color: var(--purple-deep); transform: scale(1.1); box-shadow: 0 4px 8px rgba(45,27,94,0.1); }
+  .action-btn.saved { background: var(--accent-teal); color: var(--white); transform: scale(1.05); box-shadow: 0 4px 10px rgba(78,205,196,0.3); }
+{% endblock %}
 
-<!-- MAIN SPLIT VIEW -->
-<div class="split-view">
-
-  <!-- TEXT SIDE -->
-  <section class="text-side">
-    <div class="text-toolbar">
-      <div class="toolbar-ocr-btn" onclick="document.getElementById('ocr-input').click()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <span>Imagen a texto</span>
-      </div>
-      
-      <div style="flex:1;"></div>
-
-      <div class="mode-toggle-wrapper">
-        <div class="mode-toggle-slider" id="mode-slider"></div>
-        <button class="mode-toggle-btn active" id="edit-mode-btn" onclick="setMode('edit')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Editar
+{% block content %}
+    <section class="editor-panel">
+      <div class="toolbar">
+        <input type="file" id="ocr-input" style="display:none;" accept="image/*" onchange="uploadImage()">
+        <button class="tool-btn" onclick="document.getElementById('ocr-input').click()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Imagen a Texto
         </button>
-        <button class="mode-toggle-btn" id="read-mode-btn" onclick="setMode('read')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          Leer
+        <button class="tool-btn" onclick="pasteText()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+          Pegar texto
         </button>
-      </div>
-      
-      <div style="flex:1;"></div>
-    </div>
-
-    <div class="content-scroll">
-      <textarea id="text-input" placeholder="Pega o escribe tu texto aquí…"></textarea>
-      <div id="read-display"></div>
-    </div>
-  </section>
-
-  <div class="resizer" id="dragMe"></div>
-
-  <!-- DEFINITION PANEL -->
-  <aside class="def-panel" id="def-panel">
-
-    <div style="padding: 20px 20px 0 20px; display: flex; justify-content: center;">
-      <div class="custom-lang-pill">
-        <span class="lang-label-light">LEER:</span>
-        <select id="source-lang-select" class="lang-select-dark">
-          <option value="en">Inglés</option>
-          <option value="es">Español</option>
-          <option value="fr">Francés</option>
-          <option value="de">Alemán</option>
-          <option value="it">Italiano</option>
-          <option value="pt">Portugués</option>
-          <option value="zh-CN">Chino</option>
-          <option value="ja">Japonés</option>
-          <option value="ko">Coreano</option>
-          <option value="ru">Ruso</option>
-        </select>
-        <div class="sep-light"></div>
-        <span class="lang-label-light">VER:</span>
-        <select id="target-lang-select" class="lang-select-dark">
-          <option value="es">Español</option>
-          <option value="en">Inglés</option>
-          <option value="fr">Francés</option>
-          <option value="de">Alemán</option>
-          <option value="it">Italiano</option>
-          <option value="pt">Portugués</option>
-          <option value="zh-CN">Chino</option>
-          <option value="ja">Japonés</option>
-          <option value="ko">Coreano</option>
-          <option value="ru">Ruso</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- EMPTY STATE -->
-    <div class="def-empty-state" id="sidebar-default">
-      <div class="def-empty-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      </div>
-      <div class="def-empty-text">Cambia a <strong>leer</strong> y toca una palabra para ver su definición</div>
-    </div>
-
-    <!-- LOADING SKELETON -->
-    <div id="sidebar-loading" style="display:none; flex:1; flex-direction:column; align-items:center; justify-content:center; padding: 40px 22px;">
-      <dotlottie-player src="/static/core/loading.lottie?v=2" background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></dotlottie-player>
-      <div style="font-size: 14px; font-weight: 600; color: var(--ink-3); margin-top: -15px;">Buscando...</div>
-    </div>
-
-    <!-- FILLED STATE -->
-    <div id="word-details" style="display:none; flex:1; flex-direction:column; overflow:hidden;">
-      <div class="def-top">
-        <div class="def-panel-label">definición</div>
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-          <div class="def-word-display" id="side-word" style="word-break: break-word;"></div>
-          <button id="btn-play-audio" class="icon-btn" onclick="playWordAudio()" style="border:none; color:var(--lilac-dk); display:none; padding:4px;" title="Escuchar pronunciación">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-          </button>
-        </div>
-        <div class="def-phonetic" id="side-phonetic"></div>
-        <div class="def-badges" id="side-badges">
-          <span class="pill pill-lilac" id="side-pos" style="display:none;"></span>
-          <span class="pill pill-neutral" id="side-lang-badge"></span>
+        <span class="toolbar-spacer"></span>
+        <span class="word-count" id="wordCount"></span>
+        <div class="mode-switch">
+          <button class="mode-btn active" id="btnEdit" onclick="setMode('edit')">Editar</button>
+          <button class="mode-btn" id="btnAnalyze" onclick="setMode('analyze')">Analizar</button>
         </div>
       </div>
 
-      <div class="def-body" id="def-body">
-        <div>
-          <div class="def-section-title">traducción</div>
-          <div class="def-translation-text" id="side-translation"></div>
+      <div class="text-area-wrapper">
+        <textarea class="edit-area" id="editArea" placeholder="Pega o escribe tu texto aquí…" oninput="onTextInput()"></textarea>
+        <div class="token-area" id="tokenArea" onmouseup="onSelectionChange()"></div>
+        <div class="textarea-footer">
+          <span class="footer-hint" id="footerHint">Modo edición — escribe o pega texto</span>
+          <button class="btn-secondary" onclick="clearText()">Limpiar</button>
         </div>
-        <div class="def-separator"></div>
-        <div id="pos-container"></div>
-        
-        <div id="ai-actions" style="margin-top: 15px; display: flex; gap: 8px;">
-          <button class="btn-secondary" onclick="askOllama('explain')" style="flex:1; justify-content:center; padding:10px; font-size: 12px; border-color: var(--lilac); color: var(--lilac-dk);">✨ Explicar contexto</button>
-          <button class="btn-secondary" onclick="askOllama('examples')" style="flex:1; justify-content:center; padding:10px; font-size: 12px; border-color: var(--amber); color: #c27b03;">🌟 Dar ejemplos</button>
-        </div>
-        <div id="ai-results" style="margin-top: 15px; display: none;"></div>
+      </div>
+    </section>
+
+    <div class="resizer" id="sidebar-resizer"></div>
+
+    <aside class="vocab-panel" id="vocab-panel" onmouseup="onSelectionChange()">
+      <div id="sidebar-loading">
+        <dotlottie-player src="/static/core/loading.lottie?v=2" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
+        <div style="font-size: 14px; font-weight: 600; color: var(--muted); margin-top: -10px;">Buscando...</div>
       </div>
 
-      <div class="def-footer">
-        <button class="btn-save-card" id="save-btn" onclick="saveCurrentWord()">
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="2" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 2v4l2-1.5L9 6V2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          guardar como tarjeta
-        </button>
+      <div class="vp-def-wrap" id="defWrap" style="display: none;">
+        <div class="vp-body" id="defBody"></div>
       </div>
-    </div>
 
-  </aside>
-</div>
+      <div class="vocab-empty" id="vocabEmpty">
+        <div class="vocab-empty-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        </div>
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 20px;">Tu vocabulario</h3>
+        <p style="font-size: 13.5px; opacity: 0.8;">Activa el modo <strong>Analizar</strong> y selecciona texto o pasa el mouse.</p>
+      </div>
+    </aside>
+{% endblock %}
 
-<div id="toast"></div>
-
+{% block extra_js %}
 <script>
-    // Limpiar Service Workers fantasmas (por el error en consola 2sw.js)
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(let registration of registrations) { registration.unregister(); }
-        });
-    }
-
     let currentData = null;
-    let currentMode = 'edit';
+    let mode = 'edit';
+    let activeRequest = null;
+    let hoverTimeout = null;
+    let lastSelectedText = "";
+    
+    const editArea = document.getElementById('editArea');
+    const tokenArea = document.getElementById('tokenArea');
+    const mainGrid = document.querySelector('.main');
+    const resizer = document.getElementById('sidebar-resizer');
 
-    // ── RESIZER ────────────────────────
-    const resizer = document.getElementById('dragMe');
-    const leftSide = resizer.previousElementSibling;
-    const rightSide = resizer.nextElementSibling;
-    let rx = 0, rightWidth = 0;
-    resizer.addEventListener('mousedown', e => {
-        rx = e.clientX;
-        rightWidth = rightSide.getBoundingClientRect().width;
-        document.addEventListener('mousemove', onResizerMove);
-        document.addEventListener('mouseup', onResizerUp);
+    // Resizer Logic
+    let isResizing = false;
+    resizer.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        resizer.classList.add('resizing');
+        document.body.style.cursor = 'col-resize';
+        e.preventDefault();
     });
-    function onResizerMove(e) {
-        const dx = rx - e.clientX; // Moving left increases right side width
-        const newW = Math.max(300, rightWidth + dx);
-        rightSide.style.width = newW + 'px';
-        rightSide.style.flex = 'none';
-    }
-    function onResizerUp() {
-        document.removeEventListener('mousemove', onResizerMove);
-        document.removeEventListener('mouseup', onResizerUp);
-    }
 
-    // ── LANG PERSISTENCE ──────────────
-    const srcSel = document.getElementById('source-lang-select');
-    const tgtSel = document.getElementById('target-lang-select');
-    if (localStorage.getItem('source-lang')) srcSel.value = localStorage.getItem('source-lang');
-    if (localStorage.getItem('target-lang')) tgtSel.value = localStorage.getItem('target-lang');
-    srcSel.onchange = () => localStorage.setItem('source-lang', srcSel.value);
-    tgtSel.onchange = () => localStorage.setItem('target-lang', tgtSel.value);
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        const offsetRight = document.body.offsetWidth - e.clientX;
+        const newWidth = Math.max(280, Math.min(800, offsetRight - 36));
+        mainGrid.style.gridTemplateColumns = `1fr 6px ${newWidth}px`;
+        localStorage.setItem('sidebarWidth', newWidth);
+    });
 
-    // ── MODE SWITCH ────────────────────
-    const textarea = document.getElementById('text-input');
-    const readDisplay = document.getElementById('read-display');
-
-    function setMode(mode) {
-        currentMode = mode;
-        const slider = document.getElementById('mode-slider');
-        const editBtn = document.getElementById('edit-mode-btn');
-        const readBtn = document.getElementById('read-mode-btn');
-        const ocrBtn = document.querySelector('.toolbar-ocr-btn');
-        
-        if (mode === 'edit') {
-            slider.style.transform = 'translateX(0)';
-            editBtn.classList.add('active');
-            readBtn.classList.remove('active');
-            textarea.style.display = 'block';
-            readDisplay.style.display = 'none';
-            if (ocrBtn) ocrBtn.style.display = 'flex';
-        } else {
-            slider.style.transform = 'translateX(100%)';
-            editBtn.classList.remove('active');
-            readBtn.classList.add('active');
-            textarea.style.display = 'none';
-            readDisplay.style.display = 'block';
-            if (ocrBtn) ocrBtn.style.display = 'none';
-            renderReadMode();
+    document.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            resizer.classList.remove('resizing');
+            document.body.style.cursor = 'default';
         }
+    });
+
+    // Load width
+    const savedWidth = localStorage.getItem('sidebarWidth') || 360;
+    mainGrid.style.gridTemplateColumns = `1fr 6px ${savedWidth}px`;
+
+    window.addEventListener('langChanged', (e) => {
+        if (mode === 'analyze') renderTokens();
+    });
+
+    function setMode(m) {
+        mode = m;
+        document.getElementById('btnEdit').classList.toggle('active', m==='edit');
+        document.getElementById('btnAnalyze').classList.toggle('active', m==='analyze');
+        editArea.style.display = m==='edit' ? 'block' : 'none';
+        tokenArea.style.display = m==='analyze' ? 'block' : 'none';
+        document.getElementById('footerHint').textContent = m==='edit' ? 'Modo edición' : 'Modo análisis';
+        if (m==='analyze') renderTokens();
+        else showEmpty();
     }
 
-    function renderReadMode() {
-        const text = textarea.value;
+    function renderTokens() {
+        const text = editArea.value;
         const sourceLang = srcSel.value;
-        readDisplay.innerHTML = '';
-        if (!text.trim()) {
-            readDisplay.innerHTML = '<p style="color:var(--ink-3);font-family:Figtree,sans-serif;font-size:14px;text-align:center;margin-top:40px;">Pega un texto o sube una imagen primero.</p>';
-            return;
-        }
-        const lines = text.split('\n');
-        
-        let segmenter = null;
-        try {
-            segmenter = new Intl.Segmenter(sourceLang, { granularity: 'word' });
-        } catch(e) {}
+        tokenArea.innerHTML = '';
+        if (!text.trim()) return;
 
+        let segmenter = null;
+        try { segmenter = new Intl.Segmenter(sourceLang, { granularity: 'word' }); } catch(e) {}
+
+        const lines = text.split('\n');
         lines.forEach((line, li) => {
             if (segmenter) {
-                const segments = segmenter.segment(line);
-                for (const {segment, isWordLike} of segments) {
+                for (const {segment, isWordLike} of segmenter.segment(line)) {
+                    const span = document.createElement('span');
+                    span.className = 'word-span';
+                    span.textContent = segment;
                     if (isWordLike || (segment.trim() !== '' && !/^[\s.,\/#!$%\^&\*;:{}=\-_`~()！？，。]+$/.test(segment))) {
-                        const span = document.createElement('span');
-                        span.className = 'word-span';
-                        span.textContent = segment;
-                        readDisplay.appendChild(span);
-                    } else {
-                        readDisplay.appendChild(document.createTextNode(segment));
+                        span.onmouseenter = () => onHoverStart(span);
+                        span.onmouseleave = () => onHoverEnd();
                     }
+                    tokenArea.appendChild(span);
                 }
             } else {
                 line.split(/(\s+)/).forEach(token => {
+                    const span = document.createElement('span');
+                    span.className = 'word-span';
+                    span.textContent = token;
                     if (token.trim()) {
-                        const span = document.createElement('span');
-                        span.className = 'word-span';
-                        span.textContent = token;
-                        readDisplay.appendChild(span);
-                    } else {
-                        readDisplay.appendChild(document.createTextNode(token));
+                        span.onmouseenter = () => onHoverStart(span);
+                        span.onmouseleave = () => onHoverEnd();
                     }
+                    tokenArea.appendChild(span);
                 });
             }
-            if (li < lines.length - 1) readDisplay.appendChild(document.createElement('br'));
+            if (li < lines.length - 1) tokenArea.appendChild(document.createElement('br'));
         });
     }
 
-    // ── HOVER + SELECTION ─────────────
-    let hoverTimer, activeRequest = null, isMouseDown = false;
+    function onHoverStart(span) {
+        if (window.getSelection().toString().trim()) return;
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(() => {
+            tokenArea.querySelectorAll('.word-span').forEach(s => s.classList.remove('active'));
+            span.classList.add('active');
+            const word = span.textContent.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()！？，。]/g, '').trim();
+            if (word) triggerLookup(word);
+        }, 300);
+    }
 
-    readDisplay.addEventListener('mousedown', () => {
-        if (currentMode !== 'read') return;
-        isMouseDown = true;
-        clearTimeout(hoverTimer);
-        if (activeRequest) { activeRequest.abort(); activeRequest = null; }
-        readDisplay.querySelectorAll('.word-span').forEach(s => {
-            s.classList.remove('active', 'loading');
-            s.dataset.hovering = 'false';
-        });
-    });
+    function onHoverEnd() { clearTimeout(hoverTimeout); }
 
-    document.addEventListener('mouseup', () => { 
-        isMouseDown = false; 
-        if (currentMode !== 'read') return;
-        setTimeout(() => {
-            let sel = window.getSelection().toString().trim();
-            const isCjk = /[\u4e00-\u9fa5\u3040-\u30ff]/.test(sel);
-            const isPhraseSelection = isCjk ? sel.length >= 3 : /\s/.test(sel);
-            
-            if (sel && isPhraseSelection) {
-                sel = sel.replace(/\s+/g, ' ');
-                if (window.lastRequestedPhrase !== sel) {
-                    window.lastRequestedPhrase = sel;
-                    triggerLookup(sel, null);
-                }
-            } else {
-                window.lastRequestedPhrase = "";
-            }
-        }, 50);
-    });
+    function onSelectionChange() {
+        const selection = window.getSelection().toString().trim();
+        if (selection && selection !== lastSelectedText) {
+            lastSelectedText = selection;
+            // Clear highlights only if in main area, or keep them?
+            // tokenArea.querySelectorAll('.word-span').forEach(s => s.classList.remove('active'));
+            triggerLookup(selection);
+        }
+    }
 
-        readDisplay.addEventListener('mousemove', e => {
-        const span = e.target.closest('.word-span');
-        if (!span || currentMode !== 'read' || isMouseDown) return;
-        const word = span.textContent.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()！？，。]/g, '').trim();
-        if (!word || span.dataset.hovering === 'true') return;
-        clearTimeout(hoverTimer);
-        hoverTimer = setTimeout(() => {
-            if (!isMouseDown && window.getSelection().toString().length === 0) {
-                readDisplay.querySelectorAll('.word-span').forEach(s => s.classList.remove('active'));
-                span.classList.add('active');
-                triggerLookup(word, span);
-            }
-        }, 250);
-        readDisplay.querySelectorAll('.word-span').forEach(s => s.dataset.hovering = 'false');
-        span.dataset.hovering = 'true';
-    });
-
-    // ── LOOKUP ────────────────────────
-    function triggerLookup(word, span) {
+    function triggerLookup(word) {
         if (activeRequest) activeRequest.abort();
         const controller = new AbortController();
         activeRequest = controller;
 
-        // Show skeleton
-        document.getElementById('sidebar-default').style.display = 'none';
-        document.getElementById('word-details').style.display = 'none';
-        document.getElementById('sidebar-loading').style.display = 'block';
+        document.getElementById('vocabEmpty').style.display = 'none';
+        document.getElementById('defWrap').style.display = 'none';
+        document.getElementById('sidebar-loading').style.display = 'flex';
 
-        const source = srcSel.value;
-        const target = tgtSel.value;
-
-        fetch(`/define/?word=${encodeURIComponent(word)}&source=${source}&target=${target}`, { signal: controller.signal })
+        fetch(`/define/?word=${encodeURIComponent(word)}&source=${srcSel.value}&target=${tgtSel.value}`, { signal: controller.signal })
             .then(r => r.json())
             .then(data => {
-                if (span) span.classList.remove('loading');
                 document.getElementById('sidebar-loading').style.display = 'none';
-                if (data.error) { showDefault(); return; }
+                if (data.error) { showEmpty(); return; }
                 updateSidebar(data);
             })
-            .catch(err => {
-                if (err.name !== 'AbortError') {
-                    if (span) span.classList.remove('loading');
-                    document.getElementById('sidebar-loading').style.display = 'none';
-                    showDefault();
-                    showToast('Network error: ' + err.message, '#E63F3F');
-                }
-            });
+            .catch(err => { if (err.name !== 'AbortError') { document.getElementById('sidebar-loading').style.display = 'none'; showEmpty(); } });
     }
 
-    function showDefault() {
-        document.getElementById('sidebar-default').style.display = 'flex';
-        document.getElementById('word-details').style.display = 'none';
+    function showEmpty() {
+        document.getElementById('vocabEmpty').style.display = 'flex';
+        document.getElementById('defWrap').style.display = 'none';
     }
-
-    // ── SIDEBAR UPDATE ────────────────
-    const LANG_NAMES = { en:'Inglés', es:'Español', fr:'Francés', de:'Alemán', it:'Italiano', pt:'Portugués', 'zh-CN':'Chino', ja:'Japonés', ko:'Coreano', ru:'Ruso' };
 
     function updateSidebar(data) {
         currentData = data;
-        document.getElementById('sidebar-default').style.display = 'none';
-        document.getElementById('sidebar-loading').style.display = 'none';
-        const wd = document.getElementById('word-details');
-        wd.style.display = 'flex';
-        wd.style.flexDirection = 'column';
-        wd.style.flex = '1';
-        wd.style.overflow = 'hidden';
+        document.getElementById('defWrap').style.display = 'flex';
+        const body = document.getElementById('defBody');
+        const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' ')) || (data.original && data.original.length >= 3 && /[\u4e00-\u9fa5]/.test(data.original));
+        const isChinese = srcSel.value === 'zh-CN';
+        const showOriginal = isChinese || !isPhrase;
 
-        document.getElementById('ai-results').style.display = 'none';
-        document.getElementById('ai-results').innerHTML = '';
-        const aiActions = document.getElementById('ai-actions');
-        if (aiActions) {
-            aiActions.style.display = 'flex';
-            aiActions.style.opacity = '1';
-            aiActions.style.pointerEvents = 'auto';
-        }
-
-        const isCjk = /[\u4e00-\u9fa5\u3040-\u30ff]/.test(data.original || '');
-        const isPhrase = data.type === 'phrase' || (data.original && data.original.includes(' ')) || (isCjk && data.original && data.original.length >= 3);
-        const langName = LANG_NAMES[srcSel.value] || srcSel.value;
-
-        document.querySelector('.def-top').style.display = 'flex';
-        document.querySelector('.def-panel-label').textContent = isPhrase ? 'frase' : 'definición';
-        document.getElementById('side-word').textContent = data.original || '';
-        document.getElementById('side-phonetic').textContent = data.phonetic || '';
-        
-        const btnAudio = document.getElementById('btn-play-audio');
-        if (!isPhrase && data.original) {
-            btnAudio.style.display = 'flex';
-        } else {
-            btnAudio.style.display = 'none';
-        }
-        
-        if (isPhrase) {
-            document.getElementById('side-word').style.fontSize = '20px';
-            document.getElementById('side-word').style.lineHeight = '1.4';
-            document.getElementById('side-translation').style.fontSize = '18px';
-            document.getElementById('side-translation').style.fontWeight = '500';
-            document.getElementById('side-translation').style.lineHeight = '1.5';
-        } else {
-            document.getElementById('side-word').style.fontSize = '';
-            document.getElementById('side-word').style.lineHeight = '1';
-            document.getElementById('side-translation').style.fontSize = '22px';
-            document.getElementById('side-translation').style.fontWeight = '700';
-            document.getElementById('side-translation').style.lineHeight = 'normal';
-        }
-
-        document.getElementById('side-translation').textContent = data.translation || '';
-        document.getElementById('side-lang-badge').textContent = langName;
-
-        const posEl = document.getElementById('side-pos');
-        if (data.meanings && data.meanings.length > 0 && !isPhrase) {
-            posEl.textContent = data.meanings[0].partOfSpeech;
-            posEl.style.display = 'inline-block';
-        } else { posEl.style.display = 'none'; }
-
-        const posContainer = document.getElementById('pos-container');
-        posContainer.innerHTML = '';
-        if (isPhrase) {
-            const p = document.createElement('p');
-            p.style.cssText = 'color:var(--ink-3);font-style:italic;font-size:13px;';
-            p.textContent = 'Frase seleccionada. Usa los botones de abajo para generar ejemplos con IA.';
-            posContainer.appendChild(p);
-
-        } else if (data.meanings && data.meanings.length > 0) {
-            data.meanings.forEach(meaning => {
-                const sec = document.createElement('div');
-                const lbl = document.createElement('div');
-                lbl.className = 'def-section-title';
-                lbl.textContent = meaning.partOfSpeech;
-                sec.appendChild(lbl);
-                meaning.definitions.forEach((def, i) => {
-                    const item = document.createElement('div');
-                    item.className = 'def-meaning-text';
-                    item.style.marginBottom = '10px';
-                    item.innerHTML = `<strong>${i+1}.</strong> ${def.definition}`;
-                    if (def.example) {
-                        const ex = document.createElement('div');
-                        ex.className = 'def-example-block';
-                        ex.style.marginTop = '8px';
-                        ex.textContent = `"${def.example}"`;
-                        item.appendChild(ex);
-                    }
-                    sec.appendChild(item);
-                });
-                posContainer.appendChild(sec);
-            });
-        } else if (data.definition) {
-            const item = document.createElement('div');
-            item.className = 'def-meaning-text';
-            item.textContent = data.definition;
-            posContainer.appendChild(item);
-        }
-    }
-
-    // ── OCR ───────────────────────────
-    function uploadImage() {
-        const file = document.getElementById('ocr-input').files[0];
-        if (!file) return;
-        showToast('Procesando imagen…');
-        const fd = new FormData();
-        fd.append('image', file);
-        fd.append('lang', srcSel.value);
-        fetch('/ocr/', { method:'POST', headers:{'X-CSRFToken': getCookie('csrftoken')}, body: fd })
-            .then(r => r.json())
-            .then(data => {
-                if (data.text) { textarea.value = data.text; showToast('Texto extraído ✓', '#1DB87A'); }
-                else showToast(data.error || 'Error en OCR', '#E63F3F');
-            })
-            .catch(() => showToast('Error de conexión', '#E63F3F'));
-    }
-
-    // ── SAVE ──────────────────────────
-    function saveCurrentWord() {
-        if (!currentData) return;
-        const btn = document.getElementById('save-btn');
-        showToast('Guardando…');
-        const payload = { ...currentData, word: currentData.original, source_lang: srcSel.value, target_lang: tgtSel.value };
-        fetch('/save/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-            body: JSON.stringify(payload)
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                showToast('¡Tarjeta guardada!', '#1DB87A');
-                btn.classList.add('saved');
-                btn.innerHTML = '✓ guardada';
-            } else if (data.status === 'duplicate') {
-                showToast('Ya la tienes guardada', '#F59E0B');
-            }
-        })
-        .catch(() => showToast('Error de conexión', '#E63F3F'));
-    }
-
-    // ── AUDIO PRONUNCIATION ───────────
-    function playWordAudio() {
-        if (!currentData || !currentData.original) return;
-        const text = currentData.original;
-        let langCode = srcSel.value;
-        // Adjust lang code for some browsers for better TTS compatibility
-        if (langCode === 'en') langCode = 'en-US';
-        if (langCode === 'es') langCode = 'es-ES';
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = langCode;
-        window.speechSynthesis.cancel(); // Stop any currently playing audio
-        window.speechSynthesis.speak(utterance);
-    }
-
-    // ── OLLAMA AI ─────────────────────
-    function askOllama(action) {
-        if (!currentData || !currentData.original) return;
-        const btnContainer = document.getElementById('ai-actions');
-        const resContainer = document.getElementById('ai-results');
-        
-        btnContainer.style.opacity = '0.5';
-        btnContainer.style.pointerEvents = 'none';
-        resContainer.style.display = 'block';
-        resContainer.innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 20px 0;">
-                <dotlottie-player src="/static/core/loading.lottie?v=2" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></dotlottie-player>
-                <div style="font-size:12px; font-weight: 500; color:var(--ink-3); margin-top: -5px;">✨ Ollama está pensando...</div>
-            </div>`;
-        
-        const text = document.getElementById('text-input').value;
-        let context = "";
-        if (text && currentData.original) {
-            const idx = text.toLowerCase().indexOf(currentData.original.toLowerCase());
-            if (idx !== -1) {
-                const start = Math.max(0, idx - 50);
-                const end = Math.min(text.length, idx + currentData.original.length + 50);
-                context = text.substring(start, end).replace(/\\n/g, ' ');
-            }
-        }
-        
-        const payload = {
-            word: currentData.original,
-            context: context.trim(),
-            source_lang: srcSel.value,
-            target_lang: tgtSel.value
-        };
-        
-        const url = action === 'explain' ? '/api/ai/explain/' : '/api/ai/examples/';
-        
-        fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-            body: JSON.stringify(payload)
-        })
-        .then(r => r.json())
-        .then(data => {
-            btnContainer.style.opacity = '1';
-            btnContainer.style.pointerEvents = 'auto';
-            if (data.error) {
-                resContainer.innerHTML = `<div style="color:var(--red); font-size:12px;">Error: ${data.error}</div>`;
-                return;
-            }
+        body.innerHTML = `
+            ${showOriginal ? `
+            <div class="sec-label">${isChinese && isPhrase ? 'frase' : (isChinese ? 'caracteres' : 'original')}</div>
+            <div class="def-word-container">
+                <div class="def-word">${data.original}</div>
+                <div style="display: flex; gap: 8px;">
+                    ${!isPhrase ? `
+                    <button class="action-btn" onclick="playAudio()" title="Proinciar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    </button>` : ''}
+                    <button class="action-btn" id="btnSave" onclick="saveCurrentWord()" title="Agregar al vocabulario">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                </div>
+            </div>
+            ${data.phonetic ? `<div class="def-phonetic">${data.phonetic}</div>` : ''}
+            ` : ''}
             
-            let html = '';
-            if (action === 'explain') {
-                html += '<div class="def-section-title">✨ Explicación IA</div>';
-                if (data.phonetic) html += `<div class="def-phonetic" style="margin-bottom:8px;">${data.phonetic}</div>`;
-                
-                if (data.explanation_sentences && data.explanation_sentences.length > 0) {
-                    data.explanation_sentences.forEach(sent => {
-                        html += `
-                        <div class="def-example-block accordion-explain" style="margin-bottom:10px; cursor:pointer; background: transparent; border-left: 2px solid var(--lilac);" onclick="const t = this.querySelector('.ex-trans'); const h = this.querySelector('.ex-hint'); if(t.style.display === 'none') { t.style.display = 'block'; h.style.display = 'none'; } else { t.style.display = 'none'; h.style.display = 'inline'; }">
-                            <div style="font-weight: 500; display: inline; color: var(--ink);">${sent.original}</div>
-                            <span class="ex-hint" style="font-size: 11px; color: var(--lilac-dk); font-weight: 700; margin-left: 8px; text-transform: uppercase; float: right;">👀 Ver</span>
-                            <div class="ex-trans" style="font-size:14px; color:var(--ink-2); margin-top:8px; font-style:normal; display:none; padding-top: 8px; border-top: 1px dashed rgba(17,17,24,0.15);">${sent.translation}</div>
-                        </div>`;
-                    });
-                } else if (data.translation) {
-                    html += `
-                    <div class="def-example-block accordion-explain" style="margin-bottom:10px; cursor:pointer;" onclick="const t = this.querySelector('.ex-trans'); const h = this.querySelector('.ex-hint'); if(t.style.display === 'none') { t.style.display = 'block'; h.style.display = 'none'; } else { t.style.display = 'none'; h.style.display = 'inline'; }">
-                        <div style="font-weight: 500; display: inline;">${data.explanation || 'Sin explicación.'}</div>
-                        <span class="ex-hint" style="font-size: 11px; color: var(--lilac-dk); font-weight: 700; margin-left: 8px; text-transform: uppercase; float: right;">👀 Ver</span>
-                        <div class="ex-trans" style="font-size:14px; color:var(--ink-2); margin-top:8px; font-style:normal; display:none; padding-top: 8px; border-top: 1px dashed rgba(17,17,24,0.15);">${data.translation}</div>
-                    </div>`;
-                } else {
-                    html += `<div class="def-meaning-text" style="color: var(--ink);">${data.explanation || 'Sin explicación.'}</div>`;
-                }
+            <div class="def-tags" style="margin-top: ${showOriginal ? '4px' : '0'}">
+                ${data.meanings && data.meanings[0] ? `<span class="def-tag pos">${data.meanings[0].partOfSpeech}</span>` : ''}
+                <span class="def-tag lang">${LANG_NAMES[srcSel.value]}</span>
+            </div>
+            
+            <div class="sec-label">Traducción</div>
+            <div class="def-translation-container">
+                <div class="def-translation">${data.translation}</div>
+                <div style="display: flex; gap: 8px;">
+                    ${!showOriginal && !isPhrase ? `
+                    <button class="action-btn" onclick="playAudio()" title="Proinciar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    </button>` : ''}
+                    ${!showOriginal ? `
+                    <button class="action-btn" id="btnSaveTrans" onclick="saveCurrentWord()" title="Agregar al vocabulario">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>` : ''}
+                </div>
+            </div>
+            
+            <div class="ai-actions">
+                <button class="ai-btn" onclick="askOllama('explain')"><span class="spark">✦</span> Explicar contexto</button>
+                <button class="ai-btn" onclick="askOllama('examples')"><span class="spark">✦</span> Dar ejemplos</button>
+            </div>
+            <div id="ai-results" style="margin-top:10px; display:none;"></div>
+        `;
+
+        if (data.meanings) {
+            data.meanings.forEach(m => {
+                const sec = document.createElement('div');
+                sec.innerHTML = `<div class="sec-label">${m.partOfSpeech}</div>`;
+                const list = document.createElement('ul'); list.className = 'def-list';
+                m.definitions.forEach((d, i) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="def-num">${i+1}.</span><div>${d.definition}${d.example ? `<div class="ex-card" style="margin-top:8px;">"${d.example}"</div>` : ''}</div>`;
+                    list.appendChild(li);
+                });
+                sec.appendChild(list); body.appendChild(sec);
+            });
+        }
+    }
+
+    function playAudio() {
+        if (!currentData || !currentData.original) return;
+        const u = new SpeechSynthesisUtterance(currentData.original);
+        u.lang = srcSel.value === 'en' ? 'en-US' : (srcSel.value === 'es' ? 'es-ES' : srcSel.value);
+        window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+    }
+
+    function toggleAiTrans(btn) {
+        const trans = btn.nextElementSibling;
+        if (trans.style.display === 'none') {
+            trans.style.display = 'block';
+            btn.innerHTML = `Ocultar traducción`;
+        } else {
+            trans.style.display = 'none';
+            btn.innerHTML = `Traducir`;
+        }
+    }
+
+    function askOllama(action) {
+        const res = document.getElementById('ai-results'); res.style.display = 'block';
+        res.innerHTML = '<div class="centered-lottie"><dotlottie-player src="/static/core/loading.lottie?v=2" background="transparent" speed="1" style="width: 80px; height: 80px;" loop autoplay></dotlottie-player><div style="font-size:12px;color:var(--muted);margin-top:-10px;">Consultando IA...</div></div>';
+        
+        fetch(`/api/ai/${action}/`, {
+            method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},
+            body: JSON.stringify({ word:currentData.original, context: editArea.value, source_lang:srcSel.value, target_lang:tgtSel.value })
+        }).then(r => r.json()).then(d => {
+            if (action==='explain') {
+                const sents = d.explanation_sentences || [];
+                if (sents.length === 0) { res.innerHTML = `<div class="sec-label">Explicación</div><div style="font-size:13px;">${d.error || 'No se pudo obtener una explicación.'}</div>`; return; }
+                res.innerHTML = `<div class="sec-label">Explicación</div>` + sents.map(s => `
+                    <div style="font-size:13px; margin-bottom:12px; text-align: left;">
+                        <strong>${s.original}</strong><br>
+                        <button class="translate-toggle-btn" onclick="toggleAiTrans(this)">Traducir</button>
+                        <div class="ai-trans" style="display:none; color:var(--muted); margin-top:4px;">${s.translation}</div>
+                    </div>`).join('');
             } else {
-                html += '<div class="def-section-title">🌟 Ejemplos IA</div>';
-                if (data.examples && data.examples.length > 0) {
-                    data.examples.forEach(ex => {
-                        html += `
-                        <div class="def-example-block" style="margin-bottom:10px; cursor:pointer;" onclick="const t = this.querySelector('.ex-trans'); const h = this.querySelector('.ex-hint'); if(t.style.display === 'none') { t.style.display = 'block'; h.style.display = 'none'; } else { t.style.display = 'none'; h.style.display = 'inline'; }">
-                            <div style="font-weight: 500; display: inline;">${ex.sentence}</div>
-                            <span class="ex-hint" style="font-size: 11px; color: var(--lilac-dk); font-weight: 700; margin-left: 8px; text-transform: uppercase; float: right;">👀 Ver</span>
-                            <div class="ex-trans" style="font-size:14px; color:var(--ink-2); margin-top:8px; font-style:normal; display:none; padding-top: 8px; border-top: 1px dashed rgba(17,17,24,0.15);">${ex.translation}</div>
-                        </div>`;
-                    });
-                } else {
-                    html += '<div class="def-meaning-text">No se generaron ejemplos.</div>';
-                }
+                const exs = d.examples || [];
+                res.innerHTML = `<div class="ex-section-label">✦ EJEMPLOS IA</div>` + exs.map(ex => `
+                    <div class="ex-card">
+                        <div class="ex-original">${ex.sentence}</div>
+                        <button class="translate-toggle-btn" onclick="toggleAiTrans(this)">Traducir</button>
+                        <div class="ex-translation" style="display:none; margin-top:6px;">${ex.translation}</div>
+                    </div>`).join('');
             }
-            resContainer.innerHTML = html;
-        })
-        .catch(err => {
-            btnContainer.style.opacity = '1';
-            btnContainer.style.pointerEvents = 'auto';
-            resContainer.innerHTML = '<div style="color:var(--red); font-size:12px;">Error de conexión con Ollama</div>';
         });
     }
 
-    // ── UTILS ─────────────────────────
-    function getCookie(name) {
-        for (const c of document.cookie.split(';')) {
-            const [k, v] = c.trim().split('=');
-            if (k === name) return decodeURIComponent(v);
-        }
-        return null;
+    function saveCurrentWord() {
+        if (!currentData) return;
+        fetch('/save/', { method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')}, body:JSON.stringify({ ...currentData, word: currentData.original, source_lang: srcSel.value, target_lang: tgtSel.value }) })
+        .then(r => r.json()).then(d => {
+            if (d.status === 'ok') { 
+                const btns = document.querySelectorAll('#btnSave, #btnSaveTrans');
+                btns.forEach(b => {
+                    b.classList.add('saved');
+                    b.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                });
+                showToast('¡Guardada!'); renderTokens(); 
+            }
+            else showToast('Ya guardada', '#F7B731');
+        });
     }
 
-    function showToast(msg, bg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.style.background = bg || 'var(--ink)';
-        t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 2500);
+    function uploadImage() {
+        const file = document.getElementById('ocr-input').files[0]; if (!file) return;
+        const fd = new FormData(); fd.append('image', file); fd.append('lang', srcSel.value);
+        showToast('Procesando imagen...');
+        fetch('/ocr/', { method:'POST', headers:{'X-CSRFToken':getCookie('csrftoken')}, body:fd })
+        .then(r => r.json()).then(d => {
+            if (d.text) { editArea.value = d.text; onTextInput(); showToast('Texto extraído ✓'); setMode('edit'); }
+            else showToast('Error en OCR', '#F7B731');
+        });
     }
+
+    function onTextInput() {
+        const n = editArea.value.trim().split(/\s+/).filter(Boolean).length;
+        document.getElementById('wordCount').textContent = n ? `${n} palabras` : '';
+    }
+    function pasteText() { navigator.clipboard.readText().then(t=>{if(t){editArea.value=t; onTextInput();}}).catch(() => {}); }
+    function clearText() { editArea.value=''; tokenArea.innerHTML=''; onTextInput(); showEmpty(); setMode('edit'); }
+
+    editArea.value = "Welcome to VocabAssistant! Paste your own text here to start mining new words and phrases.";
+    onTextInput();
 </script>
-</body>
-</html>
+{% endblock %}

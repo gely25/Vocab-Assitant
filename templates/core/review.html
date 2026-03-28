@@ -1,301 +1,76 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VocabAssistant | Repaso</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+{% extends 'core/base.html' %}
+{% load static %}
 
-:root {
-  --ink:       #111118;
-  --ink-2:     #60607A;
-  --ink-3:     #AEAEC5;
-  --paper:     #FAFAF7;
-  --surface:   #F2F2EE;
-  --surface-2: #E8E8E2;
-  --lilac:     #C4B5FD;
-  --lilac-dk:  #7C3AED;
-  --lilac-lt:  #EDE9FE;
-  --green:     #1DB87A;
-  --green-lt:  #DCFAED;
-  --red:       #E63F3F;
-  --red-lt:    #FDEAEA;
-  --amber:     #F59E0B;
-  --amber-lt:  #FEF3C7;
-  --border:    rgba(17,17,24,0.09);
+{% block title %}VocabAssistant | Repaso{% endblock %}
+{% block topbar_title %}Review Mode{% endblock %}
+
+{% block extra_css %}
+  .main { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; overflow-y: auto; background: var(--surface); }
   
-  --nav-bg:    #31094E;
-  --toolbar-bg: #240638;
-  --r-sm: 8px;
-  --r-md: 14px;
-  --r-lg: 20px;
-  --r-xl: 28px;
-}
-
-html, body {
-  height: 100%;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: 'Figtree', sans-serif;
-}
-
-body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-
-/* ── TOPBAR ─────────────────────────── */
-.topbar {
-  display: flex;
-  align-items: center;
-  padding: 0 30px;
-  height: 60px;
-  background: linear-gradient(90deg, #DDD5F3 0%, var(--nav-bg) 100%);
-  gap: 12px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 10;
-}
-.logo {
-  font-family: 'Figtree', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  display: flex; align-items: center; gap: 8px;
-}
-.top-nav-links {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 40px;
-}
-.nav-link { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 14px; border-radius: 8px; transition: all 0.15s; }
-.nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
-.nav-link.active { color: #fff; font-weight: 700; background: rgba(255,255,255,0.18); }
-.icon-btn {
-  width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,0.2);
-  border-radius: var(--r-sm); background: transparent;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: rgba(255,255,255,0.8); transition: all .15s;
-}
-.icon-btn:hover { border-color: #fff; color: #fff; }
-
-/* ── REPASO LAYOUT ─────────────────── */
-.repaso-wrap {
-  flex: 1; overflow: hidden;
-  display: flex; flex-direction: column;
-  background: var(--surface);
-}
-
-/* Progress */
-.progress-section {
-  padding: 24px 48px 0; flex-shrink: 0;
-}
-.progress-meta {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 8px;
-}
-.progress-label { font-size: 12px; font-weight: 600; color: var(--ink-2); }
-.progress-count { font-size: 12px; font-weight: 700; color: var(--ink); }
-.progress-track {
-  height: 6px; background: var(--surface-2);
-  border-radius: 99px; overflow: hidden;
-}
-.progress-fill {
-  height: 100%; background: var(--ink);
-  border-radius: 99px; transition: width .4s cubic-bezier(.4,0,.2,1);
-  width: 0%;
-}
-
-/* Stats */
-.stats-row {
-  display: flex; gap: 8px;
-  padding: 14px 48px 0; flex-shrink: 0;
-}
-.stat-chip {
-  padding: 4px 12px; border-radius: 20px;
-  font-size: 12px; font-weight: 700;
-  display: flex; align-items: center; gap: 5px;
-}
-.stat-green { background: var(--green-lt); color: var(--green); }
-.stat-red   { background: var(--red-lt);   color: var(--red); }
-.stat-amber { background: var(--amber-lt); color: var(--amber); }
-
-/* Card stage */
-.card-stage {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 28px; padding: 24px 48px 16px;
-  width: 100%; max-width: 660px; margin: 0 auto;
-}
-
-/* 3D flip card */
-.flip-card-wrapper { width: 100%; perspective: 1200px; }
-.flip-card {
-  width: 100%; height: 220px;
-  position: relative; transform-style: preserve-3d;
-  transition: transform .55s cubic-bezier(.4,0,.2,1); cursor: pointer;
-}
-.flip-card.flipped { transform: rotateY(180deg); }
-.card-face {
-  position: absolute; inset: 0; backface-visibility: hidden;
-  border-radius: var(--r-xl); border: 1.5px solid var(--border);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; padding: 32px;
-}
-.card-front { background: var(--paper); }
-.card-back  { background: var(--ink); transform: rotateY(180deg); }
-
-.card-tag {
-  position: absolute; top: 16px; left: 20px;
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-}
-.card-front .card-tag { color: var(--ink-3); }
-.card-back  .card-tag { color: rgba(196,181,253,0.5); }
-
-.card-word {
-  font-family: 'Fraunces', serif; font-size: 52px;
-  font-weight: 700; letter-spacing: -0.03em; line-height: 1; text-align: center;
-}
-.card-front .card-word { color: var(--ink); }
-.card-back  .card-word { color: var(--lilac); }
-
-.card-context {
-  font-size: 13px; color: var(--ink-3); margin-top: 10px;
-  font-style: italic; text-align: center;
-}
-.card-back .card-context { color: rgba(255,255,255,0.3); }
-
-.card-hint {
-  position: absolute; bottom: 14px; right: 18px;
-  font-size: 11px; font-weight: 600; color: var(--ink-3);
-}
-.card-back .card-hint { color: rgba(255,255,255,0.22); }
-.card-phonetic { font-size: 14px; color: var(--ink-3); margin-top: 6px; font-style: italic; }
-
-/* Action zone */
-.action-zone {
-  width: 100%; display: flex;
-  flex-direction: column; align-items: center; gap: 12px;
-}
-
-.btn-reveal {
-  width: 100%; padding: 18px; border-radius: var(--r-xl);
-  border: 1.5px solid var(--ink); background: var(--ink);
-  color: var(--lilac); font-family: 'Fraunces', serif;
-  font-size: 20px; font-weight: 700; cursor: pointer;
-  transition: all .15s; letter-spacing: -0.01em;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-}
-.btn-reveal:hover { background: #2A2A38; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(17,17,24,0.18); }
-
-.response-group { display: none; width: 100%; gap: 10px; }
-.response-group.visible { display: flex; }
-
-.btn-resp-no {
-  flex: 1; padding: 13px 10px; border-radius: var(--r-lg);
-  border: 1.5px solid #EDCFCF; background: var(--red-lt); color: var(--red);
-  font-family: 'Figtree', sans-serif; font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all .15s; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-}
-.btn-resp-no:hover { background: #FAD5D5; transform: translateY(-1px); }
-
-.btn-resp-almost {
-  flex: 1.3; padding: 13px 10px; border-radius: var(--r-lg);
-  border: 1.5px solid #F3D9A0; background: var(--amber-lt); color: var(--amber);
-  font-family: 'Figtree', sans-serif; font-size: 14px; font-weight: 700;
-  cursor: pointer; transition: all .15s; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-}
-.btn-resp-almost:hover { background: #fde9a0; transform: translateY(-1px); }
-
-.btn-resp-yes {
-  flex: 2; padding: 13px 10px; border-radius: var(--r-lg);
-  border: 1.5px solid #8FDFBA; background: var(--green); color: #fff;
-  font-family: 'Figtree', sans-serif; font-size: 16px; font-weight: 700;
-  cursor: pointer; transition: all .15s; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-}
-.btn-resp-yes:hover { background: #18a56e; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,184,122,0.3); }
-
-.resp-emoji { font-size: 20px; display: flex; align-items: center; justify-content: center; height: 22px; }
-.resp-label { font-size: 11px; font-weight: 600; opacity: 0.7; }
-
-.btn-skip {
-  font-size: 12px; font-weight: 600; color: var(--ink-3);
-  background: none; border: none; cursor: pointer; padding: 4px 8px;
-  font-family: 'Figtree', sans-serif; transition: color .15s;
-}
-.btn-skip:hover { color: var(--ink-2); }
-
-/* Footer */
-.repaso-footer {
-  padding: 12px 48px 20px;
-  display: flex; justify-content: center; align-items: center; gap: 12px;
-  flex-shrink: 0;
-}
-.footer-label { font-size: 12px; color: var(--ink-3); }
-.footer-label strong { color: var(--ink-2); font-weight: 700; }
-
-/* Empty state */
-.empty-card {
-  width: 100%; padding: 60px 40px;
-  background: var(--paper); border-radius: var(--r-xl);
-  border: 1.5px solid var(--border);
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; text-align: center; gap: 16px;
-}
-.empty-icon { font-size: 40px; }
-.empty-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--ink); }
-.empty-text { font-size: 14px; color: var(--ink-3); line-height: 1.6; max-width: 280px; }
-.btn-go-read {
-  padding: 10px 24px; border-radius: var(--r-md);
-  border: 1.5px solid var(--ink); background: var(--ink);
-  color: var(--lilac); font-family: 'Figtree', sans-serif;
-  font-size: 14px; font-weight: 700; cursor: pointer;
-  text-decoration: none; transition: all .15s; display: inline-block;
-}
-.btn-go-read:hover { background: #2a2a38; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.fade-in { animation: fadeIn .3s ease-out; }
-</style>
-</head>
-<body>
-
-<!-- TOPBAR -->
-<nav class="topbar">
-  <div class="logo">
-    <svg width="45" height="32" viewBox="0 0 105 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M66.5621 9.11539L79.648 10.4552C81.4181 10.6365 83.1446 11.119 84.7525 11.881C89.1551 13.9676 92.3338 17.987 93.3492 22.7521L95.0074 30.5334C95.2483 31.6638 95.3697 32.817 95.3697 33.9728V40.672C95.3697 41.4865 95.3091 42.3001 95.189 43.1056L93.4488 54.7775C92.4198 61.6765 87.1636 67.1835 80.3199 68.5324L77.3248 69.1222L55.8267 71.3478C54.8602 71.4479 53.8866 71.462 52.9175 71.3908L24.7623 69.3205C23.0074 69.1914 21.2879 68.7594 19.6802 68.0441C14.5655 65.7684 11.1084 60.8734 10.6734 55.2921L9.72321 43.1095C9.662 42.3242 9.6571 41.5352 9.70856 40.7492L10.607 27.0363C11.0689 19.9817 15.9734 14.0051 22.8023 12.1759L26.6841 11.1359C27.6791 10.8694 28.697 10.697 29.7242 10.6203L49.8746 9.11539H66.5621Z" fill="#8474D9" stroke="black"/>
-      <path d="M51.9603 20.0808C60.3156 20.0314 68.6711 20.4209 75.1293 21.2791C78.3632 21.7088 81.0836 22.2513 83.0785 22.9002C84.0769 23.2249 84.8581 23.5654 85.4213 23.9099C85.9988 24.2633 86.2534 24.564 86.3451 24.7664C87.9625 28.3354 89.7241 35.7294 90.1879 43.1043C90.4191 46.781 90.3238 50.4019 89.7474 53.5007C89.1671 56.6207 88.122 59.0853 86.5609 60.5925C85.8542 61.2748 84.3904 61.9962 82.1674 62.6746C79.9868 63.3399 77.2153 63.9234 74.0355 64.4109C67.6791 65.3854 59.778 65.9621 51.89 66.0613C43.9999 66.1605 36.1598 65.7822 29.9213 64.8591C26.7996 64.3972 24.1104 63.8033 22.0277 63.0789C19.9022 62.3395 18.5773 61.5197 17.9808 60.7156C16.5504 58.7872 15.6343 56.0186 15.1429 52.7507C14.6539 49.4982 14.5978 45.839 14.8207 42.2078C15.2679 34.9235 16.8236 27.9129 18.1049 24.7263C18.1502 24.6137 18.3323 24.3644 18.8802 24.0369C19.405 23.7234 20.1516 23.4064 21.1205 23.0974C23.0546 22.4806 25.7239 21.9431 28.9164 21.5007C35.2913 20.6175 43.6057 20.1302 51.9603 20.0808Z" fill="#E8F0F7" stroke="black" stroke-width="2"/>
-      <path d="M77.6087 43.0586C77.6087 47.8066 74.2873 44.2765 70.1902 44.2765C66.0931 44.2765 62.7717 47.8066 62.7717 43.0586C62.7717 38.3106 66.0931 34.4615 70.1902 34.4615C74.2873 34.4615 77.6087 38.3106 77.6087 43.0586Z" fill="#31094E"/>
-      <path d="M47.9348 54.4055C47.9348 52.1654 49.851 53.1293 52.2147 53.1293C54.5784 53.1293 56.4946 52.1654 56.4946 54.4055C56.4946 56.6456 54.5784 58.4615 52.2147 58.4615C49.851 58.4615 47.9348 56.6456 47.9348 54.4055Z" fill="#31094E"/>
-      <path d="M40.5163 44.2893C40.5163 49.0373 37.3227 45.5073 33.3832 45.5073C29.4436 45.5073 26.25 49.0373 26.25 44.2893C26.25 39.5413 29.4436 35.6923 33.3832 35.6923C37.3227 35.6923 40.5163 39.5413 40.5163 44.2893Z" fill="#31094E"/>
-      <path d="M6.95703 30.6538C7.27053 30.6539 7.50043 30.7183 7.67578 30.8189C7.85066 30.9192 8.00101 31.0727 8.12988 31.2974C8.3989 31.7664 8.54794 32.4998 8.60352 33.5152C8.65837 34.5179 8.62035 35.7215 8.56641 37.0874C8.51278 38.4453 8.44434 39.9546 8.44434 41.5386C8.44434 43.1226 8.51278 44.6319 8.56641 45.9898C8.62034 47.3555 8.65835 48.5584 8.60352 49.5611C8.54796 50.5767 8.39894 51.3107 8.12988 51.7798C8.00104 52.0044 7.8506 52.1581 7.67578 52.2583C7.50045 52.3588 7.27045 52.4233 6.95703 52.4234C5.67585 52.4234 4.06704 51.3269 2.74316 49.314C1.44079 47.3337 0.500031 44.5826 0.5 41.5386C0.5 38.4946 1.44084 35.7435 2.74316 33.7632C4.06704 31.7503 5.67585 30.6538 6.95703 30.6538Z" fill="#31094E" stroke="black"/>
-      <path d="M98.043 30.6538C97.7295 30.6539 97.4996 30.7183 97.3242 30.8189C97.1493 30.9192 96.999 31.0727 96.8701 31.2974C96.6011 31.7664 96.4521 32.4998 96.3965 33.5152C96.3416 34.5179 96.3797 35.7215 96.4336 37.0874C96.4872 38.4453 96.5557 39.9546 96.5557 41.5386C96.5557 43.1226 96.4872 44.6319 96.4336 45.9898C96.3797 47.3555 96.3417 48.5584 96.3965 49.5611C96.452 50.5767 96.6011 51.3107 96.8701 51.7798C96.999 52.0044 97.1494 52.1581 97.3242 52.2583C97.4996 52.3588 97.7295 52.4233 98.043 52.4234C99.3241 52.4234 100.933 51.3269 102.257 49.314C103.559 47.3337 104.5 44.5826 104.5 41.5386C104.5 38.4946 103.559 35.7435 102.257 33.7632C100.933 31.7503 99.3241 30.6538 98.043 30.6538Z" fill="#31094E" stroke="black"/>
-      <path d="M38.7337 6.56445C38.7337 6.82818 38.8037 7.02058 38.9212 7.1748C39.0441 7.3361 39.2443 7.48872 39.553 7.62207C40.1847 7.89485 41.1501 8.037 42.4329 8.08984C43.7031 8.14215 45.2224 8.10553 46.9319 8.05469C48.6357 8.00402 50.5213 7.93945 52.5003 7.93945C54.479 7.93946 56.3641 8.00403 58.0677 8.05469C59.7774 8.10553 61.2975 8.14216 62.5677 8.08984C63.8501 8.037 64.815 7.89472 65.4466 7.62207C65.7553 7.48877 65.9555 7.33603 66.0784 7.1748C66.1959 7.02058 66.2659 6.82818 66.2659 6.56445C66.2659 6.0222 65.9627 5.36699 65.2845 4.66113C64.6136 3.96296 63.621 3.2643 62.3655 2.64258C59.8565 1.40011 56.3667 0.500046 52.5003 0.5C48.6336 0.5 45.1432 1.4 42.6341 2.64258C41.3786 3.26436 40.3861 3.9629 39.7151 4.66113C39.0369 5.36699 38.7337 6.0222 38.7337 6.56445Z" fill="#31094E" stroke="black"/>
-    </svg>
-    VocabAssistant
-  </div>
+  .repaso-container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 24px; }
   
-  <div class="top-nav-links">
-    <a href="/" class="nav-link">Reading</a>
-    <a href="/live/" class="nav-link">Live Caption</a>
-    <a href="/review/" class="nav-link active">Review</a>
-  </div>
+  .progress-section { width: 100%; background: var(--white); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid rgba(139,109,208,0.1); }
+  .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .progress-count { font-size: 13px; font-weight: 800; color: var(--purple-deep); }
+  .progress-track { height: 8px; background: var(--purple-ghost); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--purple-mid); border-radius: 99px; transition: width .4s cubic-bezier(.4,0,.2,1); width: 0%; }
+
+  .stats-row { display: flex; gap: 10px; justify-content: center; }
+  .stat-chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid transparent; }
+  .stat-green { background: #DCFAED; color: #1DB87A; border-color: rgba(29,184,122,0.1); }
+  .stat-red   { background: #FDEAEA; color: #E63F3F; border-color: rgba(230,63,63,0.1); }
+  .stat-amber { background: #FEF3C7; color: #F59E0B; border-color: rgba(245,158,11,0.1); }
+
+  .flip-card-wrapper { width: 100%; perspective: 1200px; margin-top: 10px; }
+  .flip-card { width: 100%; height: 260px; position: relative; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,0,.2,1); cursor: pointer; }
+  .flip-card.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius-lg); border: 2px solid rgba(139,109,208,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; box-shadow: var(--shadow-md); }
+  .card-front { background: var(--white); }
+  .card-back  { background: var(--purple-deep); transform: rotateY(180deg); color: var(--white); border-color: var(--purple-mid); }
   
-  <div style="margin-left: auto;">
-    <button class="icon-btn" title="Ajustes">
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M3 3l1 1M11 11l1 1M11 3l-1 1M4 11l-1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </button>
-  </div>
-</nav>
+  .card-tag { position: absolute; top: 20px; left: 24px; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .card-back .card-tag { color: var(--purple-soft); opacity: 0.6; }
 
-<!-- REPASO -->
-<div class="repaso-wrap">
+  .card-word { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; text-align: center; color: var(--purple-deep); }
+  .card-back .card-word { color: var(--white); }
+  .card-phonetic { font-size: 16px; color: var(--muted); margin-top: 8px; font-style: italic; }
+  .card-back .card-phonetic { color: var(--purple-soft); }
+  
+  .card-translation { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 700; color: var(--white); text-align: center; }
+  .card-context { font-size: 14px; color: var(--purple-soft); margin-top: 14px; font-style: italic; text-align: center; opacity: 0.8; max-width: 80%; line-height: 1.5; }
 
+  .action-zone { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .btn-reveal { width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; background: var(--purple-deep); color: var(--white); font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer; transition: all .2s; box-shadow: 0 4px 20px rgba(45,27,94,0.3); display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .btn-reveal:hover { background: var(--purple-mid); transform: translateY(-2px); }
+
+  .response-group { display: none; width: 100%; gap: 10px; }
+  .response-group.visible { display: flex; }
+  .btn-resp { flex: 1; padding: 14px; border-radius: var(--radius-md); border: 2px solid transparent; font-weight: 700; cursor: pointer; transition: all .2s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: 'DM Sans', sans-serif; }
+  
+  .btn-resp-no { background: #FDEAEA; color: #E63F3F; border-color: #EDCFCF; }
+  .btn-resp-almost { background: #FEF3C7; color: #F59E0B; border-color: #F3D9A0; }
+  .btn-resp-yes { background: var(--accent-teal); color: #fff; flex: 1.5; box-shadow: 0 4px 15px rgba(78,205,196,0.3); }
+  
+  .btn-resp:hover { transform: translateY(-2px); filter: brightness(0.95); }
+  .resp-label { font-size: 11px; opacity: 0.8; }
+
+  .btn-skip { font-size: 13px; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; padding: 8px; transition: color .2s; }
+  .btn-skip:hover { color: var(--purple-mid); }
+
+  .empty-card { width: 100%; padding: 60px 40px; background: var(--white); border-radius: var(--radius-lg); border: 2px solid rgba(139,109,208,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; box-shadow: var(--shadow-md); }
+  .empty-icon { font-size: 48px; margin-bottom: 10px; }
+  .empty-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--purple-deep); }
+  .empty-text { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 320px; }
+  .btn-go-read { margin-top: 10px; padding: 12px 28px; border-radius: var(--radius-md); background: var(--purple-deep); color: var(--white); font-weight: 700; text-decoration: none; transition: all .2s; }
+  .btn-go-read:hover { background: var(--purple-mid); box-shadow: 0 4px 15px rgba(45,27,94,0.2); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn .4s ease-out; }
+{% endblock %}
+
+{% block content %}
+<div class="repaso-container">
   <div class="progress-section" id="progress-section">
     <div class="progress-meta">
       <span class="progress-label">Progreso de sesión</span>
@@ -312,7 +87,7 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     <div class="stat-chip stat-red">✗ <span id="stat-no">0</span> repasar</div>
   </div>
 
-  <div class="card-stage" id="card-stage">
+  <div class="card-stage" id="card-stage" style="width:100%">
     <div class="empty-card fade-in">
       <div class="empty-icon">⏳</div>
       <div class="empty-title">Cargando…</div>
@@ -320,12 +95,13 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     </div>
   </div>
 
-  <div class="repaso-footer" id="repaso-footer">
-    <span class="footer-label" id="footer-remaining"></span>
+  <div style="text-align: center; padding-top: 10px;">
+    <span id="footer-remaining" style="font-size: 12px; color: var(--muted); font-weight:600;"></span>
   </div>
-
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
     let cards = [];
     let currentIndex = 0;
@@ -353,7 +129,7 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         const filled = Math.min(currentIndex, totalCards);
         document.getElementById('progress-count').textContent = `${filled} / ${totalCards}`;
         document.getElementById('progress-fill').style.width = totalCards > 0 ? `${(filled / totalCards) * 100}%` : '0%';
-        document.getElementById('footer-remaining').innerHTML = `<strong>${Math.max(0, totalCards - currentIndex)}</strong> tarjetas restantes`;
+        document.getElementById('footer-remaining').textContent = `${Math.max(0, totalCards - currentIndex)} tarjetas restantes`;
 
         if (currentIndex >= cards.length) {
             showComplete(stage);
@@ -368,37 +144,31 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
                 <div class="card-tag">${card.source_lang || 'en'}</div>
                 <div class="card-word">${escHtml(card.word)}</div>
                 ${card.phonetic ? `<div class="card-phonetic">${escHtml(card.phonetic)}</div>` : ''}
-                <div class="card-hint">toca para revelar ↓</div>
               </div>
               <div class="card-face card-back">
                 <div class="card-tag">${card.target_lang || 'es'}</div>
-                <div class="card-word">${escHtml(card.translation)}</div>
-                ${card.definition ? `<div class="card-context">${escHtml(card.definition.substring(0, 80))}${card.definition.length > 80 ? '…' : ''}</div>` : ''}
-                <div class="card-hint">¿lo sabías?</div>
+                <div class="card-translation">${escHtml(card.translation)}</div>
+                ${card.definition ? `<div class="card-context">${escHtml(card.definition.substring(0, 100))}${card.definition.length > 100 ? '…' : ''}</div>` : ''}
               </div>
             </div>
           </div>
 
-          <div class="action-zone">
+          <div class="action-zone" style="margin-top:24px;">
             <button class="btn-reveal" id="btn-reveal" onclick="flipCard()">
               Revelar respuesta
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v12M3 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
             <div class="response-group" id="response-group">
-              <button class="btn-resp-no" onclick="respond(1)">
-                <span class="resp-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
-                no lo sabía
-                <span class="resp-label">repasar pronto</span>
+              <button class="btn-resp btn-resp-no" onclick="respond(1)">
+                <span>No lo sabía</span>
+                <span class="resp-label">Repasar pronto</span>
               </button>
-              <button class="btn-resp-almost" onclick="respond(3)">
-                <span class="resp-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M5 8h14"/></svg></span>
-                casi
-                <span class="resp-label">repasar mañana</span>
+              <button class="btn-resp btn-resp-almost" onclick="respond(3)">
+                <span>Casi</span>
+                <span class="resp-label">Mañana</span>
               </button>
-              <button class="btn-resp-yes" onclick="respond(5)">
-                <span class="resp-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-                ¡lo sabía!
-                <span class="resp-label">siguiente tarjeta</span>
+              <button class="btn-resp btn-resp-yes" onclick="respond(5)">
+                <span>¡Lo sabía!</span>
+                <span class="resp-label">Siguiente</span>
               </button>
             </div>
             <button class="btn-skip" onclick="skipCard()">saltar tarjeta →</button>
@@ -407,12 +177,11 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
     function showComplete(stage) {
         document.getElementById('progress-fill').style.width = '100%';
-        document.getElementById('footer-remaining').innerHTML = '<strong>0</strong> tarjetas restantes';
         stage.innerHTML = `
           <div class="empty-card fade-in">
-            <div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="empty-icon">🎉</div>
             <div class="empty-title">¡Sesión completa!</div>
-            <div class="empty-text">Has revisado todas tus tarjetas de hoy. Tu vocabulario está creciendo.</div>
+            <div class="empty-text">Has revisado todas tus tarjetas de hoy. Tu vocabulario está creciendo día a día.</div>
             <a href="/" class="btn-go-read">← Volver a lectura</a>
           </div>`;
     }
@@ -434,30 +203,21 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         document.getElementById('stat-almost').textContent = stats.almost;
         document.getElementById('stat-no').textContent = stats.no;
 
-        fetch(`/api/review/${card.id}/`, {
+        fetch(`/api/review/${card.id}//`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
             body: JSON.stringify({ quality })
         })
         .then(r => r.json())
-        .then(data => { if (data.status === 'ok') { currentIndex++; updateUI(); } })
+        .then(() => { currentIndex++; updateUI(); })
         .catch(() => { currentIndex++; updateUI(); });
     }
 
     function skipCard() { currentIndex++; updateUI(); }
-
-    function getCookie(name) {
-        for (const c of document.cookie.split(';')) {
-            const [k, v] = c.trim().split('=');
-            if (k === name) return decodeURIComponent(v);
-        }
-        return null;
-    }
 
     function escHtml(str) {
         if (!str) return '';
         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 </script>
-</body>
-</html>
+{% endblock %}

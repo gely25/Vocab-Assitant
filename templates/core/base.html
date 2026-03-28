@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}VocabAssistant{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+<style>
+  :root {
+    --purple-deep:  #2D1B5E;
+    --purple-mid:   #5B3FA6;
+    --purple-light: #8B6DD0;
+    --purple-soft:  #C8B8F0;
+    --purple-ghost: #EDE8FB;
+    --cream:        #FAF8FF;
+    --ink:          #1A0F35;
+    --muted:        #9585B8;
+    --white:        #FFFFFF;
+    --accent-teal:  #4ECDC4;
+    --accent-warm:  #F7B731;
+    --shadow-sm: 0 2px 8px rgba(45,27,94,0.08);
+    --shadow-md: 0 8px 24px rgba(45,27,94,0.12);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); overflow: hidden; }
+
+  .app { display: grid; grid-template-columns: 72px 1fr; grid-template-rows: 60px 1fr; height: 100vh; }
+
+  /* Topbar */
+  .topbar { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; padding:0 24px; background:var(--white); border-bottom:1px solid rgba(139,109,208,0.12); box-shadow:var(--shadow-sm); z-index:10; }
+  .topbar-brand { display:flex; align-items:center; gap:10px; text-decoration: none; }
+  .brand-mascot { width:36px; height:36px; filter:drop-shadow(0 2px 4px rgba(91,63,166,0.3)); }
+  .brand-name { font-family:'Syne',sans-serif; font-weight:800; font-size:17px; color:var(--purple-deep); letter-spacing:-0.3px; }
+  .brand-name span { color:var(--purple-light); }
+  .topbar-title { font-family:'Syne',sans-serif; font-weight:700; font-size:18px; color:var(--purple-deep); }
+  .topbar-controls { display:flex; align-items:center; gap:8px; }
+  
+  .lang-pill-container { position: relative; display: flex; align-items: center; }
+  .lang-select-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
+  .lang-pill { display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:100px; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; border:none; user-select:none; }
+  .lang-pill.source { background:var(--purple-ghost); color:var(--purple-mid); }
+  .lang-pill.target { background:var(--purple-mid); color:var(--white); box-shadow:0 4px 12px rgba(91,63,166,.35); }
+  .lang-pill:hover { transform:translateY(-1px); }
+  .lang-arrow { color:var(--muted); font-size:14px; margin:0 2px; }
+
+  /* Sidebar */
+  .sidebar { background:var(--white); border-right:1px solid rgba(139,109,208,.1); display:flex; flex-direction:column; align-items:center; padding:16px 0; gap:4px; }
+  .nav-item { width:52px; height:52px; border-radius:var(--radius-md); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; color:var(--muted); transition:all .2s; position:relative; border:none; background:transparent; text-decoration: none; }
+  .nav-item svg { width:22px; height:22px; }
+  .nav-item .nav-label { font-size:9px; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  .nav-item:hover { background:var(--purple-ghost); color:var(--purple-mid); }
+  .nav-item.active { background:var(--purple-deep); color:var(--white); box-shadow:0 6px 20px rgba(45,27,94,.3); }
+  .nav-item.active::before { content:''; position:absolute; left:-1px; width:3px; height:32px; background:var(--purple-light); border-radius:0 4px 4px 0; }
+
+  /* Main grid */
+  .main { display:grid; grid-template-columns:1fr 340px; overflow:hidden; }
+  
+  #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--purple-deep); color: var(--white); padding: 10px 22px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 600; z-index: 1000; display: none; box-shadow: var(--shadow-md); }
+  
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(91,63,166,0.35); border-radius:100px; border:1px solid transparent; background-clip:padding-box; }
+  ::-webkit-scrollbar-thumb:hover { background:rgba(91,63,166,0.5); }
+  
+  {% block extra_css %}{% endblock %}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <a href="{% url 'core:home' %}" class="topbar-brand">
+      <svg class="brand-mascot" viewBox="0 0 105 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M66.5621 9.11539L79.648 10.4552C81.4181 10.6365 83.1446 11.119 84.7525 11.881C89.1551 13.9676 92.3338 17.987 93.3492 22.7521L95.0074 30.5334C95.2483 31.6638 95.3697 32.817 95.3697 33.9728V40.672C95.3697 41.4865 95.3091 42.3001 95.189 43.1056L93.4488 54.7775C92.4198 61.6765 87.1636 67.1835 80.3199 68.5324L77.3248 69.1222L55.8267 71.3478C54.8602 71.4479 53.8866 71.462 52.9175 71.3908L24.7623 69.3205C23.0074 69.1914 21.2879 68.7594 19.6802 68.0441C14.5655 65.7684 11.1084 60.8734 10.6734 55.2921L9.72321 43.1095C9.662 42.3242 9.6571 41.5352 9.70856 40.7492L10.607 27.0363C11.0689 19.9817 15.9734 14.0051 22.8023 12.1759L26.6841 11.1359C27.6791 10.8694 28.697 10.697 29.7242 10.6203L49.8746 9.11539H66.5621Z" fill="#8474D9"/>
+        <path d="M51.9603 20.0808C60.3156 20.0314 68.6711 20.4209 75.1293 21.2791C78.3632 21.7088 81.0836 22.2513 83.0785 22.9002C84.0769 23.2249 84.8581 23.5654 85.4213 23.9099C85.9988 24.2633 86.2534 24.564 86.3451 24.7664C87.9625 28.3354 89.7241 35.7294 90.1879 43.1043C90.4191 46.781 90.3238 50.4019 89.7474 53.5007C89.1671 56.6207 88.122 59.0853 86.5609 60.5925C85.8542 61.2748 84.3904 61.9962 82.1674 62.6746C79.9868 63.3399 77.2153 63.9234 74.0355 64.4109C67.6791 65.3854 59.778 65.9621 51.89 66.0613C43.9999 66.1605 36.1598 65.7822 29.9213 64.8591C26.7996 64.3972 24.1104 63.8033 22.0277 63.0789C19.9022 62.3395 18.5773 61.5197 17.9808 60.7156C16.5504 58.7872 15.6343 56.0186 15.1429 52.7507C14.6539 49.4982 14.5978 45.839 14.8207 42.2078C15.2679 34.9235 16.8236 27.9129 18.1049 24.7263C18.1502 24.6137 18.3323 24.3644 18.8802 24.0369C19.405 23.7234 20.1516 23.4064 21.1205 23.0974C23.0546 22.4806 25.7239 21.9431 28.9164 21.5007C35.2913 20.6175 43.6057 20.1302 51.9603 20.0808Z" fill="#E8F0F7"/>
+        <path d="M77.6087 43.0586C77.6087 47.8066 74.2873 44.2765 70.1902 44.2765C66.0931 44.2765 62.7717 47.8066 62.7717 43.0586C62.7717 38.3106 66.0931 34.4615 70.1902 34.4615C74.2873 34.4615 77.6087 38.3106 77.6087 43.0586Z" fill="#31094E"/>
+        <path d="M47.9348 54.4055C47.9348 52.1654 49.851 53.1293 52.2147 53.1293C54.5784 53.1293 56.4946 52.1654 56.4946 54.4055C56.4946 56.6456 54.5784 58.4615 52.2147 58.4615C49.851 58.4615 47.9348 56.6456 47.9348 54.4055Z" fill="#31094E"/>
+        <path d="M40.5163 44.2893C40.5163 49.0373 37.3227 45.5073 33.3832 45.5073C29.4436 45.5073 26.25 49.0373 26.25 44.2893C26.25 39.5413 29.4436 35.6923 33.3832 35.6923C37.3227 35.6923 40.5163 39.5413 40.5163 44.2893Z" fill="#31094E"/>
+        <path d="M6.95703 30.6538C7.27053 30.6539 7.50043 30.7183 7.67578 30.8189C7.85066 30.9192 8.00101 31.0727 8.12988 31.2974C8.3989 31.7664 8.54794 32.4998 8.60352 33.5152C8.65837 34.5179 8.62035 35.7215 8.56641 37.0874C8.51278 38.4453 8.44434 39.9546 8.44434 41.5386C8.44434 43.1226 8.51278 44.6319 8.56641 45.9898C8.62034 47.3555 8.65835 48.5584 8.60352 49.5611C8.54796 50.5767 8.39894 51.3107 8.12988 51.7798C8.00104 52.0044 7.8506 52.1581 7.67578 52.2583C7.50045 52.3588 7.27045 52.4233 6.95703 52.4234C5.67585 52.4234 4.06704 51.3269 2.74316 49.314C1.44079 47.3337 0.500031 44.5826 0.5 41.5386C0.5 38.4946 1.44084 35.7435 2.74316 33.7632C4.06704 31.7503 5.67585 30.6538 6.95703 30.6538Z" fill="#31094E"/>
+        <path d="M98.043 30.6538C97.7295 30.6539 97.4996 30.7183 97.3242 30.8189C97.1493 30.9192 96.999 31.0727 96.8701 31.2974C96.6011 31.7664 96.4521 32.4998 96.3965 33.5152C96.3416 34.5179 96.3797 35.7215 96.4336 37.0874C96.4872 38.4453 96.5557 39.9546 96.5557 41.5386C96.5557 43.1226 96.4872 44.6319 96.4336 45.9898C96.3797 47.3555 96.3417 48.5584 96.3965 49.5611C96.452 50.5767 96.6011 51.3107 96.8701 51.7798C96.999 52.0044 97.1494 52.1581 97.3242 52.2583C97.4996 52.3588 97.7295 52.4233 98.043 52.4234C99.3241 52.4234 100.933 51.3269 102.257 49.314C103.559 47.3337 104.5 44.5826 104.5 41.5386C104.5 38.4946 103.559 35.7435 102.257 33.7632C100.933 31.7503 99.3241 30.6538 98.043 30.6538Z" fill="#31094E"/>
+        <path d="M38.7337 6.56445C38.7337 6.82818 38.8037 7.02058 38.9212 7.1748C39.0441 7.3361 39.2443 7.48872 39.553 7.62207C40.1847 7.89485 41.1501 8.037 42.4329 8.08984C43.7031 8.14215 45.2224 8.10553 46.9319 8.05469C48.6357 8.00402 50.5213 7.93945 52.5003 7.93945C54.479 7.93946 56.3641 8.00403 58.0677 8.05469C59.7774 8.10553 61.2975 8.14216 62.5677 8.08984C63.8501 8.037 64.815 7.89472 65.4466 7.62207C65.7553 7.48877 65.9555 7.33603 66.0784 7.1748C66.1959 7.02058 66.2659 6.82818 66.2659 6.56445C66.2659 6.0222 65.9627 5.36699 65.2845 4.66113C64.6136 3.96296 63.621 3.2643 62.3655 2.64258C59.8565 1.40011 56.3667 0.500046 52.5003 0.5C48.6336 0.5 45.1432 1.4 42.6341 2.64258C41.3786 3.26436 40.3861 3.9629 39.7151 4.66113C39.0369 5.36699 38.7337 6.0222 38.7337 6.56445Z" fill="#31094E"/>
+      </svg>
+      <span class="brand-name">Vocab<span>Assistant</span></span>
+    </a>
+    <span class="topbar-title">{% block topbar_title %}Word Mining{% endblock %}</span>
+    <div class="topbar-controls">
+      <div class="lang-pill-container">
+        <select id="source-lang-select" class="lang-select-hidden">
+          <option value="en">Inglés</option>
+          <option value="es">Español</option>
+          <option value="fr">Francés</option>
+          <option value="de">Alemán</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Portugués</option>
+          <option value="zh-CN">Chino</option>
+          <option value="ja">Japonés</option>
+          <option value="ko">Coreano</option>
+          <option value="ru">Ruso</option>
+        </select>
+        <button class="lang-pill source">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          <span id="source-lang-label">Inglés</span>
+          <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+      <span class="lang-arrow">→</span>
+      <div class="lang-pill-container">
+        <select id="target-lang-select" class="lang-select-hidden">
+          <option value="es">Español</option>
+          <option value="en">Inglés</option>
+          <option value="fr">Francés</option>
+          <option value="de">Alemán</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Portugués</option>
+          <option value="zh-CN">Chino</option>
+          <option value="ja">Japonés</option>
+          <option value="ko">Coreano</option>
+          <option value="ru">Ruso</option>
+        </select>
+        <button class="lang-pill target">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          <span id="target-lang-label">Español</span>
+          <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="#" class="nav-item" title="Live Caption">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="3"/><path d="M16 3l-4 4-4-4"/><path d="M7 13h4M7 17h10" stroke-linecap="round"/></svg>
+      <span class="nav-label">Live</span>
+    </a>
+    <a href="{% url 'core:home' %}" class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}" title="Mining">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/><path d="M11 8v6M8 11h6" stroke-linecap="round"/></svg>
+      <span class="nav-label">Mining</span>
+    </a>
+    <a href="{% url 'core:review_home' %}" class="nav-item {% if request.resolver_match.url_name == 'review_home' %}active{% endif %}" title="Review">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span class="nav-label">Review</span>
+    </a>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    const LANG_NAMES = { en:'Inglés', es:'Español', fr:'Francés', de:'Alemán', it:'Italiano', pt:'Portugués', 'zh-CN':'Chino', ja:'Japonés', ko:'Coreano', ru:'Ruso' };
+    const srcSel = document.getElementById('source-lang-select');
+    const tgtSel = document.getElementById('target-lang-select');
+
+    if (localStorage.getItem('source-lang')) srcSel.value = localStorage.getItem('source-lang');
+    if (localStorage.getItem('target-lang')) tgtSel.value = localStorage.getItem('target-lang');
+    
+    function updateLabels() {
+        document.getElementById('source-lang-label').textContent = LANG_NAMES[srcSel.value];
+        document.getElementById('target-lang-label').textContent = LANG_NAMES[tgtSel.value];
+        localStorage.setItem('source-lang', srcSel.value);
+        localStorage.setItem('target-lang', tgtSel.value);
+        window.dispatchEvent(new CustomEvent('langChanged', { detail: { source: srcSel.value, target: tgtSel.value } }));
+    }
+    srcSel.onchange = updateLabels;
+    tgtSel.onchange = updateLabels;
+    updateLabels();
+
+    function showToast(m, b=null) {
+        const t = document.getElementById('toast'); t.textContent = m; t.style.display = 'block';
+        if(b) t.style.background = b; else t.style.background = '';
+        setTimeout(() => t.style.display='none', 2500);
+    }
+    function getCookie(n) { let v = document.cookie.match('(^|;) ?' + n + '=([^;]*)(;|$)'); return v ? v[2] : null; }
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
