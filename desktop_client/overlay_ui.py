@@ -1,5 +1,6 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QFrame, QTextBrowser, QPushButton, QDialog, QComboBox
+from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, 
+                             QFrame, QTextBrowser, QPushButton, QDialog, QComboBox, QScrollArea)
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer
 from PyQt6.QtGui import QColor, QFont, QTextCursor
 
@@ -121,15 +122,12 @@ class TranslationTooltip(QWidget):
         card.setObjectName("card")
         card.setFixedWidth(self.FIXED_W)
         
-        # Main vertical layout inside the card
-        self.main_vbox = QVBoxLayout(card)
-        self.main_vbox.setContentsMargins(1, 1, 1, 1) # Thin border
-        self.main_vbox.setSpacing(0)
+        self.card_vbox = QVBoxLayout(card)
+        self.card_vbox.setContentsMargins(16, 12, 16, 16)
+        self.card_vbox.setSpacing(10)
 
         # 1. Header (Static/Top)
-        hdr_widget = QWidget()
-        hdr = QHBoxLayout(hdr_widget)
-        hdr.setContentsMargins(16, 12, 16, 8)
+        hdr = QHBoxLayout()
         self.word_lbl = QLabel()
         self.word_lbl.setObjectName("word_lbl")
         self.word_lbl.setWordWrap(False)
@@ -141,52 +139,31 @@ class TranslationTooltip(QWidget):
         close_lbl.setCursor(Qt.CursorShape.PointingHandCursor)
         close_lbl.mousePressEvent = lambda _e: self._force_close()
         hdr.addWidget(close_lbl)
-        self.main_vbox.addWidget(hdr_widget)
+        self.card_vbox.addLayout(hdr)
 
-        # 2. Scroll Area for Content (Adaptive/Middle)
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setFrameShape(QFrame.Shape.NoFrame)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scroll.setStyleSheet("background: transparent; border: none;")
-        
-        scroll_content = QWidget()
-        scroll_content.setStyleSheet("background: transparent;")
-        self.scroll_vbox = QVBoxLayout(scroll_content)
-        self.scroll_vbox.setContentsMargins(16, 0, 16, 10)
-        self.scroll_vbox.setSpacing(6)
-        
+        # 2. Content
         self.phone_lbl = QLabel()
         self.phone_lbl.setObjectName("phone_lbl")
         self.phone_lbl.hide()
-        self.scroll_vbox.addWidget(self.phone_lbl)
+        self.card_vbox.addWidget(self.phone_lbl)
 
         self.trans_lbl = QLabel("…")
         self.trans_lbl.setObjectName("trans_lbl")
         self.trans_lbl.setWordWrap(True)
-        self.trans_lbl.setFixedWidth(self.FIXED_W - 40)
-        self.scroll_vbox.addWidget(self.trans_lbl)
+        self.trans_lbl.setFixedWidth(self.FIXED_W - 32)
+        self.card_vbox.addWidget(self.trans_lbl)
 
         self.def_lbl = QLabel()
         self.def_lbl.setObjectName("def_lbl")
         self.def_lbl.setWordWrap(True)
-        self.def_lbl.setFixedWidth(self.FIXED_W - 40)
+        self.def_lbl.setFixedWidth(self.FIXED_W - 32)
         self.def_lbl.hide()
-        self.scroll_vbox.addWidget(self.def_lbl)
-        
-        self.scroll.setWidget(scroll_content)
-        self.main_vbox.addWidget(self.scroll)
+        self.card_vbox.addWidget(self.def_lbl)
 
-        # 3. Footer (Static/Bottom)
-        footer_widget = QWidget()
-        footer_vbox = QVBoxLayout(footer_widget)
-        footer_vbox.setContentsMargins(16, 5, 16, 14)
-        footer_vbox.setSpacing(8)
-
+        # 3. Footer
         self.status_lbl = QLabel("Click para guardar")
         self.status_lbl.setObjectName("status_lbl")
-        footer_vbox.addWidget(self.status_lbl)
+        self.card_vbox.addWidget(self.status_lbl)
 
         self.save_btn = QPushButton("＋ Guardar en mis tarjetas")
         self.save_btn.setObjectName("save_btn")
@@ -194,9 +171,7 @@ class TranslationTooltip(QWidget):
         self.save_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.save_btn.setEnabled(False)
         self.save_btn.clicked.connect(self._on_save)
-        footer_vbox.addWidget(self.save_btn)
-        
-        self.main_vbox.addWidget(footer_widget)
+        self.card_vbox.addWidget(self.save_btn)
 
         # Add card to window
         outer = QVBoxLayout(self)
@@ -240,31 +215,20 @@ class TranslationTooltip(QWidget):
         self.save_btn.setEnabled(False)
 
     def _place(self, global_pos):
-        """Position ABOVE/BELOW with adaptive height without clipping."""
-        self.adjustSize()
-        h = self.sizeHint().height()
-        
-        # Limit height to 350px max to avoid covering the whole screen
-        max_h = 350
-        if h > max_h:
-            h = max_h
-            self.setFixedHeight(max_h)
-            self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        else:
-            self.setMinimumHeight(0)
-            self.setMaximumHeight(16777215) # QWidget maximum
-            self.adjustSize()
-            h = self.height()
-            self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        """Position ABOVE with adaptive height and safety margin."""
+        # Force layout to recalculate the height for our fixed width
+        h = self.layout().heightForWidth(self.FIXED_W) + 20
+        self.setFixedSize(self.FIXED_W, h)
 
         screen = QApplication.primaryScreen().availableGeometry()
         x = max(screen.left() + 8,
                 min(global_pos.x() - self.FIXED_W // 2,
                     screen.right() - self.FIXED_W - 8))
         
-        y = global_pos.y() - h - 15
+        # Position further up (60px offset) to avoid covering the subtitle bar
+        y = global_pos.y() - h - 60
         if y < screen.top() + 8:
-            y = global_pos.y() + 25    # fallback below if near top
+            y = global_pos.y() + 40    # fallback below if near top
         self.move(x, y)
 
     # ── public API ───────────────────────────────────────────────────
@@ -327,7 +291,7 @@ class TranslationTooltip(QWidget):
             self.status_lbl.setText("Click para fijar y guardar")
 
         self._hide_timer.stop()
-        self._place(global_pos)
+        self._place(global_pos) # Trigger sizing/placing with final text
         self.show()
         self.raise_()
 
@@ -407,7 +371,7 @@ class SelectableCaptions(QTextBrowser):
                 selection-background-color: rgba(139, 109, 208, 180);
             }
         """)
-        font = QFont("Figtree", 19, QFont.Weight.Bold)
+        font = QFont("Figtree", 16, QFont.Weight.Bold)
         font.setFamilies(["Figtree", "Segoe UI", "Arial"])
         self.setFont(font)
         self.setLineWrapMode(QTextBrowser.LineWrapMode.WidgetWidth)
@@ -468,30 +432,37 @@ class SelectableCaptions(QTextBrowser):
 
 
 class CaptionManager:
-    def __init__(self, max_lines=2):
+    def __init__(self, max_words=18):
         self.lines = []
         self.current_partial = ""
-        self.max_lines = max_lines
+        self.max_words = max_words
 
     def add_final(self, text):
         if text:
-            self.lines.append(text.strip())
-            if len(self.lines) > self.max_lines:
-                self.lines.pop(0)
+            words = text.strip().split()
+            self.lines.extend(words)
+            self._prune()
         self.current_partial = ""
 
     def update_partial(self, text):
         self.current_partial = text.strip() if text else ""
+        self._prune()
+
+    def _prune(self):
+        # Limit the number of total words in the history
+        if len(self.lines) > self.max_words:
+            self.lines = self.lines[-self.max_words:]
 
     def get_display_text(self):
-        display = list(self.lines)
+        # Only show a limited window of words to keep it to ~1-2 lines max
+        combined = list(self.lines)
         if self.current_partial:
-            display.append(self.current_partial)
-        
-        if len(display) > self.max_lines:
-            display = display[-self.max_lines:]
+            combined.extend(self.current_partial.split())
             
-        return " ".join(display)
+        if len(combined) > self.max_words:
+            combined = combined[-self.max_words:]
+            
+        return " ".join(combined)
 
 class SubtitleOverlay(QWidget):
     on_word_clicked = None
@@ -517,7 +488,7 @@ class SubtitleOverlay(QWidget):
     def __init__(self):
         super().__init__()
         self.current_lang_idx = 0
-        self.caption_manager = CaptionManager(max_lines=2)
+        self.caption_manager = CaptionManager(max_words=18)
         self.custom_tooltip = TranslationTooltip()
         self.initUI()
         self.mining_mode = True
@@ -537,7 +508,7 @@ class SubtitleOverlay(QWidget):
         """)
         
         self.content_layout = QHBoxLayout(self.container)
-        self.content_layout.setContentsMargins(20, 10, 20, 10)
+        self.content_layout.setContentsMargins(20, 8, 20, 8)
         self.content_layout.setSpacing(15)
         
         # Gear icon (Left/Right?) User said "engranaje la opcion de cmahair idioma"
@@ -589,8 +560,8 @@ class SubtitleOverlay(QWidget):
         
         # Sizing and centering (Slimmer like Windows)
         screen = QApplication.primaryScreen().geometry()
-        self.resize(1000, 60)
-        self.move((screen.width() - 1000) // 2, screen.height() - 100)
+        self.resize(1000, 110)
+        self.move((screen.width() - 1000) // 2, screen.height() - 140)
         self.oldPos = self.pos()
 
     def set_status_message(self, msg: str):
