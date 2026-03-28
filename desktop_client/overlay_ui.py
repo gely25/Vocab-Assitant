@@ -1,76 +1,162 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QFrame, QTextBrowser
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QFrame, QTextBrowser, QPushButton
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer
 from PyQt6.QtGui import QColor, QFont, QTextCursor
 
 class TranslationTooltip(QFrame):
+    save_requested = pyqtSignal(dict)   # emits full word_data dict
+
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowFlags(Qt.WindowType.ToolTip | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.WindowDoesNotAcceptFocus)
+        self.setWindowFlags(
+            Qt.WindowType.FramelessWindowHint |
+            Qt.WindowType.WindowStaysOnTopHint |
+            Qt.WindowType.Tool |
+            Qt.WindowType.WindowDoesNotAcceptFocus
+        )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        
+        self._word_data = {}
+
         self.setStyleSheet("""
             QFrame {
-                background-color: #1A1A1A;
-                border: 1px solid #333333;
-                border-radius: 8px;
+                background-color: #1C1C1E;
+                border: 1px solid #3A3A3C;
+                border-radius: 12px;
             }
-            QLabel.source { color: #CCCCCC; font-size: 14px; font-weight: 500;}
-            QLabel.target { color: #F7B731; font-size: 14px; font-weight: 700; margin-top: 8px;}
-            QLabel.btn { color: #00A8FF; font-size: 16px; font-weight: bold;}
+            QLabel#word_lbl  { color: #E0E0E0; font-size: 15px; font-weight: 700; }
+            QLabel#phone_lbl { color: #8E8E93; font-size: 12px; font-style: italic; }
+            QLabel#trans_lbl { color: #F7B731; font-size: 15px; font-weight: 700; }
+            QLabel#def_lbl   { color: #AEAEB2; font-size: 12px; }
+            QPushButton#save_btn {
+                background-color: #8B6DD0;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 6px 16px;
+                font-size: 13px;
+                font-weight: 600;
+            }
+            QPushButton#save_btn:hover { background-color: #A98BE8; }
         """)
-        
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(15, 10, 15, 10)
-        
-        self.src_layout = QHBoxLayout()
-        self.src_label = QLabel()
-        self.src_label.setProperty("class", "source")
-        self.src_layout.addWidget(self.src_label, 1)
-        
-        self.save_btn = QLabel("➕")
-        self.save_btn.setProperty("class", "btn")
+
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(16, 14, 16, 14)
+        outer.setSpacing(6)
+
+        # Row 1: word + close btn
+        row1 = QHBoxLayout()
+        self.word_lbl = QLabel()
+        self.word_lbl.setObjectName("word_lbl")
+        row1.addWidget(self.word_lbl, 1)
+        close = QLabel("✕")
+        close.setStyleSheet("color:#555; font-size:12px;")
+        close.setCursor(Qt.CursorShape.PointingHandCursor)
+        close.mousePressEvent = lambda e: self.hide()
+        row1.addWidget(close)
+        outer.addLayout(row1)
+
+        # Phonetic (IPA / pinyin)
+        self.phone_lbl = QLabel()
+        self.phone_lbl.setObjectName("phone_lbl")
+        self.phone_lbl.hide()
+        outer.addWidget(self.phone_lbl)
+
+        # Divider
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setStyleSheet("background:#333; margin: 2px 0;")
+        sep.setFixedHeight(1)
+        outer.addWidget(sep)
+
+        # Translation
+        self.trans_lbl = QLabel()
+        self.trans_lbl.setObjectName("trans_lbl")
+        outer.addWidget(self.trans_lbl)
+
+        # Definition snippet
+        self.def_lbl = QLabel()
+        self.def_lbl.setObjectName("def_lbl")
+        self.def_lbl.setWordWrap(True)
+        self.def_lbl.setMaximumWidth(320)
+        self.def_lbl.hide()
+        outer.addWidget(self.def_lbl)
+
+        # Save button
+        self.save_btn = QPushButton("＋ Guardar en mis tarjetas")
+        self.save_btn.setObjectName("save_btn")
         self.save_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.src_layout.addWidget(self.save_btn)
-        
-        layout.addLayout(self.src_layout)
-        
-        self.tgt_label = QLabel()
-        self.tgt_label.setProperty("class", "target")
-        layout.addWidget(self.tgt_label)
-        
+        self.save_btn.clicked.connect(self._on_save)
+        outer.addWidget(self.save_btn)
+
         self.hide_timer = QTimer()
         self.hide_timer.setSingleShot(True)
         self.hide_timer.timeout.connect(self.hide)
-        
-    def show_translation(self, text, trans, global_pos):
+
+    def _on_save(self):
+        if self._word_data:
+            self.save_requested.emit(self._word_data)
+            self.save_btn.setText("✓ Guardada")
+            self.save_btn.setEnabled(False)
+
+    def show_loading(self, word, global_pos):
         self.hide_timer.stop()
-        self.src_label.setText(text.upper())
-        self.tgt_label.setText(trans.upper())
+        self._word_data = {}
+        self.word_lbl.setText(word)
+        self.phone_lbl.hide()
+        self.trans_lbl.setText("Buscando traducción...")
+        self.def_lbl.hide()
+        self.save_btn.setText("＋ Guardar en mis tarjetas")
+        self.save_btn.setEnabled(False)
         self.adjustSize()
-        # Colocar debajo para mejor alcance del mouse
-        self.move(global_pos.x(), global_pos.y() + 30)
+        self._reposition(global_pos)
         self.show()
 
-    def show_loading(self, text, global_pos):
+    def show_data(self, word_data, global_pos):
         self.hide_timer.stop()
-        self.src_label.setText(text.upper())
-        self.tgt_label.setText("Cargando transcripción...")
+        self._word_data = word_data
+        self.word_lbl.setText(word_data.get('original', word_data.get('word', '')))
+        phonetic = word_data.get('phonetic', '')
+        if phonetic:
+            self.phone_lbl.setText(phonetic)
+            self.phone_lbl.show()
+        else:
+            self.phone_lbl.hide()
+        self.trans_lbl.setText(word_data.get('translation', '—'))
+        definition = word_data.get('definition', '')
+        if definition and len(definition) > 5:
+            self.def_lbl.setText(definition[:140] + ('...' if len(definition) > 140 else ''))
+            self.def_lbl.show()
+        else:
+            self.def_lbl.hide()
+        self.save_btn.setText("＋ Guardar en mis tarjetas")
+        self.save_btn.setEnabled(True)
         self.adjustSize()
-        self.move(global_pos.x(), global_pos.y() + 30)
+        self._reposition(global_pos)
         self.show()
+
+    def _reposition(self, global_pos):
+        screen = QApplication.primaryScreen().geometry()
+        x = global_pos.x()
+        y = global_pos.y() + 30
+        if x + self.width() > screen.right() - 10:
+            x = screen.right() - self.width() - 10
+        if y + self.height() > screen.bottom() - 10:
+            y = global_pos.y() - self.height() - 10
+        self.move(x, y)
 
     def enterEvent(self, event):
         self.hide_timer.stop()
         super().enterEvent(event)
 
     def leaveEvent(self, event):
-        self.hide_timer.start(200) # Ocultar en 200ms tras salir
+        self.hide_timer.start(800)   # 800ms to comfortably reach the tooltip
         super().leaveEvent(event)
+
 
 class SelectableCaptions(QTextBrowser):
     word_hovered = pyqtSignal(str, object)
     word_clicked = pyqtSignal(str)
+    phrase_selected = pyqtSignal(str, object)  # full selection text, QPoint
     
     def __init__(self):
         super().__init__()
@@ -81,7 +167,7 @@ class SelectableCaptions(QTextBrowser):
                 background: transparent; 
                 color: white; 
                 border: none; 
-                selection-background-color: rgba(139, 109, 208, 150);
+                selection-background-color: rgba(139, 109, 208, 180);
             }
         """)
         self.setFont(QFont("Figtree", 18, QFont.Weight.Medium))
@@ -89,10 +175,12 @@ class SelectableCaptions(QTextBrowser):
         self.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.last_hovered_word = ""
+        self._is_selecting = False
 
     def mouseMoveEvent(self, event):
         super().mouseMoveEvent(event)
-        if self.textCursor().hasSelection():
+        # Don't trigger hover while user is actively selecting text
+        if self._is_selecting or self.textCursor().hasSelection():
             self.setExtraSelections([])
             return
 
@@ -117,18 +205,28 @@ class SelectableCaptions(QTextBrowser):
             self.setExtraSelections([])
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton and not self.textCursor().hasSelection():
-            cursor = self.cursorForPosition(event.pos())
-            cursor.select(QTextCursor.SelectionType.WordUnderCursor)
-            word = cursor.selectedText().strip()
-            if word:
-                self.word_clicked.emit(word)
+        self._is_selecting = event.button() == Qt.MouseButton.LeftButton
         super().mousePressEvent(event)
-        
+
+    def mouseReleaseEvent(self, event):
+        self._is_selecting = False
+        super().mouseReleaseEvent(event)
+        if event.button() == Qt.MouseButton.LeftButton:
+            cursor = self.textCursor()
+            selected = cursor.selectedText().strip()
+            if len(selected.split()) > 1:  # Frase (2+ palabras)
+                rect = self.cursorRect(cursor)
+                global_pos = self.viewport().mapToGlobal(rect.bottomLeft())
+                self.phrase_selected.emit(selected, global_pos)
+            elif selected and selected.isalpha():  # Palabra individual (click sin arrastrar)
+                pass  # hover ya lo maneja
+
     def leaveEvent(self, event):
+        self._is_selecting = False
         self.last_hovered_word = ""
         self.setExtraSelections([])
         super().leaveEvent(event)
+
 
 class CaptionManager:
     def __init__(self, max_lines=2):
