@@ -29,6 +29,7 @@ except Exception as e:
 class VocabAssistantDesktop:
     def __init__(self):
         self.app = QApplication(sys.argv)
+        self.app.setQuitOnLastWindowClosed(False)
         self.api = VocabAPIClient()
         self.overlay = SubtitleOverlay()
         self.overlay.mode_toggled.connect(self.toggle_mode)
@@ -57,6 +58,9 @@ class VocabAssistantDesktop:
         
         # Guardar desde el tooltip
         self.overlay.custom_tooltip.save_requested.connect(self.handle_save)
+
+        # Configuracion en tiempo de ejecucion (engranaje)
+        self.overlay.open_settings.connect(self.show_settings_dialog)
 
         # Estado de cancelación de peticiones
         self._hover_request_id = 0
@@ -101,8 +105,10 @@ class VocabAssistantDesktop:
 
         def fetch():
             try:
+                tgt_lang = getattr(self, 'target_lang', 'es')
                 data = self.api.get_definition(word.lower().strip(),
-                                               source_lang=source_lang)
+                                               source_lang=source_lang,
+                                               target_lang=tgt_lang)
                 if my_id != self._hover_request_id:
                     return  # Resultado desfasado, descartar
                 if data:
@@ -192,6 +198,29 @@ class VocabAssistantDesktop:
         """Alias por compatibilidad"""
         self.handle_mining_click(word)
 
+    def show_settings_dialog(self):
+        """Llamado cuando el usuario presiona el engranaje o la píldora de idioma."""
+        dialog = LanguageSelectorDialog()
+        
+        # Pre-seleccionar los idiomas actuales en los combobox
+        src_idx = dialog.src_combo.findData(self.stt.current_lang)
+        if src_idx >= 0: dialog.src_combo.setCurrentIndex(src_idx)
+        
+        tgt_idx = dialog.tgt_combo.findData(getattr(self, 'target_lang', 'es'))
+        if tgt_idx >= 0: dialog.tgt_combo.setCurrentIndex(tgt_idx)
+        
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            src_code, tgt_code = dialog.get_selection()
+            self.target_lang = tgt_code
+            
+            # Si el idioma fuente (audio) cambió, reconfigurar STT
+            if src_code != self.stt.current_lang:
+                self.stt.set_language(src_code)
+                src_name = list(filter(lambda x: x["code"] == src_code, self.overlay.LANGUAGES))[0]["name"]
+                self.overlay.current_lang_idx = [i for i, x in enumerate(self.overlay.LANGUAGES) if x["code"] == src_code][0]
+                self.overlay.lang_pill.setText(src_name)
+                self.overlay.set_status_message(f"Cambiando Vosk a {src_name}...")
+
     def handle_meaning(self, word):
         data = self.api.get_definition(word)
         if data:
@@ -234,6 +263,14 @@ if __name__ == "__main__":
     print("INICIANDO VOCAB ASSISTANT (VOSK VERSION)")
     print("="*40 + "\n")
     
+    def global_exception_handler(exc_type, exc_value, exc_traceback):
+        import traceback
+        print("\n[CRITICAL ERROR] Python Exception in PyQt Slot:")
+        traceback.print_exception(exc_type, exc_value, exc_traceback)
+        sys.exit(1)
+        
+    sys.excepthook = global_exception_handler
+
     try:
         assistant = VocabAssistantDesktop()
         assistant.run()

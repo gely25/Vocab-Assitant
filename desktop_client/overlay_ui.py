@@ -47,19 +47,15 @@ class LanguageSelectorDialog(QDialog):
         # Source Audio (Vosk)
         container_layout.addWidget(QLabel("Idioma del Audio (Vosk):"))
         self.src_combo = QComboBox()
-        self.src_combo.addItem("🇺🇸 Inglés (English)", "en")
-        self.src_combo.addItem("🇨🇳 Chino (中文)", "zh-CN")
-        self.src_combo.addItem("🇯🇵 Japonés (日本語)", "ja")
-        self.src_combo.addItem("🇫🇷 Francés (Français)", "fr")
+        for lang in SubtitleOverlay.LANGUAGES:
+            self.src_combo.addItem(lang["name"], lang["code"])
         container_layout.addWidget(self.src_combo)
 
         # Target Translation (API)
         container_layout.addWidget(QLabel("Traducir al:"))
         self.tgt_combo = QComboBox()
-        self.tgt_combo.addItem("🇪🇸 Español", "es")
-        self.tgt_combo.addItem("🇺🇸 Inglés", "en")
-        self.tgt_combo.addItem("🇨🇳 Chino", "zh")
-        self.tgt_combo.addItem("🇫🇷 Francés", "fr")
+        for lang in SubtitleOverlay.LANGUAGES:
+            self.tgt_combo.addItem(lang["name"], lang["code"])
         container_layout.addWidget(self.tgt_combo)
 
         # Start button
@@ -103,15 +99,15 @@ class TranslationTooltip(QWidget):
         # ── stylesheet ──────────────────────────────────────────────
         self.setStyleSheet("""
             QWidget#card {
-                background: rgba(35, 15, 65, 0.92);  /* Morado profundo transparente */
-                border: 1px solid rgba(139, 109, 208, 0.35); /* Borde lila sutil */
+                background: rgba(30, 10, 60, 0.98);  /* Morado ultra-opaco */
+                border: 1px solid rgba(139, 109, 208, 0.35);
                 border-radius: 14px;
             }
-            QLabel#word_lbl  { color: #E8E8F0; font-size:15px; font-weight:700; }
-            QLabel#phone_lbl { color: #7E7E93; font-size:11px; font-style:italic; }
-            QLabel#trans_lbl { color: #F7B731; font-size:16px; font-weight:700; }
-            QLabel#def_lbl   { color: #AEAEB2; font-size:12px; }
-            QLabel#status_lbl{ color: #6E6E7E; font-size:11px; }
+            QLabel#word_lbl  { color: #FFFFFF; font-size:15px; font-weight:700; }
+            QLabel#phone_lbl { color: #8C8CAB; font-size:11px; font-style:italic; }
+            QLabel#trans_lbl { color: #FFFFFF; font-size:17px; font-weight:800; }
+            QLabel#def_lbl   { color: #D1D1D1; font-size:12px; }
+            QLabel#status_lbl{ color: #888899; font-size:11px; }
             QPushButton#save_btn {
                 background:#7B5EA7; color:white; border:none;
                 border-radius:8px; padding:7px 0; font-size:13px; font-weight:600;
@@ -124,65 +120,87 @@ class TranslationTooltip(QWidget):
         card = QWidget(self)
         card.setObjectName("card")
         card.setFixedWidth(self.FIXED_W)
+        
+        # Main vertical layout inside the card
+        self.main_vbox = QVBoxLayout(card)
+        self.main_vbox.setContentsMargins(1, 1, 1, 1) # Thin border
+        self.main_vbox.setSpacing(0)
 
-        vbox = QVBoxLayout(card)
-        vbox.setContentsMargins(16, 12, 16, 14)
-        vbox.setSpacing(4)
-
-        # header: word + ✕
-        hdr = QHBoxLayout()
+        # 1. Header (Static/Top)
+        hdr_widget = QWidget()
+        hdr = QHBoxLayout(hdr_widget)
+        hdr.setContentsMargins(16, 12, 16, 8)
         self.word_lbl = QLabel()
         self.word_lbl.setObjectName("word_lbl")
         self.word_lbl.setWordWrap(False)
-        self.word_lbl.setMaximumWidth(240)
+        self.word_lbl.setMaximumWidth(220)
         hdr.addWidget(self.word_lbl, 1)
+        
         close_lbl = QLabel("✕")
-        close_lbl.setStyleSheet("color:#555; font-size:13px; padding:0 2px;")
+        close_lbl.setStyleSheet("color:#888; font-size:14px; padding:2px;")
         close_lbl.setCursor(Qt.CursorShape.PointingHandCursor)
         close_lbl.mousePressEvent = lambda _e: self._force_close()
         hdr.addWidget(close_lbl)
-        vbox.addLayout(hdr)
+        self.main_vbox.addWidget(hdr_widget)
 
+        # 2. Scroll Area for Content (Adaptive/Middle)
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.scroll.setStyleSheet("background: transparent; border: none;")
+        
+        scroll_content = QWidget()
+        scroll_content.setStyleSheet("background: transparent;")
+        self.scroll_vbox = QVBoxLayout(scroll_content)
+        self.scroll_vbox.setContentsMargins(16, 0, 16, 10)
+        self.scroll_vbox.setSpacing(6)
+        
         self.phone_lbl = QLabel()
         self.phone_lbl.setObjectName("phone_lbl")
         self.phone_lbl.hide()
-        vbox.addWidget(self.phone_lbl)
-
-        sep = QFrame()
-        sep.setFrameShape(QFrame.Shape.HLine)
-        sep.setStyleSheet("background:#333; margin:2px 0;")
-        sep.setFixedHeight(1)
-        vbox.addWidget(sep)
+        self.scroll_vbox.addWidget(self.phone_lbl)
 
         self.trans_lbl = QLabel("…")
         self.trans_lbl.setObjectName("trans_lbl")
         self.trans_lbl.setWordWrap(True)
-        self.trans_lbl.setFixedWidth(self.FIXED_W - 32)
-        vbox.addWidget(self.trans_lbl)
+        self.trans_lbl.setFixedWidth(self.FIXED_W - 40)
+        self.scroll_vbox.addWidget(self.trans_lbl)
 
         self.def_lbl = QLabel()
         self.def_lbl.setObjectName("def_lbl")
         self.def_lbl.setWordWrap(True)
-        self.def_lbl.setFixedWidth(self.FIXED_W - 32)
+        self.def_lbl.setFixedWidth(self.FIXED_W - 40)
         self.def_lbl.hide()
-        vbox.addWidget(self.def_lbl)
+        self.scroll_vbox.addWidget(self.def_lbl)
+        
+        self.scroll.setWidget(scroll_content)
+        self.main_vbox.addWidget(self.scroll)
 
-        self.status_lbl = QLabel("Hover para ver • click para guardar")
+        # 3. Footer (Static/Bottom)
+        footer_widget = QWidget()
+        footer_vbox = QVBoxLayout(footer_widget)
+        footer_vbox.setContentsMargins(16, 5, 16, 14)
+        footer_vbox.setSpacing(8)
+
+        self.status_lbl = QLabel("Click para guardar")
         self.status_lbl.setObjectName("status_lbl")
-        vbox.addWidget(self.status_lbl)
+        footer_vbox.addWidget(self.status_lbl)
 
         self.save_btn = QPushButton("＋ Guardar en mis tarjetas")
         self.save_btn.setObjectName("save_btn")
-        self.save_btn.setFixedWidth(self.FIXED_W - 32)
+        self.save_btn.setFixedHeight(36)
         self.save_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.save_btn.setEnabled(False)
         self.save_btn.clicked.connect(self._on_save)
-        vbox.addWidget(self.save_btn)
+        footer_vbox.addWidget(self.save_btn)
+        
+        self.main_vbox.addWidget(footer_widget)
 
-        # outer layout just holds the card — no margins so card fills all space
+        # Add card to window
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
-        outer.setSpacing(0)
         outer.addWidget(card)
 
         # ── hide timer ───────────────────────────────────────────────
@@ -222,15 +240,31 @@ class TranslationTooltip(QWidget):
         self.save_btn.setEnabled(False)
 
     def _place(self, global_pos):
-        """Position ABOVE the given point without calling adjustSize()."""
+        """Position ABOVE/BELOW with adaptive height without clipping."""
+        self.adjustSize()
+        h = self.sizeHint().height()
+        
+        # Limit height to 350px max to avoid covering the whole screen
+        max_h = 350
+        if h > max_h:
+            h = max_h
+            self.setFixedHeight(max_h)
+            self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        else:
+            self.setMinimumHeight(0)
+            self.setMaximumHeight(16777215) # QWidget maximum
+            self.adjustSize()
+            h = self.height()
+            self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
         screen = QApplication.primaryScreen().availableGeometry()
-        h = self.sizeHint().height()   # use sizeHint, not adjustSize()
         x = max(screen.left() + 8,
                 min(global_pos.x() - self.FIXED_W // 2,
                     screen.right() - self.FIXED_W - 8))
-        y = global_pos.y() - h - 10
+        
+        y = global_pos.y() - h - 15
         if y < screen.top() + 8:
-            y = global_pos.y() + 20    # fallback below if near top
+            y = global_pos.y() + 25    # fallback below if near top
         self.move(x, y)
 
     # ── public API ───────────────────────────────────────────────────
@@ -373,7 +407,9 @@ class SelectableCaptions(QTextBrowser):
                 selection-background-color: rgba(139, 109, 208, 180);
             }
         """)
-        self.setFont(QFont("Figtree", 18, QFont.Weight.Medium))
+        font = QFont("Figtree", 19, QFont.Weight.Bold)
+        font.setFamilies(["Figtree", "Segoe UI", "Arial"])
+        self.setFont(font)
         self.setLineWrapMode(QTextBrowser.LineWrapMode.WidgetWidth)
         self.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -463,12 +499,19 @@ class SubtitleOverlay(QWidget):
     on_word_right_clicked = None
     mode_toggled = pyqtSignal()
     lang_changed = pyqtSignal(str) # Emite el código de idioma (en, zh-CN, etc)
+    open_settings = pyqtSignal()
 
     LANGUAGES = [
         {"name": "🇺🇸 Ingles", "code": "en"},
+        {"name": "🇪🇸 Español", "code": "es"},
         {"name": "🇨🇳 Chino", "code": "zh-CN"},
         {"name": "🇯🇵 Japones", "code": "ja"},
-        {"name": "🇫🇷 Frances", "code": "fr"}
+        {"name": "🇫🇷 Frances", "code": "fr"},
+        {"name": "🇩🇪 Alemán", "code": "de"},
+        {"name": "🇮🇹 Italiano", "code": "it"},
+        {"name": "🇵🇹 Portugués", "code": "pt"},
+        {"name": "🇷🇺 Ruso", "code": "ru"},
+        {"name": "🇰🇷 Coreano", "code": "ko"}
     ]
 
     def __init__(self):
@@ -514,7 +557,7 @@ class SubtitleOverlay(QWidget):
             }
             QLabel:hover { background-color: rgba(255, 255, 255, 0.15); }
         """)
-        self.lang_pill.mousePressEvent = self.cycle_language
+        self.lang_pill.mousePressEvent = lambda e: self.open_settings.emit()
         self.content_layout.addWidget(self.lang_pill)
 
         # Status Label (The "Title" style from image)
@@ -531,14 +574,14 @@ class SubtitleOverlay(QWidget):
         self.settings_btn = QLabel("⚙")
         self.settings_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.settings_btn.setStyleSheet("color: rgba(255,255,255,0.6); font-size: 18px;")
-        self.settings_btn.mousePressEvent = self.cycle_language # Shortcut for now
+        self.settings_btn.mousePressEvent = lambda e: self.open_settings.emit()
         self.content_layout.addWidget(self.settings_btn)
         
         # Close Area
         self.close_btn = QLabel("✕")
         self.close_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.close_btn.setStyleSheet("color: rgba(255,255,255,0.4); font-size: 16px;")
-        self.close_btn.mousePressEvent = lambda e: self.close()
+        self.close_btn.setStyleSheet("color: rgba(255,255,255,0.4); font-size: 14px; padding: 4px;")
+        self.close_btn.mousePressEvent = lambda e: QApplication.instance().quit()
         self.content_layout.addWidget(self.close_btn)
         
         self.layout.addWidget(self.container)
@@ -551,25 +594,12 @@ class SubtitleOverlay(QWidget):
         self.oldPos = self.pos()
 
     def set_status_message(self, msg: str):
-        """Muestra un estado inicial o de mensaje general en lugar de captions viejos"""
+        """Muestra un estado inicial con estilo tenue e itálico usando HTML."""
         self.status_label.hide()
         self.captions_view.show()
-        self.captions_view.setPlainText(msg)
-        self.captions_view.setStyleSheet("""
-            QTextBrowser {
-                background: transparent; 
-                color: rgba(255, 255, 255, 0.5); 
-                border: none; 
-                font-style: italic;
-            }
-        """)
+        self.captions_view.setStyleSheet("QTextBrowser { background: transparent; border: none; }")
+        self.captions_view.setHtml(f"<div style='color: rgba(255,255,255,0.5); font-style: italic; font-size: 16px;'>{msg}</div>")
 
-    def cycle_language(self, event):
-        self.current_lang_idx = (self.current_lang_idx + 1) % len(self.LANGUAGES)
-        lang = self.LANGUAGES[self.current_lang_idx]
-        self.lang_pill.setText(lang["name"])
-        self.lang_changed.emit(lang["code"])
-        self.set_status(f"Listo para mostrar subtítulos en directo en {lang['name']}")
 
     def set_status(self, text):
         self.captions_view.hide()
@@ -594,12 +624,22 @@ class SubtitleOverlay(QWidget):
         self.status_label.hide()
         self.captions_view.show()
         
+        # Restaurar estilos intensos (100% opacidad)
+        self.captions_view.setStyleSheet("""
+            QTextBrowser {
+                background: transparent; 
+                color: #FFFFFF; 
+                border: none; 
+                selection-background-color: rgba(139, 109, 208, 180);
+            }
+        """)
+
         # Conservar el cursor si no hay selección manual del usuario
         cursor = self.captions_view.textCursor()
         had_selection = cursor.hasSelection()
         
         if not had_selection:
-            # Reemplazar texto limpiamente
+            # Reemplazar texto limpiamente (esto quita el HTML previo)
             self.captions_view.setPlainText(text)
             # Ir al final para auto-scroll
             self.captions_view.moveCursor(QTextCursor.MoveOperation.End)
@@ -607,10 +647,10 @@ class SubtitleOverlay(QWidget):
     def set_mining_mode(self, enabled):
         self.mining_mode = enabled
         if enabled:
-            # Prevenir arrastre desde el texto para no interferir con selección
-            self.container.setStyleSheet("QFrame { background-color: rgba(26, 15, 53, 0.85); border: 2px solid #8B6DD0; border-radius: 20px; }")
+            # Opaco casi total (0.98) para que no se trasluzcan subtítulos del video original
+            self.container.setStyleSheet("QFrame { background-color: rgba(20, 10, 45, 0.98); border: 2px solid #8B6DD0; border-radius: 20px; }")
         else:
-            self.container.setStyleSheet("QFrame { background-color: rgba(26, 15, 53, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }")
+            self.container.setStyleSheet("QFrame { background-color: rgba(20, 10, 45, 0.92); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }")
         self.show()
 
     def keyPressEvent(self, event):

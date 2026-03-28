@@ -22,12 +22,18 @@ class STTService(QThread):
         self.recognizer = None
         self.current_lang = "en" # default (en, zh-CN, ja, fr)
         self.samplerate = 16000
-        
+        # Map full locale to short code used by Vosk model downloader
         self.lang_map = {
             "en": "en-us",
+            "es": "es",
             "zh-CN": "cn",
             "ja": "ja",
-            "fr": "fr"
+            "fr": "fr",
+            "de": "de",
+            "it": "it",
+            "pt": "pt",
+            "ru": "ru",
+            "ko": "ko"
         }
 
     def set_language(self, lang_code):
