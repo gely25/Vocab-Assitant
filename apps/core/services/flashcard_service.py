@@ -37,3 +37,54 @@ class FlashcardService:
             return card, True
         except Flashcard.DoesNotExist:
             return None, False
+
+    @staticmethod
+    def get_flashcard_stats():
+        """Retorna estadísticas y listas de flashcards por estado de calidad"""
+        all_cards = Flashcard.objects.all()
+        
+        # Categorización por última calidad de respuesta
+        dominated = all_cards.filter(last_quality=5)
+        to_confirm = all_cards.filter(last_quality=3)
+        pending = all_cards.exclude(last_quality__in=[3, 5])
+        
+        def safe_json(cards):
+            return [
+                {'id': c.id, 'word': c.word, 'translation': c.translation, 'repetitions': c.repetitions} 
+                for c in cards
+            ]
+
+        return {
+            'total': all_cards.count(),
+            'pending_count': pending.count(),
+            'to_confirm_count': to_confirm.count(),
+            'dominated_count': dominated.count(),
+            'pending_list': safe_json(pending),
+            'to_confirm_list': safe_json(to_confirm),
+            'dominated_list': safe_json(dominated),
+        }
+
+    @staticmethod
+    def get_pending_flashcards():
+        """Retorna todas las palabras que NO están dominadas (calidad < 5)"""
+        return Flashcard.objects.exclude(last_quality=5)
+
+    @staticmethod
+    def get_all_flashcards():
+        """Retorna todas las flashcards sin excepción"""
+        return Flashcard.objects.all()
+
+    @staticmethod
+    def reset_flashcard(card_id):
+        """Reinicia el progreso de una flashcard"""
+        try:
+            card = Flashcard.objects.get(id=card_id)
+            card.repetitions = 0
+            card.interval = 1
+            card.ease_factor = 2.5
+            card.last_quality = 0
+            card.next_review = timezone.now()
+            card.save()
+            return True
+        except Flashcard.DoesNotExist:
+            return False

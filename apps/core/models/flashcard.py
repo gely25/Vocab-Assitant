@@ -16,6 +16,7 @@ class Flashcard(models.Model):
     ease_factor = models.FloatField(default=2.5)
     interval = models.IntegerField(default=1)
     repetitions = models.IntegerField(default=0)
+    last_quality = models.IntegerField(default=0)
     next_review = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -42,6 +43,7 @@ class Flashcard(models.Model):
 
             self.repetitions += 1
 
+        self.last_quality = quality
         self.ease_factor = max(1.3, self.ease_factor + 0.1 - (5 - quality) * 0.08) 
         self.next_review = timezone.now() + timezone.timedelta(days=self.interval)
         self.save()
