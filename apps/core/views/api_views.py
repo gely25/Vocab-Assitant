@@ -171,3 +171,31 @@ def generate_examples(request):
         return JsonResponse({'error': 'JSON inválido'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+def launch_desktop_client(request):
+    """Lanza el cliente de escritorio (solo funciona localmente)"""
+    import subprocess
+    import sys
+    import os
+    
+    # Ruta absoluta al script
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    script_path = os.path.join(base_dir, 'desktop_client', 'main_app.py')
+    
+    try:
+        command = [sys.executable, script_path]
+        print(f"DEBUG: Intentando lanzar -> {' '.join(command)}")
+        
+        # Popen para no bloquear el proceso de Django
+        process = subprocess.Popen(command, 
+                         stdout=subprocess.DEVNULL, 
+                         stderr=None, 
+                         creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0)
+        
+        return JsonResponse({
+            'status': 'ok', 
+            'message': 'Asistente iniciado',
+            'pid': process.pid
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})

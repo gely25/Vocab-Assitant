@@ -1,0 +1,1237 @@
+2026-03-27 21:27:13,579 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:27:19,334 - INFO - Módulos cargados correctamente
+2026-03-27 21:27:19,661 - INFO - Iniciando Interfaz Overlay...
+2026-03-27 21:27:22,970 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:27:23,297 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D06753380>
+2026-03-27 21:27:23,297 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000017D0646DF50> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:27:23,766 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D067532C0>
+2026-03-27 21:27:23,770 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:23,771 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:23,771 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:27:23,771 - DEBUG - send_request_body.complete
+2026-03-27 21:27:23,771 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:24,245 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:27:24 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"7cb-GCyxWoEDBbaVkO3WwQAFKvTJ7wU"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73c8c-28e6fea765842e7536a18e26;6b708635-3632-4431-b293-9e1baa719299'), (b'RateLimit', b'"api";r=499;t=228'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 af0c3fbc11dbd0b6ca811448514b3186.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'Yfo2r2frmSm9l3AKb_GYIBijEOyBL1xffnUOhYeCV_xpzg2JUCKN8w==')])
+2026-03-27 21:27:24,249 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-base/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:27:24,249 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:27:24,424 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:24,424 - DEBUG - response_closed.started
+2026-03-27 21:27:24,424 - DEBUG - response_closed.complete
+2026-03-27 21:27:24,457 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:24,461 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:24,461 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:24,462 - DEBUG - send_request_body.complete
+2026-03-27 21:27:24,463 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=10 socket_options=None
+2026-03-27 21:27:24,463 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:24,465 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=10 socket_options=None
+2026-03-27 21:27:24,466 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=10 socket_options=None
+2026-03-27 21:27:24,625 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D05F50650>
+2026-03-27 21:27:24,625 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D05F50770>
+2026-03-27 21:27:24,625 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D06404230>
+2026-03-27 21:27:24,625 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000017D0646DF50> server_hostname='huggingface.co' timeout=10
+2026-03-27 21:27:24,625 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000017D0646DF50> server_hostname='huggingface.co' timeout=10
+2026-03-27 21:27:24,625 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000017D0646DF50> server_hostname='huggingface.co' timeout=10
+2026-03-27 21:27:24,864 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 307, b'Temporary Redirect', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'294'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:27:24 GMT'), (b'Location', b'/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/config.json?%2FSystran%2Ffaster-whisper-base%2Fresolve%2Febe41f70d5b6dfa9166e2c581c45c9c0cfc57b66%2Fconfig.json=&etag=%22867cf1a0fece1394e01d55e287ba2f09a577c046%22'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73c8c-1a8aeca6316307b567fa2aa9;0f2128db-90b3-413f-a87c-56f3657a271b'), (b'RateLimit', b'"resolvers";r=2999;t=228'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Accept-Ranges', b'bytes'), (b'X-HF-Warning', b'unauthenticated; Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'config.json; filename="config.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'X-Linked-ETag', b'"867cf1a0fece1394e01d55e287ba2f09a577c046"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 af0c3fbc11dbd0b6ca811448514b3186.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'6L-hiSHMyrJ5mrk-zeuE2Wpm1UHkH9fA2zc7hnCVCQiEfpMs42hs5g==')])
+2026-03-27 21:27:24,865 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-27 21:27:24,865 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:24,865 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:24,865 - DEBUG - response_closed.started
+2026-03-27 21:27:24,866 - DEBUG - response_closed.complete
+2026-03-27 21:27:24,866 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-03-27 21:27:24,867 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:24,868 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:24,868 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:24,868 - DEBUG - send_request_body.complete
+2026-03-27 21:27:24,868 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,184 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D064A8980>
+2026-03-27 21:27:25,184 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D064A9CA0>
+2026-03-27 21:27:25,184 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000017D06631D30>
+2026-03-27 21:27:25,185 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,185 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,185 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,186 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:25,186 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:25,188 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,188 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:25,188 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,188 - DEBUG - send_request_body.complete
+2026-03-27 21:27:25,189 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,189 - DEBUG - send_request_body.complete
+2026-03-27 21:27:25,189 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,190 - DEBUG - send_request_body.complete
+2026-03-27 21:27:25,190 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,191 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,449 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'2309'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:21 GMT'), (b'ETag', b'"867cf1a0fece1394e01d55e287ba2f09a577c046"'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef25-590bd1ee5d33cd165c7fd194;288af51d-ff2e-4a68-9024-9bd5c785f6a7'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'config.json; filename="config.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Vary', b'Origin'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 af0c3fbc11dbd0b6ca811448514b3186.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'nF1v-NNEKfRC8HRT3OvQwSrUSHrxCcA1bMykQnNQQQvq7_FRpUdKGQ=='), (b'Age', b'23809383')])
+2026-03-27 21:27:25,449 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/config.json "HTTP/1.1 200 OK"
+2026-03-27 21:27:25,449 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,449 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:25,449 - DEBUG - response_closed.started
+2026-03-27 21:27:25,449 - DEBUG - response_closed.complete
+2026-03-27 21:27:25,450 - DEBUG - Attempting to acquire lock 1636490886560 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\867cf1a0fece1394e01d55e287ba2f09a577c046.lock
+2026-03-27 21:27:25,455 - DEBUG - Lock 1636490886560 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\867cf1a0fece1394e01d55e287ba2f09a577c046.lock
+2026-03-27 21:27:25,457 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:25,457 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:25,457 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:27:25,459 - DEBUG - send_request_body.complete
+2026-03-27 21:27:25,459 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:25,857 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 307, b'Temporary Redirect', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'300'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:27:25 GMT'), (b'Location', b'/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/vocabulary.txt?%2FSystran%2Ffaster-whisper-base%2Fresolve%2Febe41f70d5b6dfa9166e2c581c45c9c0cfc57b66%2Fvocabulary.txt=&etag=%22c9074644d9d1205686f16d411564729461324b75%22'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73c8d-579a634c7329dd28041789a3;7d693e7f-11e9-4f3e-b894-5a8385df6238'), (b'RateLimit', b'"resolvers";r=2998;t=227'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Accept-Ranges', b'bytes'), (b'X-HF-Warning', b'unauthenticated; Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'vocabulary.txt; filename="vocabulary.txt";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'X-Linked-ETag', b'"c9074644d9d1205686f16d411564729461324b75"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 1016c4ec68508b07b5535ff8dc3bdcc4.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'Ci1mRaygigu4zEyc-XL0VlnpPqmhE4F3C7od6sVatsxv7gsm4ZYh8Q==')])
+2026-03-27 21:27:25,858 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/vocabulary.txt "HTTP/1.1 307 Temporary Redirect"
+2026-03-27 21:27:25,859 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,859 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:25,859 - DEBUG - response_closed.started
+2026-03-27 21:27:25,859 - DEBUG - response_closed.complete
+2026-03-27 21:27:25,860 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,861 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:25,861 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,861 - DEBUG - send_request_body.complete
+2026-03-27 21:27:25,861 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,968 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 307, b'Temporary Redirect', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'300'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:27:25 GMT'), (b'Location', b'/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/tokenizer.json?%2FSystran%2Ffaster-whisper-base%2Fresolve%2Febe41f70d5b6dfa9166e2c581c45c9c0cfc57b66%2Ftokenizer.json=&etag=%227818adb6de9fa3064d3ff81226fdd675be1f6344%22'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73c8d-25f9ce641d33c6b00adce460;f5cb0d96-a13a-4ad1-877c-2aac40978d5f'), (b'RateLimit', b'"resolvers";r=2996;t=227'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'tokenizer.json; filename="tokenizer.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'X-Linked-ETag', b'"7818adb6de9fa3064d3ff81226fdd675be1f6344"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 b80af6d90290b622c680fa62cff91fca.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'Mgoh0qVzLfZnX8TlcZWG17K5T-EQkjeYmHWHTcoybd28cm1ea7tCaA==')])
+2026-03-27 21:27:25,969 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-27 21:27:25,969 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,969 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:25,969 - DEBUG - response_closed.started
+2026-03-27 21:27:25,969 - DEBUG - response_closed.complete
+2026-03-27 21:27:25,969 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,969 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:25,972 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,972 - DEBUG - send_request_body.complete
+2026-03-27 21:27:25,972 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,976 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 302, b'Found', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'1374'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:27:25 GMT'), (b'Location', b'https://cas-bridge.xethub.hf.co/xet-bridge-us/655f20e8a81ce416b9fda508/0c4d8d814973160f53608ff0aa1618a90abbce9ed632bbc54930475ba82ce973?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cas%2F20260328%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260328T022725Z&X-Amz-Expires=3600&X-Amz-Signature=e5e1b0435c865ada34dc90eed641455f60eaecc897f75f82298042d02bc903a7&X-Amz-SignedHeaders=host&X-Xet-Cas-Uid=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%27model.bin%3B+filename%3D%22model.bin%22%3B&response-content-type=application%2Foctet-stream&x-amz-checksum-mode=ENABLED&x-id=GetObject&Expires=1774668445&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc3NDY2ODQ0NX19LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2FzLWJyaWRnZS54ZXRodWIuaGYuY28veGV0LWJyaWRnZS11cy82NTVmMjBlOGE4MWNlNDE2YjlmZGE1MDgvMGM0ZDhkODE0OTczMTYwZjUzNjA4ZmYwYWExNjE4YTkwYWJiY2U5ZWQ2MzJiYmM1NDkzMDQ3NWJhODJjZTk3MyoifV19&Signature=gtSQq5ltEw17748zz5bSjDlW4ONA0WQaRK8Q1VCvGLipYpJVUMfYbhF7YVhMmYFU8f18954YwL5xSsxyi1jIuLu9vMX3psdTCBO8D67-MDE3ARIwVxBY6PDuPa-wat-KDtFLlB3hMqOWYDTE%7EUMEbDt1opZLdpxp6JLZ0EnvqjJZyEU8lkx2y03sKicPe4S81ZHiYLTGKcrnRaKFSo9g8U0V5mo74JbsvP-OupdPUYv3UfCGdPYEMY2-fwDeYH8DZnEmby2TK2NPJ84rEhFyk0vJAWg-2r6qJAc7XvpJ0IPugCiyzLoDIC1Obi5TVZdkDYr4u3RZcTdKM-fornXSZA__&Key-Pair-Id=K2L8F4GPSG1IFC'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73c8d-33f9601172525083252111f0;392fe8cf-ed81-4b6b-936d-f53916024bd6'), (b'RateLimit', b'"resolvers";r=2997;t=227'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'MISS'), (b'X-Linked-Size', b'145217532'), (b'X-Linked-ETag', b'"d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9"'), (b'X-Xet-Hash', b'0c4d8d814973160f53608ff0aa1618a90abbce9ed632bbc54930475ba82ce973'), (b'Link', b'<https://huggingface.co/api/models/Systran/faster-whisper-base/xet-read-token/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66>; rel="xet-auth", <https://cas-server.xethub.hf.co/v1/reconstructions/0c4d8d814973160f53608ff0aa1618a90abbce9ed632bbc54930475ba82ce973>; rel="xet-reconstruction-info"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 48238c381b3e8aba2677f8bc0bda423c.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'tXlZTxlQczPygd7sMeahDjz_j5kIqu2XL6NTh3vzTuuo_8R7lS1nFg==')])
+2026-03-27 21:27:25,976 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/model.bin "HTTP/1.1 302 Found"
+2026-03-27 21:27:25,976 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:25,976 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:25,976 - DEBUG - response_closed.started
+2026-03-27 21:27:25,976 - DEBUG - response_closed.complete
+2026-03-27 21:27:25,976 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:21 GMT'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'config.json; filename="config.json";'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef25-395df2ca0aae76a662d50a4d;a14e8614-de8d-4270-ae25-ed83afcd880a'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Content-Encoding', b'gzip'), (b'ETag', b'W/"867cf1a0fece1394e01d55e287ba2f09a577c046"'), (b'Vary', b'Origin,accept-encoding'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 af0c3fbc11dbd0b6ca811448514b3186.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'0Vt0_qb9JluUsyAd6s_K5VKBo4JYYEH3TYVAaG1d2IZkahHf4i6NHA=='), (b'Age', b'23809384')])
+2026-03-27 21:27:25,976 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/config.json "HTTP/1.1 200 OK"
+2026-03-27 21:27:25,976 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:27:25,980 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:25,980 - DEBUG - response_closed.started
+2026-03-27 21:27:25,980 - DEBUG - response_closed.complete
+2026-03-27 21:27:25,987 - DEBUG - Attempting to acquire lock 1636490886656 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9.lock
+2026-03-27 21:27:25,988 - DEBUG - Lock 1636490886656 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9.lock
+2026-03-27 21:27:25,996 - DEBUG - Attempting to release lock 1636490886560 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\867cf1a0fece1394e01d55e287ba2f09a577c046.lock
+2026-03-27 21:27:26,000 - DEBUG - Lock 1636490886560 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\867cf1a0fece1394e01d55e287ba2f09a577c046.lock
+2026-03-27 21:27:26,055 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:26,055 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:26,057 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:27:26,057 - DEBUG - send_request_body.complete
+2026-03-27 21:27:26,057 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:26,095 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'459861'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:21 GMT'), (b'ETag', b'"c9074644d9d1205686f16d411564729461324b75"'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef25-5177483a58d2806418f0331e;f4b05336-133a-498c-838b-0402522eafce'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'vocabulary.txt; filename="vocabulary.txt";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Vary', b'Origin'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 1016c4ec68508b07b5535ff8dc3bdcc4.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'FkAmoLw6v3qWzQ1SkVO2ccJw7ogIBHc1E0wcIFM08NvbfC3yHgdBIA=='), (b'Age', b'23809385')])
+2026-03-27 21:27:26,095 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/vocabulary.txt "HTTP/1.1 200 OK"
+2026-03-27 21:27:26,095 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:26,095 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:26,095 - DEBUG - response_closed.started
+2026-03-27 21:27:26,095 - DEBUG - response_closed.complete
+2026-03-27 21:27:26,095 - DEBUG - Attempting to acquire lock 1636491305104 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:27:26,099 - DEBUG - Lock 1636491305104 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:27:26,101 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:26,102 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:26,102 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:27:26,102 - DEBUG - send_request_body.complete
+2026-03-27 21:27:26,102 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:26,221 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'2203239'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:21 GMT'), (b'ETag', b'"7818adb6de9fa3064d3ff81226fdd675be1f6344"'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef25-3a2bd52c7f85f84833cc269a;a44405eb-cac3-4437-8900-1d7bdf4b21f1'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'tokenizer.json; filename="tokenizer.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Vary', b'Origin'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 b80af6d90290b622c680fa62cff91fca.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'UR19KpaB5t0kO_agni3Sq28-AJqQIQZTSyY3AwtaLUigPfsuUERhfw=='), (b'Age', b'23809385')])
+2026-03-27 21:27:26,221 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/tokenizer.json "HTTP/1.1 200 OK"
+2026-03-27 21:27:26,223 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:27:26,223 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:26,224 - DEBUG - response_closed.started
+2026-03-27 21:27:26,224 - DEBUG - response_closed.complete
+2026-03-27 21:27:26,224 - DEBUG - Attempting to acquire lock 1636491300016 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:27:26,226 - DEBUG - Lock 1636491300016 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:27:26,232 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:26,232 - DEBUG - send_request_headers.complete
+2026-03-27 21:27:26,232 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:27:26,232 - DEBUG - send_request_body.complete
+2026-03-27 21:27:26,232 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:27:26,346 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:21 GMT'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'vocabulary.txt; filename="vocabulary.txt";'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef25-428f2ffa5872c073687f8f62;750b2b32-1fd7-4e4f-abb1-201c9d6ee2d4'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Content-Encoding', b'gzip'), (b'ETag', b'W/"c9074644d9d1205686f16d411564729461324b75"'), (b'Vary', b'Origin,accept-encoding'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 48238c381b3e8aba2677f8bc0bda423c.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'oVOMYMxt4QkG61qO-HbSgKMtXz8pCVsu0unkusmoAC-HuYNtfw1RTg=='), (b'Age', b'23809385')])
+2026-03-27 21:27:26,346 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/vocabulary.txt "HTTP/1.1 200 OK"
+2026-03-27 21:27:26,346 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:27:26,489 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:21 GMT'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'tokenizer.json; filename="tokenizer.json";'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef25-5245f3282c226e0d4074242e;40b19909-edec-4763-97e7-5d10050c70bb'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66'), (b'Content-Encoding', b'gzip'), (b'ETag', b'W/"7818adb6de9fa3064d3ff81226fdd675be1f6344"'), (b'Vary', b'Origin,accept-encoding'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 b80af6d90290b622c680fa62cff91fca.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'HA3wYQLva7I1KOIqh7YvFXtgvAgF2DixZJVoEpM7YrqOhG07nYknJg=='), (b'Age', b'23809385')])
+2026-03-27 21:27:26,490 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-base/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/tokenizer.json "HTTP/1.1 200 OK"
+2026-03-27 21:27:26,491 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:27:26,542 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Content-Length', b'399'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:27:26 GMT'), (b'ETag', b'W/"18f-IYZsitEhSZ70vieo5h7aDz0z2bs"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73c8e-3fbb9644167d81c41ae034b6;1b965721-db4c-486f-8343-9283812a27d5'), (b'RateLimit', b'"api";r=498;t=226'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Xet-Cas-Url', b'https://cas-server.xethub.hf.co'), (b'X-Xet-Token-Expiration', b'1774665746'), (b'X-Xet-Access-Token', b'eyJhbGciOiJIUzI1NiJ9.eyJyZXBvSWQiOiI2NTVmMjBlOGE4MWNlNDE2YjlmZGE1MDgiLCJ1c2VySWQiOiJwdWJsaWMiLCJhY2Nlc3MiOiJSRUFEIiwiaGZDZG5UaWVyIjoidW5hdXRoZW50aWNhdGVkIiwicmVwb19zdG9yYWdlX3R5cGUiOiJnaXQiLCJpYXQiOjE3NzQ2NjQ4NDYsImV4cCI6MTc3NDY2NTc0NiwiaXNzIjoiaHR0cHM6Ly9odWdnaW5nZmFjZS5jbyJ9.ZB8ZFDipHyLYZ-EOZR-sEfIHpVet_ufgPirgdT97bD8'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 af0c3fbc11dbd0b6ca811448514b3186.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'ARN52-P1'), (b'X-Amz-Cf-Id', b'91xr_pc5UTAc_GaZXuINZNjuB6rxesOm94SK996gmOfygVyWB-gG7g==')])
+2026-03-27 21:27:26,544 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-base/xet-read-token/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66 "HTTP/1.1 200 OK"
+2026-03-27 21:27:26,544 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:27:26,544 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:26,544 - DEBUG - response_closed.started
+2026-03-27 21:27:26,544 - DEBUG - response_closed.complete
+2026-03-27 21:27:27,078 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:27,078 - DEBUG - response_closed.started
+2026-03-27 21:27:27,078 - DEBUG - response_closed.complete
+2026-03-27 21:27:27,083 - DEBUG - Attempting to release lock 1636491305104 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:27:27,085 - DEBUG - Lock 1636491305104 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:27:28,181 - DEBUG - receive_response_body.complete
+2026-03-27 21:27:28,182 - DEBUG - response_closed.started
+2026-03-27 21:27:28,182 - DEBUG - response_closed.complete
+2026-03-27 21:27:28,191 - DEBUG - Attempting to release lock 1636491300016 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:27:28,192 - DEBUG - Lock 1636491300016 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:27:45,415 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:27:45,426 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=Cambiado&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 21:27:46,144 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:27:46,151 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 21:27:46,220 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:27:46,230 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%F0%9F%87%BA%F0%9F%87%B8&source=en&target=es HTTP/1.1" 404 5706
+2026-03-27 21:27:46,362 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:27:46,372 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=Ingles...&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 21:27:47,455 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:27:47,468 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%28Escuchando%29&source=en&target=es HTTP/1.1" 404 5698
+2026-03-27 21:27:50,389 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:27:50,400 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%28Escuchando%29&source=en&target=es HTTP/1.1" 404 5698
+2026-03-27 21:27:58,801 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:27:58,815 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%28Escuchando%29&source=en&target=es HTTP/1.1" 404 5698
+2026-03-27 21:28:00,068 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:28:00,076 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%28Escuchando%29&source=en&target=es HTTP/1.1" 404 5698
+2026-03-27 21:28:01,054 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:28:01,064 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%28Escuchando%29&source=en&target=es HTTP/1.1" 404 5698
+2026-03-27 21:28:30,983 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:28:30,997 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%F0%9F%87%BA%F0%9F%87%B8&source=en&target=es HTTP/1.1" 404 5706
+2026-03-27 21:28:31,040 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:28:31,051 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=%F0%9F%87%BA%F0%9F%87%B8&source=en&target=es HTTP/1.1" 404 5706
+2026-03-27 21:28:32,366 - DEBUG - Attempting to release lock 1636490886656 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9.lock
+2026-03-27 21:28:32,366 - DEBUG - Lock 1636490886656 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-base\d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9.lock
+2026-03-27 21:28:32,716 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:28:32,726 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=Ingles...&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 21:31:51,873 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:31:51,884 - ERROR - Error cargando módulos: invalid syntax (stt_service.py, line 74)
+2026-03-27 21:35:25,487 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:35:26,317 - INFO - Módulos cargados correctamente
+2026-03-27 21:35:26,390 - INFO - Iniciando Interfaz Overlay...
+2026-03-27 21:35:27,674 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:35:28,145 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000245C0C1D850>
+2026-03-27 21:35:28,146 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000245C0A914D0> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:35:28,629 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000245C0D69730>
+2026-03-27 21:35:28,629 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:35:28,630 - DEBUG - send_request_headers.complete
+2026-03-27 21:35:28,630 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:35:28,630 - DEBUG - send_request_body.complete
+2026-03-27 21:35:28,630 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:35:29,103 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:35:29 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"7cb-GCyxWoEDBbaVkO3WwQAFKvTJ7wU"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73e71-6e7bce890dde448a541c2b1b;2af85bb7-f9ee-48f4-8037-a54cf77825a2'), (b'RateLimit', b'"api";r=499;t=43'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 8eef06122923858c49b99a9d21f15d68.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'hL45Qz0-Luw-2a4A4MNqZct5VJ5x3sPMT8yIiuECwAp2FNmgrad1vg==')])
+2026-03-27 21:35:29,103 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-base/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:35:29,103 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:35:29,268 - DEBUG - receive_response_body.complete
+2026-03-27 21:35:29,268 - DEBUG - response_closed.started
+2026-03-27 21:35:29,268 - DEBUG - response_closed.complete
+2026-03-27 21:37:20,278 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:37:20,939 - INFO - Módulos cargados correctamente
+2026-03-27 21:37:21,002 - INFO - Iniciando Interfaz Overlay...
+2026-03-27 21:37:21,919 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:37:22,160 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D27AC770>
+2026-03-27 21:37:22,161 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000158D28E14D0> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:37:23,116 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D2915CA0>
+2026-03-27 21:37:23,117 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:23,117 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:23,117 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:37:23,117 - DEBUG - send_request_body.complete
+2026-03-27 21:37:23,117 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:23,576 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:37:23 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"750-LCekfX69+eC26YZ3iogK4pOE+/0"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73ee3-2d3ad7680f846f5c50e429c9;0cd47fa7-eadb-4fd3-b9e6-366d05454794'), (b'RateLimit', b'"api";r=499;t=229'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'MfXvR9iyWZpDvjgjyHu7R1u5CRieBxu2SuN7Pll-f8HynnhwQNSqUQ==')])
+2026-03-27 21:37:23,577 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:37:23,577 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:37:23,735 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:23,736 - DEBUG - response_closed.started
+2026-03-27 21:37:23,736 - DEBUG - response_closed.complete
+2026-03-27 21:37:23,772 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:23,773 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=10 socket_options=None
+2026-03-27 21:37:23,773 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=10 socket_options=None
+2026-03-27 21:37:23,779 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:23,778 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=10 socket_options=None
+2026-03-27 21:37:23,779 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:23,780 - DEBUG - send_request_body.complete
+2026-03-27 21:37:23,780 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:23,900 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D2BFBEC0>
+2026-03-27 21:37:23,900 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D2C204A0>
+2026-03-27 21:37:23,903 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000158D28E14D0> server_hostname='huggingface.co' timeout=10
+2026-03-27 21:37:23,901 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D2BFBFB0>
+2026-03-27 21:37:23,901 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000158D28E14D0> server_hostname='huggingface.co' timeout=10
+2026-03-27 21:37:23,905 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000158D28E14D0> server_hostname='huggingface.co' timeout=10
+2026-03-27 21:37:24,239 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 307, b'Temporary Redirect', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'294'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:37:24 GMT'), (b'Location', b'/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/config.json?%2FSystran%2Ffaster-whisper-tiny%2Fresolve%2Fd90ca5fe260221311c53c58e660288d3deb8d356%2Fconfig.json=&etag=%223baa18e2b321a2f489614607852a729fcd516480%22'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73ee4-4f97b9d82a6ee1067bddaffa;5387d9fc-88eb-4f68-ae36-2bfbf961b239'), (b'RateLimit', b'"resolvers";r=2999;t=228'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'config.json; filename="config.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'X-Linked-ETag', b'"3baa18e2b321a2f489614607852a729fcd516480"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'QN21OEh7RhdOyYXJ8XjLsomZEO_egL_dEHfX6x1knjgO9BO6a1aH9w==')])
+2026-03-27 21:37:24,241 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-tiny/resolve/d90ca5fe260221311c53c58e660288d3deb8d356/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-27 21:37:24,241 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,241 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:24,241 - DEBUG - response_closed.started
+2026-03-27 21:37:24,241 - DEBUG - response_closed.complete
+2026-03-27 21:37:24,243 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,243 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:24,243 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,244 - DEBUG - send_request_body.complete
+2026-03-27 21:37:24,244 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,353 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D2BFAE10>
+2026-03-27 21:37:24,353 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,354 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D2BB9BE0>
+2026-03-27 21:37:24,354 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,354 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:24,355 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:24,356 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,356 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,356 - DEBUG - send_request_body.complete
+2026-03-27 21:37:24,356 - DEBUG - send_request_body.complete
+2026-03-27 21:37:24,357 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,357 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,381 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000158D27AC770>
+2026-03-27 21:37:24,381 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,381 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:24,381 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,382 - DEBUG - send_request_body.complete
+2026-03-27 21:37:24,382 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,473 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'2249'), (b'Connection', b'keep-alive'), (b'Date', b'Fri, 22 Aug 2025 11:59:40 GMT'), (b'ETag', b'"3baa18e2b321a2f489614607852a729fcd516480"'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-68a85bac-37ccb14873915ed04937ed50;bf6bd318-be2c-4435-a0b9-4b01ed5578bc'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'Set-Cookie', b'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=None'), (b'Set-Cookie', b'token=; Domain=huggingface.co; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Accept-Ranges', b'bytes'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'config.json; filename="config.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Vary', b'Origin'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'0uy0IunlPN0waRmYoko2Haxqfs-6PNVyeZXaDCR3T2XCuDn0VKZXeg=='), (b'Age', b'18801464')])
+2026-03-27 21:37:24,473 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/config.json "HTTP/1.1 200 OK"
+2026-03-27 21:37:24,473 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,473 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:24,473 - DEBUG - response_closed.started
+2026-03-27 21:37:24,473 - DEBUG - response_closed.complete
+2026-03-27 21:37:24,477 - DEBUG - Attempting to acquire lock 1481004529664 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\3baa18e2b321a2f489614607852a729fcd516480.lock
+2026-03-27 21:37:24,477 - DEBUG - Lock 1481004529664 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\3baa18e2b321a2f489614607852a729fcd516480.lock
+2026-03-27 21:37:24,479 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:24,481 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:24,481 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:37:24,481 - DEBUG - send_request_body.complete
+2026-03-27 21:37:24,481 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:24,711 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Thu, 04 Sep 2025 22:02:44 GMT'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'config.json; filename="config.json";'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-68ba0c84-3a42bd7910d0c1fe2c497aba;0d60d220-1840-478a-92ef-fee0b53075bc'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Content-Encoding', b'gzip'), (b'ETag', b'W/"3baa18e2b321a2f489614607852a729fcd516480"'), (b'Vary', b'Origin,accept-encoding'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'b3ZAL1Ha0hFfK06zrkhLOhCIHSOoX-nBs7P3iMyKhDX0P9otwQ1GJg=='), (b'Age', b'17642079')])
+2026-03-27 21:37:24,712 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/config.json "HTTP/1.1 200 OK"
+2026-03-27 21:37:24,712 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:37:24,874 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:24,874 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 307, b'Temporary Redirect', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'300'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:37:24 GMT'), (b'Location', b'/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/vocabulary.txt?%2FSystran%2Ffaster-whisper-tiny%2Fresolve%2Fd90ca5fe260221311c53c58e660288d3deb8d356%2Fvocabulary.txt=&etag=%22c9074644d9d1205686f16d411564729461324b75%22'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73ee4-5c4a13ce28f13ed67ef017fc;aa3e3ed4-3642-44f3-8a5e-b1d3502b93a4'), (b'RateLimit', b'"resolvers";r=2997;t=228'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'vocabulary.txt; filename="vocabulary.txt";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'X-Linked-ETag', b'"c9074644d9d1205686f16d411564729461324b75"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 1b5e59604d384ec0e23c5de06040fcb8.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'HwB-4cgwU89X_IdV-oR7AEVGjrKwFqJiRmtO1Fv8ryIkimJVNXvVow==')])
+2026-03-27 21:37:24,874 - DEBUG - response_closed.started
+2026-03-27 21:37:24,875 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-tiny/resolve/d90ca5fe260221311c53c58e660288d3deb8d356/vocabulary.txt "HTTP/1.1 307 Temporary Redirect"
+2026-03-27 21:37:24,875 - DEBUG - response_closed.complete
+2026-03-27 21:37:24,875 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,877 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:24,877 - DEBUG - response_closed.started
+2026-03-27 21:37:24,877 - DEBUG - response_closed.complete
+2026-03-27 21:37:24,879 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,879 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:24,879 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,879 - DEBUG - send_request_body.complete
+2026-03-27 21:37:24,879 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,886 - DEBUG - Attempting to release lock 1481004529664 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\3baa18e2b321a2f489614607852a729fcd516480.lock
+2026-03-27 21:37:24,886 - DEBUG - Lock 1481004529664 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\3baa18e2b321a2f489614607852a729fcd516480.lock
+2026-03-27 21:37:24,907 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 307, b'Temporary Redirect', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'300'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:37:24 GMT'), (b'Location', b'/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/tokenizer.json?%2FSystran%2Ffaster-whisper-tiny%2Fresolve%2Fd90ca5fe260221311c53c58e660288d3deb8d356%2Ftokenizer.json=&etag=%227818adb6de9fa3064d3ff81226fdd675be1f6344%22'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73ee4-51db67665cc771687afed215;4afaeedd-0745-4826-96da-ec9993b9ceeb'), (b'RateLimit', b'"resolvers";r=2998;t=228'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'tokenizer.json; filename="tokenizer.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'X-Linked-ETag', b'"7818adb6de9fa3064d3ff81226fdd675be1f6344"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 5d5704a42e51cafd107137919e8b851a.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'9_170JSTGIUZDCihOl55sp3R4TZh5KBaX5wwngI0nSMjV6Z6LO1Dmw==')])
+2026-03-27 21:37:24,907 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-tiny/resolve/d90ca5fe260221311c53c58e660288d3deb8d356/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-27 21:37:24,907 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,909 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:24,909 - DEBUG - response_closed.started
+2026-03-27 21:37:24,909 - DEBUG - response_closed.complete
+2026-03-27 21:37:24,909 - DEBUG - send_request_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,910 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:24,910 - DEBUG - send_request_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:24,910 - DEBUG - send_request_body.complete
+2026-03-27 21:37:24,910 - DEBUG - receive_response_headers.started request=<Request [b'HEAD']>
+2026-03-27 21:37:25,108 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'459861'), (b'Connection', b'keep-alive'), (b'Date', b'Fri, 22 Aug 2025 11:59:40 GMT'), (b'ETag', b'"c9074644d9d1205686f16d411564729461324b75"'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-68a85bac-0a06a80563d5cb8572588f92;d2dc5353-6478-4ee1-b9f2-02f92e65137b'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'Set-Cookie', b'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=None'), (b'Set-Cookie', b'token=; Domain=huggingface.co; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Accept-Ranges', b'bytes'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'vocabulary.txt; filename="vocabulary.txt";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Vary', b'Origin'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'euGGPNHKlk9kweCh1qSE8_igulmiXTV1rm2nT9ukRAOg0lERoiwLpA=='), (b'Age', b'18801465')])
+2026-03-27 21:37:25,108 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/vocabulary.txt "HTTP/1.1 200 OK"
+2026-03-27 21:37:25,109 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:25,109 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:25,109 - DEBUG - response_closed.started
+2026-03-27 21:37:25,109 - DEBUG - response_closed.complete
+2026-03-27 21:37:25,110 - DEBUG - Attempting to acquire lock 1481004684768 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:37:25,113 - DEBUG - Lock 1481004684768 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:37:25,113 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:25,115 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:25,115 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:37:25,115 - DEBUG - send_request_body.complete
+2026-03-27 21:37:25,115 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:25,139 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'2203239'), (b'Connection', b'keep-alive'), (b'Date', b'Fri, 22 Aug 2025 11:59:40 GMT'), (b'ETag', b'"7818adb6de9fa3064d3ff81226fdd675be1f6344"'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-68a85bac-517705a95a7c895609fc3967;2cc69a64-da40-4a6f-98d1-7fd16378d71e'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'Set-Cookie', b'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=None'), (b'Set-Cookie', b'token=; Domain=huggingface.co; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Accept-Ranges', b'bytes'), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'tokenizer.json; filename="tokenizer.json";'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Vary', b'Origin'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 5d5704a42e51cafd107137919e8b851a.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'BZH5ZBOB0_7dboPAvwzxc4mpwGn3F-3zw5Z2erJn17D4bMC7sulrFA=='), (b'Age', b'18801465')])
+2026-03-27 21:37:25,139 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/tokenizer.json "HTTP/1.1 200 OK"
+2026-03-27 21:37:25,139 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:25,139 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:25,140 - DEBUG - response_closed.started
+2026-03-27 21:37:25,140 - DEBUG - response_closed.complete
+2026-03-27 21:37:25,141 - DEBUG - Attempting to acquire lock 1481004679824 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:37:25,144 - DEBUG - Lock 1481004679824 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:37:25,148 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:25,148 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:25,148 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:37:25,148 - DEBUG - send_request_body.complete
+2026-03-27 21:37:25,148 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:25,264 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 302, b'Found', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'1382'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:37:25 GMT'), (b'Location', b'https://cas-bridge.xethub.hf.co/xet-bridge-us/655f211ad5c0d3db537f315b/95d706516af777831fff6b2c35837dfb450afca078db361910d44a435b24dc2c?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cas%2F20260328%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260328T022855Z&X-Amz-Expires=3600&X-Amz-Signature=cda6a2b0f9ce18c44ea8fee11b75c9b761ca2baf8e7acbb18e618c59085ed8cd&X-Amz-SignedHeaders=host&X-Xet-Cas-Uid=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%27model.bin%3B+filename%3D%22model.bin%22%3B&response-content-type=application%2Foctet-stream&x-amz-checksum-mode=ENABLED&x-id=GetObject&Expires=1774668535&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc3NDY2ODUzNX19LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2FzLWJyaWRnZS54ZXRodWIuaGYuY28veGV0LWJyaWRnZS11cy82NTVmMjExYWQ1YzBkM2RiNTM3ZjMxNWIvOTVkNzA2NTE2YWY3Nzc4MzFmZmY2YjJjMzU4MzdkZmI0NTBhZmNhMDc4ZGIzNjE5MTBkNDRhNDM1YjI0ZGMyYyoifV19&Signature=IIezrYnTfFPwofat%7ElbO8A7tG4Kx5ltl90410Oh1w0KLeZwautRd3gq5vrqHzeeDAQnWYjNhHu3R2pOVQwSIowW1tngfar37A5ASTEejS3B857m43ldiPDgjSjwQNVW5yXbu0GSQukdWWECm%7EHBC3PjV%7EbR9LwTrMrNmnsfCSLgdCbyfTnZoj4CtYzFsICw5W6FfFPERyAaUFD1vgv7YW4gpn8AJd5rrR8mj9hvacedfckE6%7Eo3Qhhz5wGlCVyFnetpPRQXdTN8OadNuf1mpNygKxf3kcmZSn56lE%7ESoxhbU9COIzpzV8TghElhIhP-UOuRgXmP-Ogarm2AiOYGBeQ__&Key-Pair-Id=K2L8F4GPSG1IFC'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73ee5-5e83eb3e4e3bc9ae07619108;fc5b582b-3b7f-4f8f-9c57-737b6950c855'), (b'RateLimit', b'"resolvers";r=2996;t=227'), (b'RateLimit-Policy', b'"fixed window";"resolvers";q=3000;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin, Accept'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Accept-Ranges', b'bytes'), (b'X-Hub-Cache', b'HIT'), (b'X-Linked-Size', b'75538270'), (b'X-Linked-ETag', b'"dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1"'), (b'X-Xet-Hash', b'95d706516af777831fff6b2c35837dfb450afca078db361910d44a435b24dc2c'), (b'Link', b'<https://huggingface.co/api/models/Systran/faster-whisper-tiny/xet-read-token/d90ca5fe260221311c53c58e660288d3deb8d356>; rel="xet-auth", <https://cas-server.xethub.hf.co/v1/reconstructions/95d706516af777831fff6b2c35837dfb450afca078db361910d44a435b24dc2c>; rel="xet-reconstruction-info"'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'hiB7Ij1G93uWe8fVVbtHUQYdNg-zg0q5T4MrHSRkYegXbm6w4kuDTA==')])
+2026-03-27 21:37:25,264 - INFO - HTTP Request: HEAD https://huggingface.co/Systran/faster-whisper-tiny/resolve/d90ca5fe260221311c53c58e660288d3deb8d356/model.bin "HTTP/1.1 302 Found"
+2026-03-27 21:37:25,266 - DEBUG - receive_response_body.started request=<Request [b'HEAD']>
+2026-03-27 21:37:25,266 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:25,266 - DEBUG - response_closed.started
+2026-03-27 21:37:25,266 - DEBUG - response_closed.complete
+2026-03-27 21:37:25,268 - DEBUG - Attempting to acquire lock 1481004994768 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1.lock
+2026-03-27 21:37:25,269 - DEBUG - Lock 1481004994768 acquired on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1.lock
+2026-03-27 21:37:25,292 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:25,292 - DEBUG - send_request_headers.complete
+2026-03-27 21:37:25,292 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:37:25,293 - DEBUG - send_request_body.complete
+2026-03-27 21:37:25,293 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:37:25,341 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:09 GMT'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'vocabulary.txt; filename="vocabulary.txt";'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef19-703f472b12e7eda51c279e54;c9f82e50-1274-4b0b-88f6-e6b59e962167'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Content-Encoding', b'gzip'), (b'ETag', b'W/"c9074644d9d1205686f16d411564729461324b75"'), (b'Vary', b'Origin,accept-encoding'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'7-EjPYDlmCp7SVr5zBxfzlgzHXC_Lnp4JoUht6gbY3no65HVy8nABg=='), (b'Age', b'23809996')])
+2026-03-27 21:37:25,341 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/vocabulary.txt "HTTP/1.1 200 OK"
+2026-03-27 21:37:25,341 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:37:25,378 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/plain; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Wed, 25 Jun 2025 12:44:09 GMT'), (b'Content-Security-Policy', b"default-src 'none'; sandbox"), (b'Content-Disposition', b'inline; filename*=UTF-8\'\'tokenizer.json; filename="tokenizer.json";'), (b'X-Powered-By', b'huggingface-moon'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'X-Request-Id', b'Root=1-685bef19-1a53b50b740e9d6e317362e0;f0e2a34e-b0f8-4efb-97b5-e120cb90f807'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Repo-Commit', b'd90ca5fe260221311c53c58e660288d3deb8d356'), (b'Content-Encoding', b'gzip'), (b'ETag', b'W/"7818adb6de9fa3064d3ff81226fdd675be1f6344"'), (b'Vary', b'Origin,accept-encoding'), (b'X-Cache', b'Hit from cloudfront'), (b'Via', b'1.1 5d5704a42e51cafd107137919e8b851a.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'lXT3N_PV0TweztHG6VDLsDGhxu2K5RG1Rk-0E7kUXHH1OuNUny88uA=='), (b'Age', b'23809995')])
+2026-03-27 21:37:25,379 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Systran/faster-whisper-tiny/d90ca5fe260221311c53c58e660288d3deb8d356/tokenizer.json "HTTP/1.1 200 OK"
+2026-03-27 21:37:25,379 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:37:25,630 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Content-Length', b'399'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:37:25 GMT'), (b'ETag', b'W/"18f-4kit13U+CnB0sF/urcJ8BsW40jM"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73ee5-3915ab512f86ebff0fd53bb4;4edada74-7c41-4b70-8e36-ce6f9148375a'), (b'RateLimit', b'"api";r=498;t=227'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Xet-Cas-Url', b'https://cas-server.xethub.hf.co'), (b'X-Xet-Token-Expiration', b'1774666345'), (b'X-Xet-Access-Token', b'eyJhbGciOiJIUzI1NiJ9.eyJyZXBvSWQiOiI2NTVmMjExYWQ1YzBkM2RiNTM3ZjMxNWIiLCJ1c2VySWQiOiJwdWJsaWMiLCJhY2Nlc3MiOiJSRUFEIiwiaGZDZG5UaWVyIjoidW5hdXRoZW50aWNhdGVkIiwicmVwb19zdG9yYWdlX3R5cGUiOiJnaXQiLCJpYXQiOjE3NzQ2NjU0NDUsImV4cCI6MTc3NDY2NjM0NSwiaXNzIjoiaHR0cHM6Ly9odWdnaW5nZmFjZS5jbyJ9.ieaAJu-eKtygxaNb_CZbIQeB6ASk02pbg2-WDIF-_ZM'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 230dfe9eee08385054831343c04fd454.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'gIP0kh-xG_x69223zbsDNagqZgGa59M5X9WlG3fkvoTePpcSZsvoJg==')])
+2026-03-27 21:37:25,631 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/xet-read-token/d90ca5fe260221311c53c58e660288d3deb8d356 "HTTP/1.1 200 OK"
+2026-03-27 21:37:25,631 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:37:25,631 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:25,632 - DEBUG - response_closed.started
+2026-03-27 21:37:25,632 - DEBUG - response_closed.complete
+2026-03-27 21:37:26,063 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:26,063 - DEBUG - response_closed.started
+2026-03-27 21:37:26,063 - DEBUG - response_closed.complete
+2026-03-27 21:37:26,070 - DEBUG - Attempting to release lock 1481004684768 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:37:26,070 - DEBUG - Lock 1481004684768 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\c9074644d9d1205686f16d411564729461324b75.lock
+2026-03-27 21:37:26,593 - DEBUG - receive_response_body.complete
+2026-03-27 21:37:26,594 - DEBUG - response_closed.started
+2026-03-27 21:37:26,594 - DEBUG - response_closed.complete
+2026-03-27 21:37:26,605 - DEBUG - Attempting to release lock 1481004679824 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:37:26,606 - DEBUG - Lock 1481004679824 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\7818adb6de9fa3064d3ff81226fdd675be1f6344.lock
+2026-03-27 21:38:06,250 - DEBUG - Attempting to release lock 1481004994768 on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1.lock
+2026-03-27 21:38:06,251 - DEBUG - Lock 1481004994768 released on C:\Users\Samira\.cache\huggingface\hub\.locks\models--Systran--faster-whisper-tiny\dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1.lock
+2026-03-27 21:39:00,263 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:39:01,094 - INFO - Módulos cargados correctamente
+2026-03-27 21:39:01,163 - INFO - Iniciando Interfaz Overlay...
+2026-03-27 21:39:02,182 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:39:02,532 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000019F06E6AF00>
+2026-03-27 21:39:02,533 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000019F072614D0> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:39:02,996 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000019F07539610>
+2026-03-27 21:39:02,996 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:39:02,997 - DEBUG - send_request_headers.complete
+2026-03-27 21:39:02,997 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:39:02,997 - DEBUG - send_request_body.complete
+2026-03-27 21:39:02,997 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:39:03,454 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:39:03 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"750-LCekfX69+eC26YZ3iogK4pOE+/0"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73f47-4f614a853883c7633fac95c8;0d878293-5cee-4e3d-a148-b1f41118082a'), (b'RateLimit', b'"api";r=497;t=129'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 8eef06122923858c49b99a9d21f15d68.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'ggS3r4uXMBB4HbLrWmoe6UF9SFa87r9AYErP7WXn4zs96RGoU0yusw==')])
+2026-03-27 21:39:03,454 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:39:03,454 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:39:03,616 - DEBUG - receive_response_body.complete
+2026-03-27 21:39:03,616 - DEBUG - response_closed.started
+2026-03-27 21:39:03,616 - DEBUG - response_closed.complete
+2026-03-27 21:40:28,996 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:40:29,623 - INFO - Módulos cargados correctamente
+2026-03-27 21:40:30,288 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:40:30,607 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000022EDF998B60>
+2026-03-27 21:40:30,607 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000022EDFBFFE50> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:40:31,073 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000022EDFF18D70>
+2026-03-27 21:40:31,074 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:40:31,074 - DEBUG - send_request_headers.complete
+2026-03-27 21:40:31,074 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:40:31,074 - DEBUG - send_request_body.complete
+2026-03-27 21:40:31,075 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:40:31,533 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:40:31 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"750-LCekfX69+eC26YZ3iogK4pOE+/0"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73f9f-61bcc1500f7b94a632813fdb;f4f50b2e-ebeb-46da-b178-ef2a4aee964b'), (b'RateLimit', b'"api";r=496;t=41'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 531e6b7b78c97c87664ac28289038c9a.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'lJOKLHVVK_pL1zU3V_no-3WT6zRNVqbHRrmoNa48yp7oRxuQOjUs0Q==')])
+2026-03-27 21:40:31,534 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:40:31,534 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:40:31,696 - DEBUG - receive_response_body.complete
+2026-03-27 21:40:31,696 - DEBUG - response_closed.started
+2026-03-27 21:40:31,696 - DEBUG - response_closed.complete
+2026-03-27 21:41:34,269 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:41:34,980 - INFO - Módulos cargados correctamente
+2026-03-27 21:41:35,675 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:41:36,252 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001FB8949F320>
+2026-03-27 21:41:36,253 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x000001FB8ACAFE50> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:41:36,714 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001FB8ACEBC80>
+2026-03-27 21:41:36,715 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:41:36,715 - DEBUG - send_request_headers.complete
+2026-03-27 21:41:36,715 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:41:36,715 - DEBUG - send_request_body.complete
+2026-03-27 21:41:36,716 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:41:37,191 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:41:37 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"750-LCekfX69+eC26YZ3iogK4pOE+/0"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c73fe1-38e45e53598b1d8f67df9b8e;df23b39f-44e2-479d-802d-7d8e5950267e'), (b'RateLimit', b'"api";r=499;t=275'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 7ddbbb10cc30af8a3cfe8c4f96516774.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'n_P3D6pdOnZ-ixpJ_ZHmhVFqUf8pxgK1-S5AeSOSn6praMzP7mGeag==')])
+2026-03-27 21:41:37,191 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:41:37,191 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:41:37,237 - DEBUG - receive_response_body.complete
+2026-03-27 21:41:37,237 - DEBUG - response_closed.started
+2026-03-27 21:41:37,237 - DEBUG - response_closed.complete
+2026-03-27 21:44:08,710 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:44:09,478 - INFO - Módulos cargados correctamente
+2026-03-27 21:44:10,132 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:44:10,481 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000281DB2CCB90>
+2026-03-27 21:44:10,481 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000281DAFAFE50> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:44:10,981 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000281DAEB8320>
+2026-03-27 21:44:10,981 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:44:10,982 - DEBUG - send_request_headers.complete
+2026-03-27 21:44:10,982 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:44:10,982 - DEBUG - send_request_body.complete
+2026-03-27 21:44:10,984 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:44:11,444 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:44:11 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"750-LCekfX69+eC26YZ3iogK4pOE+/0"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c7407b-6a4199530c594613509d5067;5067dd20-c655-4a68-886d-9d8513e32fab'), (b'RateLimit', b'"api";r=498;t=121'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 7ddbbb10cc30af8a3cfe8c4f96516774.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'vs6Mn--Q8qtud7EMaO7_cmR5wsX_Mb2nqDqrostJQ6UHsrgxZFLPLw==')])
+2026-03-27 21:44:11,444 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:44:11,446 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:44:11,623 - DEBUG - receive_response_body.complete
+2026-03-27 21:44:11,623 - DEBUG - response_closed.started
+2026-03-27 21:44:11,623 - DEBUG - response_closed.complete
+2026-03-27 21:45:08,616 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:45:09,319 - INFO - Módulos cargados correctamente
+2026-03-27 21:45:09,979 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:45:10,133 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000016BBBA98500>
+2026-03-27 21:45:10,133 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000016BBBB8FED0> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:45:10,904 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000016BBBC18B60>
+2026-03-27 21:45:10,905 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:45:10,905 - DEBUG - send_request_headers.complete
+2026-03-27 21:45:10,905 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:45:10,906 - DEBUG - send_request_body.complete
+2026-03-27 21:45:10,906 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:45:11,527 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:45:11 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"750-LCekfX69+eC26YZ3iogK4pOE+/0"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c740b7-7c64273c6d96ce8017179915;3ca4650f-04ca-4d6b-b843-1eba4bb5a4c8'), (b'RateLimit', b'"api";r=497;t=61'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 7ddbbb10cc30af8a3cfe8c4f96516774.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'xN_wIriniYbjltpT_FmqTtBnLjWfvEesHG82QrNAiZDanIdMi3XGUA==')])
+2026-03-27 21:45:11,527 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:45:11,527 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:45:11,529 - DEBUG - receive_response_body.complete
+2026-03-27 21:45:11,529 - DEBUG - response_closed.started
+2026-03-27 21:45:11,529 - DEBUG - response_closed.complete
+2026-03-27 21:45:11,560 - CRITICAL - Error fatal al iniciar: __init__(): incompatible constructor arguments. The following argument types are supported:
+    1. ctranslate2._ext.Whisper(model_path: str, device: str = 'cpu', *, device_index: Union[int, List[int]] = 0, compute_type: Union[str, Dict[str, str]] = 'default', inter_threads: int = 1, intra_threads: int = 0, max_queued_batches: int = 0, flash_attention: bool = False, tensor_parallel: bool = False, files: object = None)
+
+Invoked with: 'C:\\Users\\Samira\\.cache\\huggingface\\hub\\models--Systran--faster-whisper-tiny\\snapshots\\d90ca5fe260221311c53c58e660288d3deb8d356'; kwargs: device='cpu', device_index=0, compute_type='float32', intra_threads=1, inter_threads=1, files=None, num_threads=1
+2026-03-27 21:45:21,411 - DEBUG - close.started
+2026-03-27 21:45:21,411 - DEBUG - close.complete
+2026-03-27 21:46:07,101 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:46:07,801 - INFO - Módulos cargados correctamente
+2026-03-27 21:46:08,468 - DEBUG - connect_tcp.started host='huggingface.co' port=443 local_address=None timeout=None socket_options=None
+2026-03-27 21:46:08,744 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000159800C2F00>
+2026-03-27 21:46:08,745 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000159FFF3FE50> server_hostname='huggingface.co' timeout=None
+2026-03-27 21:46:09,266 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000159FDB5FCB0>
+2026-03-27 21:46:09,266 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2026-03-27 21:46:09,266 - DEBUG - send_request_headers.complete
+2026-03-27 21:46:09,266 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2026-03-27 21:46:09,267 - DEBUG - send_request_body.complete
+2026-03-27 21:46:09,267 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2026-03-27 21:46:09,656 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Date', b'Sat, 28 Mar 2026 02:46:09 GMT'), (b'content-encoding', b'gzip'), (b'ETag', b'W/"750-LCekfX69+eC26YZ3iogK4pOE+/0"'), (b'X-Powered-By', b'huggingface-moon'), (b'X-Request-Id', b'Root=1-69c740f1-247691b162f9bfac7def32ac;5674a6d3-f70f-4dae-8640-f99a2b1fdcd6'), (b'RateLimit', b'"api";r=496;t=3'), (b'RateLimit-Policy', b'"fixed window";"api";q=500;w=300'), (b'cross-origin-opener-policy', b'same-origin'), (b'Referrer-Policy', b'strict-origin-when-cross-origin'), (b'Access-Control-Max-Age', b'86400'), (b'Access-Control-Allow-Origin', b'https://huggingface.co'), (b'Vary', b'Origin'), (b'vary', b'Accept-Encoding'), (b'Access-Control-Expose-Headers', b'X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash'), (b'X-Cache', b'Miss from cloudfront'), (b'Via', b'1.1 1b5e59604d384ec0e23c5de06040fcb8.cloudfront.net (CloudFront)'), (b'X-Amz-Cf-Pop', b'MAD56-P4'), (b'X-Amz-Cf-Id', b'atgPQgpvoZaFJ1X5ngwWQPLZWCaZwLV7ylzvPjQLFGFDua8hQqUEJA==')])
+2026-03-27 21:46:09,656 - INFO - HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-tiny/revision/main "HTTP/1.1 200 OK"
+2026-03-27 21:46:09,656 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2026-03-27 21:46:09,710 - DEBUG - receive_response_body.complete
+2026-03-27 21:46:09,710 - DEBUG - response_closed.started
+2026-03-27 21:46:09,710 - DEBUG - response_closed.complete
+2026-03-27 21:48:38,273 - WARNING - FFmpeg no encontrado en el sistema. Whisper podría fallar.
+2026-03-27 21:48:38,659 - ERROR - Error cargando módulos: No module named 'vosk'
+2026-03-27 21:51:16,762 - ERROR - Error cargando módulos: No module named 'vosk'
+2026-03-27 21:52:17,965 - ERROR - Error cargando módulos: No module named 'vosk'
+2026-03-27 21:53:38,151 - INFO - Módulos cargados correctamente
+2026-03-27 21:53:38,932 - DEBUG - Starting new HTTPS connection (1): alphacephei.com:443
+2026-03-27 21:53:40,416 - DEBUG - https://alphacephei.com:443 "GET /vosk/models/model-list.json HTTP/1.1" 200 None
+2026-03-27 21:54:35,975 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:35,991 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=know&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:54:36,412 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:36,419 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=don%27t&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 21:54:36,552 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:36,559 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=just&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:54:36,642 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:36,651 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=we&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:54:36,657 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:36,664 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=confident&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 21:54:37,075 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:37,082 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=desire&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:54:37,088 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:37,098 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=no&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:54:37,105 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:37,111 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i%27ve&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:54:40,682 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:40,694 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=are&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:54:40,697 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:40,707 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:54:41,023 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:41,035 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=no&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:54:41,237 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:41,248 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=no&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:54:41,444 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:41,454 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=desire&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:54:44,218 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:44,229 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=no&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:54:44,270 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:44,280 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i%27ve&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:54:48,158 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:48,163 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:48,170 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:54:48,178 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=are&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:54:48,398 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:48,411 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=are&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:54:48,465 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:48,475 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:54:48,637 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:48,650 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=are&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:54:52,073 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:52,082 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=office&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:54:56,133 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:56,144 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=illustrated&source=en&target=es HTTP/1.1" 404 5693
+2026-03-27 21:54:56,402 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:56,415 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=he&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:54:58,088 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:58,101 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=launched&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 21:54:58,423 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:58,434 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=launched&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 21:54:59,620 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:54:59,629 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=he&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:55:27,922 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:27,930 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=his&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:55:27,937 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:27,944 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:55:28,304 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:28,315 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=give&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:55:29,025 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:29,036 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=give&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:55:30,498 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:30,511 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=give&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:55:40,973 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:40,983 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=people&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:55:42,451 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:42,465 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=people&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:55:47,558 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:47,568 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:55:47,573 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:47,583 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:55:47,887 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:47,898 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=walks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 21:55:48,100 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:55:48,110 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=walks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 21:56:07,580 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:07,592 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=go&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:56:11,486 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:11,498 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=what&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:56:14,821 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:14,835 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=what&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:56:40,497 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:40,505 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=look&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:56:55,970 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:55,982 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=kid&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:56:56,935 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:56,946 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:56:57,462 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:57,473 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=familiar&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 21:56:57,493 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:56:57,502 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=so&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:57:01,291 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:01,302 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:57:04,109 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,123 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:57:04,139 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,151 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:57:04,228 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,239 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=don%27t&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 21:57:04,249 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,261 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=think&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 21:57:04,265 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,277 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=it%27s&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:57:04,288 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,298 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=worth&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 21:57:04,316 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,325 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=explaining&source=en&target=es HTTP/1.1" 404 5692
+2026-03-27 21:57:04,880 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:04,892 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:57:08,296 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:08,305 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=worth&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 21:57:08,331 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:08,341 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=it%27s&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:57:13,129 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:13,141 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=now&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:57:13,379 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:13,389 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=now&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:57:13,594 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:13,607 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=now&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:57:14,529 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:14,542 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=now&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:57:17,969 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:17,980 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=so&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:57:19,016 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:19,026 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i%27m&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 21:57:28,939 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:28,949 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you%27ve&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 21:57:30,077 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:30,087 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you%27ve&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 21:57:35,843 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:35,854 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:57:58,957 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:58,967 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=well&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 21:57:59,582 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:57:59,594 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=as&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:59:00,427 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:00,439 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=as&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 21:59:07,340 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:07,351 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:59:07,523 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:07,535 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:59:08,076 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:08,089 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=say&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:59:08,526 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:08,538 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=say&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:59:08,860 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:08,870 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=say&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:59:11,302 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:11,314 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=say&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 21:59:11,578 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:11,589 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=facing&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:59:12,302 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:12,312 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=facing&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 21:59:12,602 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 21:59:12,614 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=facing&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:04:34,086 - INFO - Módulos cargados correctamente
+2026-03-27 22:04:45,098 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:45,112 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=couple&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:04:45,513 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:45,526 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:45,559 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:45,573 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:45,633 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:45,645 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:45,875 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:45,885 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:46,058 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:46,070 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:46,173 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:46,184 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:46,310 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:46,322 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:46,356 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:46,369 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:46,664 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:46,674 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:46,710 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:46,724 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:46,901 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:46,917 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:47,036 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:47,051 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:47,232 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:47,246 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:47,427 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:47,439 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:47,549 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:47,565 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:47,737 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:47,752 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:47,880 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:47,902 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:48,187 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:48,199 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:48,464 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:48,477 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:48,597 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:48,612 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:48,795 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:48,808 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,054 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,067 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,188 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,204 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=life&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,366 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,382 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,414 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,420 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,431 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:04:49,444 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=type&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,478 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,493 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=some&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,542 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,554 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=some&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,821 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,837 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=some&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,858 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,872 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=some&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:49,986 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:49,999 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=some&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:04:52,919 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:52,938 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:53,043 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:53,057 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:53,259 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:53,272 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:53,401 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:53,418 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:55,242 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:55,255 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:55,364 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:55,378 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:55,494 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:55,510 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:55,640 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:55,653 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:55,794 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:55,807 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:55,947 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:55,960 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:56,029 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:56,043 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:56,092 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:56,109 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=weeks&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:56,226 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:56,238 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:56,738 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:56,752 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:56,885 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:56,899 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:58,553 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:58,567 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:58,609 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:58,621 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:58,935 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:58,947 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:59,041 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:59,052 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:59,262 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:59,276 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:59,443 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:59,455 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:04:59,572 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:04:59,591 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=three&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:05:07,359 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:05:07,371 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:05:08,301 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:05:08,313 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:06:06,096 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:06:06,105 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=want&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:06:07,109 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:06:07,125 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:08:43,682 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:08:43,693 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:09:36,035 - INFO - Módulos cargados correctamente
+2026-03-27 22:09:54,858 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:09:54,868 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=identify&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:10:00,243 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:00,258 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=identify&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:10:00,608 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:00,618 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=identify&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:10:02,572 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:02,581 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:02,692 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:02,704 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=books&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:03,003 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:03,017 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=books&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:04,613 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:04,624 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=books&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:05,244 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:05,258 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=and&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:05,331 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:05,343 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:10:05,754 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:05,766 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=and&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:06,844 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:06,861 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:10:06,875 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:06,891 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=doctor&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:10:07,324 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:07,345 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=capon&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:14,385 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:14,394 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=capon&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:17,904 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:17,921 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=capon&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:17,923 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:17,941 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=can&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:18,046 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:18,060 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=possibly&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:10:18,150 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:18,162 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=the&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:18,224 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:18,239 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=on&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:18,256 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:18,268 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=people&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:10:18,980 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:18,995 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:19,410 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:19,424 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=people&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:10:21,405 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:21,419 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=people&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:10:21,433 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:21,445 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:21,694 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:21,704 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=do&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:22,194 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:22,202 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:22,204 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=we&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:22,212 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:22,217 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=because&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:10:22,224 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sure&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:22,224 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:22,236 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=yeah&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:22,937 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:22,949 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=kinds&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:22,962 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:22,973 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=the&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:23,039 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:23,049 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=one&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:23,107 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:23,118 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=that&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:23,149 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:23,162 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=know&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:23,834 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:23,845 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=books&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:27,285 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,295 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,298 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:27,310 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=know&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:27,314 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,325 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=the&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:27,338 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,348 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=because&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:10:27,674 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,685 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=because&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:10:27,702 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,713 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=because&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:10:27,713 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,721 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:27,727 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=we&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:27,734 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=do&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:34,496 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:34,503 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:34,509 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=what&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:34,512 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:34,519 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:34,519 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=do&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:34,528 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=this&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:34,531 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:34,537 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=something&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:10:34,545 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=that&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:10:38,104 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:38,118 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=but&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:38,320 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:38,335 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=but&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:10:39,841 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:39,857 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:10:41,079 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:41,093 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=chris&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:10:42,269 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:42,277 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:10:42,285 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=cultivate&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:10:42,299 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:16:41,745 - INFO - Módulos cargados correctamente
+2026-03-27 22:19:58,929 - INFO - Módulos cargados correctamente
+2026-03-27 22:20:18,568 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:18,572 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:18,584 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=obvious&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:20:18,592 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=growing&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:20:23,984 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:23,995 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=out&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:20:24,004 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:24,014 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=turns&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:20:24,035 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:24,044 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you%27re&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:20:24,165 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:24,176 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=because&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:20:27,406 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:27,417 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you%27re&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:20:27,427 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:27,439 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=turns&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:20:30,963 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:30,975 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=know&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:20:31,587 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:20:31,600 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=it&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:21:05,858 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:05,865 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=you&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:05,902 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:05,909 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=very&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:21:06,109 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:06,116 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=psychologist&source=en&target=es HTTP/1.1" 404 5694
+2026-03-27 22:21:06,197 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:06,205 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=cognitive&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:21:07,640 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:07,649 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=psychologist&source=en&target=es HTTP/1.1" 404 5694
+2026-03-27 22:21:08,048 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:08,055 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=however&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:21:08,179 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:08,186 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=not&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:08,202 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:08,208 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=curious&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:21:08,822 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:08,831 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=intellectually&source=en&target=es HTTP/1.1" 404 5696
+2026-03-27 22:21:08,866 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:08,875 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=are&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:09,211 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:09,221 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=education&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:21:09,737 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:09,748 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=not&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:10,051 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:10,058 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=curious&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:21:12,431 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:12,443 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=an&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:21:13,179 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:13,192 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=for&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:15,101 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:15,113 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=an&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:21:15,125 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:15,135 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=not&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:15,146 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:15,154 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:15,156 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=curious&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:21:15,166 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=intellectually&source=en&target=es HTTP/1.1" 404 5696
+2026-03-27 22:21:15,718 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:15,731 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=for&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:15,732 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:15,744 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=write&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:21:16,040 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:16,051 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=write&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:21:16,064 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:16,076 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:21:16,084 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:16,094 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=yeah&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:21:17,298 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:17,310 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:17,328 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:17,339 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=have&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:21:17,376 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:17,389 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=some&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:21:17,811 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:17,822 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=degree&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:21:17,885 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:17,896 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:21:17,955 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:17,966 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=education&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:21:18,248 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:18,260 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=however&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:21:18,272 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:18,281 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=curious&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:21:18,524 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:18,535 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=curious&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:21:18,832 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:18,842 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=intellectually&source=en&target=es HTTP/1.1" 404 5696
+2026-03-27 22:21:19,863 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:19,872 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=but&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:21:19,898 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:21:19,909 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:21:20,453 - DEBUG - Starting new HTTPS connection (1): alphacephei.com:443
+2026-03-27 22:21:21,774 - DEBUG - https://alphacephei.com:443 "GET /vosk/models/model-list.json HTTP/1.1" 200 None
+2026-03-27 22:23:05,987 - DEBUG - Starting new HTTPS connection (1): alphacephei.com:443
+2026-03-27 22:23:07,413 - DEBUG - https://alphacephei.com:443 "GET /vosk/models/model-list.json HTTP/1.1" 200 None
+2026-03-27 22:23:41,563 - INFO - Módulos cargados correctamente
+2026-03-27 22:23:59,906 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:23:59,916 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=own&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:02,020 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:02,031 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=my&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:24:04,459 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:04,469 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=department&source=en&target=es HTTP/1.1" 404 5692
+2026-03-27 22:24:04,574 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:04,586 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sometimes&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:05,030 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:05,041 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sub&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:08,302 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:08,313 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sub&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:10,573 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:10,584 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=department&source=en&target=es HTTP/1.1" 404 5692
+2026-03-27 22:24:10,600 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:10,611 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sometimes&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:11,184 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:11,196 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=own&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:11,203 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:11,210 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:11,216 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=they%27ll&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:11,225 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=know&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:24:12,390 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:12,400 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=field&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:24:16,030 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:16,041 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=field&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:24:16,181 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:16,191 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=don%27t&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:24:16,427 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:16,439 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=and&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:16,537 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:16,548 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=students&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:24:16,672 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:16,684 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sometimes&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:18,865 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:18,878 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sometimes&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:21,782 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:21,792 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sometimes&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:22,591 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:22,602 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=or&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:24:22,612 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:22,625 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=my&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:24:23,641 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:23,652 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=own&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:23,958 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:23,969 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=own&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:25,097 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:25,108 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=they%27ll&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:25,120 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:25,131 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=own&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:24:25,179 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:25,189 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=my&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:24:25,250 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:25,261 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sometimes&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:25,305 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:25,318 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=students&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:24:25,545 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:25,564 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=don%27t&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:24:25,565 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:25,575 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=field&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:24:28,589 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:28,603 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=even&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:24:28,605 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:28,615 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:28,622 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=step&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:24:28,634 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=they&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:24:28,635 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:28,648 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=been&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:24:28,651 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:28,661 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:24:32,080 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:32,090 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i%27m&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:24:46,852 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:46,861 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=scientist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:47,763 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:47,771 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=friend&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:24:47,805 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:47,812 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=political&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:48,087 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:48,095 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:24:49,330 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:49,346 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:24:49,445 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:49,453 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=political&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:49,778 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:49,784 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=political&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:24:50,096 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:24:50,102 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=scientist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:09,707 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:09,718 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=political&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:09,859 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:09,867 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=friend&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:25:10,534 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:10,542 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:10,543 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:25:10,548 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=political&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:12,091 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:12,102 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:12,450 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:12,464 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:14,805 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:14,812 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:14,819 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=or&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:14,826 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:25:14,858 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:14,870 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=political&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:14,961 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:14,975 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=scientist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:15,014 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:15,028 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=friend&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:25:15,391 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:15,402 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:17,614 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:17,624 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:17,696 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:17,708 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=scientist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:18,054 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:18,066 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:20,889 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:20,900 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:23,457 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:23,469 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:24,928 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:24,941 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:28,536 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:28,549 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:30,146 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:30,160 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:31,183 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:31,197 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=who%27s&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:31,829 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:31,841 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=friend&source=en&target=es HTTP/1.1" 404 5688
+2026-03-27 22:25:31,917 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:31,930 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:25:31,960 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:31,976 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:32,806 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:32,819 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:25:32,931 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:32,943 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=political&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:36,792 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:36,805 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:37,781 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:37,790 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:39,609 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:39,620 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:39,621 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:39,631 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:42,489 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:42,502 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=evolutionary&source=en&target=es HTTP/1.1" 404 5694
+2026-03-27 22:25:42,512 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:42,524 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=economist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:42,811 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:42,823 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=showing&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:43,410 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:43,422 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=showing&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:43,535 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:43,548 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=economist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:43,601 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:43,613 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=on&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:44,016 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:44,029 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=seen&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:25:44,076 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:44,090 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=even&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:25:45,449 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:45,461 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:45,969 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:45,981 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:46,314 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:46,326 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=even&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:25:46,766 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:46,778 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=showing&source=en&target=es HTTP/1.1" 404 5689
+2026-03-27 22:25:47,143 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:47,154 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=it&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:47,209 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:47,220 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=to&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:47,279 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:47,290 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=it&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:47,356 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:47,371 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i%27m&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:25:47,523 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:47,535 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=sure&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:25:47,958 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:47,970 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=i%27m&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:25:48,003 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:48,016 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=it&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:48,052 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:48,068 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=or&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:25:48,078 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:48,088 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=economist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:48,197 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:48,211 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=evolutionary&source=en&target=es HTTP/1.1" 404 5694
+2026-03-27 22:25:48,534 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:48,548 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:48,922 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:48,934 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:25:48,964 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:25:48,975 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=biologist&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:30:55,842 - INFO - Módulos cargados correctamente
+2026-03-27 22:31:14,350 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:14,363 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=cognitive&source=en&target=es HTTP/1.1" 404 5691
+2026-03-27 22:31:14,522 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:14,535 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:14,539 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=psychologist&source=en&target=es HTTP/1.1" 404 5694
+2026-03-27 22:31:14,547 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=about&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:31:14,604 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:14,619 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=yeah&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:31:15,757 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:15,769 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=pictures&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:31:16,099 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:16,110 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=much&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:31:16,625 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:16,638 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=work&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:31:17,518 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:17,529 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=how&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:31:17,747 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:17,760 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=the&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:31:17,865 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:17,876 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=pictures&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:31:17,991 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:18,011 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=of&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:31:18,364 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:18,375 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=your&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:31:19,045 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:19,055 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=works&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:31:37,381 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,392 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=write&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:31:37,430 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,440 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=is&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:31:37,466 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,478 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=and&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:31:37,503 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,517 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=concrete&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:31:37,666 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,679 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=concrete&source=en&target=es HTTP/1.1" 404 5690
+2026-03-27 22:31:37,697 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,709 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=being&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:31:37,771 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,783 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=means&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:31:37,918 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:37,930 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=write&source=en&target=es HTTP/1.1" 404 5687
+2026-03-27 22:31:39,453 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:39,462 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=is&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:31:39,465 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:39,473 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:39,481 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=that&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:31:39,490 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:39,520 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:31:39,521 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=good&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:31:39,545 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:39,558 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=be&source=en&target=es HTTP/1.1" 404 5684
+2026-03-27 22:31:40,170 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:40,182 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=the&source=en&target=es HTTP/1.1" 404 5685
+2026-03-27 22:31:40,245 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:40,256 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:31:40,284 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:40,298 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=that&source=en&target=es HTTP/1.1" 404 5686
+2026-03-27 22:31:40,776 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:40,787 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=a&source=en&target=es HTTP/1.1" 404 5683
+2026-03-27 22:31:40,795 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:8000
+2026-03-27 22:31:40,805 - DEBUG - http://127.0.0.1:8000 "GET /api/define/?word=second&source=en&target=es HTTP/1.1" 404 5688
