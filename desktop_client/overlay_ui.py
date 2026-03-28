@@ -1,7 +1,79 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QFrame, QTextBrowser, QPushButton
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QFrame, QTextBrowser, QPushButton, QDialog, QComboBox
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer
 from PyQt6.QtGui import QColor, QFont, QTextCursor
+
+class LanguageSelectorDialog(QDialog):
+    """
+    Startup modal to select source (audio) and target (translation) languages.
+    """
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("VocabAssistant - Preparar")
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        # Main layout
+        layout = QVBoxLayout(self)
+        
+        container = QFrame()
+        container.setStyleSheet("""
+            QFrame {
+                background-color: rgba(35, 15, 65, 0.95);
+                border: 1px solid rgba(139, 109, 208, 0.4);
+                border-radius: 14px;
+            }
+            QLabel { color: #E8E8F0; font-size: 14px; font-weight: bold; }
+            QComboBox {
+                background: #1E1235; color: white;
+                border: 1px solid #4A3A75; border-radius: 6px;
+                padding: 6px; font-size: 13px;
+            }
+            QPushButton {
+                background: #7B5EA7; color: white; border: none;
+                border-radius: 8px; padding: 10px 0; font-size: 14px; font-weight: bold;
+            }
+            QPushButton:hover { background: #9B7EC8; }
+        """)
+        container_layout = QVBoxLayout(container)
+        container_layout.setContentsMargins(24, 24, 24, 24)
+        container_layout.setSpacing(16)
+
+        title = QLabel("Configurar Sesión")
+        title.setStyleSheet("font-size: 18px;")
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        container_layout.addWidget(title)
+
+        # Source Audio (Vosk)
+        container_layout.addWidget(QLabel("Idioma del Audio (Vosk):"))
+        self.src_combo = QComboBox()
+        self.src_combo.addItem("🇺🇸 Inglés (English)", "en")
+        self.src_combo.addItem("🇨🇳 Chino (中文)", "zh-CN")
+        self.src_combo.addItem("🇯🇵 Japonés (日本語)", "ja")
+        self.src_combo.addItem("🇫🇷 Francés (Français)", "fr")
+        container_layout.addWidget(self.src_combo)
+
+        # Target Translation (API)
+        container_layout.addWidget(QLabel("Traducir al:"))
+        self.tgt_combo = QComboBox()
+        self.tgt_combo.addItem("🇪🇸 Español", "es")
+        self.tgt_combo.addItem("🇺🇸 Inglés", "en")
+        self.tgt_combo.addItem("🇨🇳 Chino", "zh")
+        self.tgt_combo.addItem("🇫🇷 Francés", "fr")
+        container_layout.addWidget(self.tgt_combo)
+
+        # Start button
+        start_btn = QPushButton("Iniciar Asistente")
+        start_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        start_btn.clicked.connect(self.accept)
+        container_layout.addWidget(start_btn)
+
+        layout.addWidget(container)
+        self.setFixedSize(300, 360)
+
+    def get_selection(self):
+        return self.src_combo.currentData(), self.tgt_combo.currentData()
+
 
 class TranslationTooltip(QWidget):
     """
@@ -31,8 +103,8 @@ class TranslationTooltip(QWidget):
         # ── stylesheet ──────────────────────────────────────────────
         self.setStyleSheet("""
             QWidget#card {
-                background: #1E1E24;
-                border: 1px solid #3A3A4C;
+                background: rgba(35, 15, 65, 0.92);  /* Morado profundo transparente */
+                border: 1px solid rgba(139, 109, 208, 0.35); /* Borde lila sutil */
                 border-radius: 14px;
             }
             QLabel#word_lbl  { color: #E8E8F0; font-size:15px; font-weight:700; }
@@ -415,8 +487,8 @@ class SubtitleOverlay(QWidget):
         self.container = QFrame()
         self.container.setStyleSheet("""
             QFrame {
-                background-color: rgba(20, 20, 25, 0.9);
-                border: 1px solid rgba(255, 255, 255, 0.1);
+                background-color: rgba(22, 10, 45, 0.88); /* Morado profundo translúcido */
+                border: 1px solid rgba(139, 109, 208, 0.25);
                 border-radius: 12px;
             }
         """)
@@ -449,13 +521,12 @@ class SubtitleOverlay(QWidget):
         self.status_label = QLabel("")
         self.status_label.setStyleSheet("color: white; font-size: 15px; font-weight: 400;")
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.content_layout.addWidget(self.status_label, 1) # Expand 1
-        
+        self.content_layout.addWidget(self.status_label) 
+
         # Words Area (Selectable Captions)
         self.captions_view = SelectableCaptions()
         self.content_layout.addWidget(self.captions_view, 1)
-        self.captions_view.hide()
-        
+
         # Gear Icon
         self.settings_btn = QLabel("⚙")
         self.settings_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -478,6 +549,20 @@ class SubtitleOverlay(QWidget):
         self.resize(1000, 60)
         self.move((screen.width() - 1000) // 2, screen.height() - 100)
         self.oldPos = self.pos()
+
+    def set_status_message(self, msg: str):
+        """Muestra un estado inicial o de mensaje general en lugar de captions viejos"""
+        self.status_label.hide()
+        self.captions_view.show()
+        self.captions_view.setPlainText(msg)
+        self.captions_view.setStyleSheet("""
+            QTextBrowser {
+                background: transparent; 
+                color: rgba(255, 255, 255, 0.5); 
+                border: none; 
+                font-style: italic;
+            }
+        """)
 
     def cycle_language(self, event):
         self.current_lang_idx = (self.current_lang_idx + 1) % len(self.LANGUAGES)

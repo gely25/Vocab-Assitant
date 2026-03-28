@@ -4,8 +4,8 @@ import sys
 import threading
 import os
 import logging
-from PyQt6.QtWidgets import QApplication, QMessageBox
-from PyQt6.QtCore import QObject, pyqtSignal, Qt, QTimer, QPoint
+from PyQt6.QtWidgets import QApplication, QMessageBox, QDialog
+from PyQt6.QtCore import QObject, pyqtSignal, Qt, QTimer, QPoint, pyqtSlot
 
 class HoverWorker(QObject):
     word_data_ready = pyqtSignal(dict, QPoint, bool)  # word_data, pos, pinned
@@ -17,7 +17,7 @@ logging.basicConfig(filename=log_path, level=logging.DEBUG,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 try:
-    from overlay_ui import SubtitleOverlay
+    from overlay_ui import SubtitleOverlay, LanguageSelectorDialog
     from stt_service import STTService
     from api_client import VocabAPIClient
     logging.info("Módulos cargados correctamente")
@@ -145,26 +145,29 @@ class VocabAssistantDesktop:
 
     def handle_save(self, word_data):
         """Guarda la palabra del tooltip como flashcard."""
-        word = word_data.get('original') or word_data.get('word', '')
-        print(f"[handle_save] Iniciando guardado de: '{word}'")
-        payload = {
-            'word':        word,
-            'translation': word_data.get('translation', ''),
-            'definition':  word_data.get('definition', ''),
-            'phonetic':    word_data.get('phonetic', ''),
-            'source_lang': self.stt.current_lang,
-            'target_lang': 'es'
-        }
-        def do_save():
-            print(f"[do_save] POST /save/ word='{word}'")
-            result = self.api.save_flashcard(payload)
-            print(f"[do_save] Respuesta del servidor: {result}")
-            if not isinstance(result, dict):
-                result = {'status': 'error', 'message': 'Respuesta inválida del servidor'}
-            # Emitir desde thread nativo está bien cuando el receptor (HoverWorker)
-            # vive en el hilo principal: Qt usa QueuedConnection automáticamente.
-            self.hover_worker.save_result.emit(result)
-        threading.Thread(target=do_save, daemon=True).start()
+        try:
+            word = word_data.get('original') or word_data.get('word', '')
+            print(f"[handle_save] Iniciando guardado de: '{word}'")
+            payload = {
+                'word':        word,
+                'translation': word_data.get('translation', ''),
+                'definition':  word_data.get('definition', ''),
+                'phonetic':    word_data.get('phonetic', ''),
+                'source_lang': self.stt.current_lang,
+                'target_lang': getattr(self, 'target_lang', 'es')
+            }
+            def do_save():
+                print(f"[do_save] POST /save/ word='{word}'")
+                result = self.api.save_flashcard(payload)
+                print(f"[do_save] Respuesta del servidor: {result}")
+                if not isinstance(result, dict):
+                    result = {'status': 'error', 'message': 'Respuesta inválida del servidor'}
+                self.hover_worker.save_result.emit(result)
+            threading.Thread(target=do_save, daemon=True).start()
+        except Exception as ex:
+            print(f"[handle_save] CRITICAL ERROR: {ex}")
+            try: self.hover_worker.save_result.emit({'status':'error', 'message': str(ex)})
+            except: pass
 
     def on_save_result(self, result):
         """Actualiza el botón de guardar con el resultado del servidor"""
@@ -174,13 +177,14 @@ class VocabAssistantDesktop:
     def handle_mining_click(self, word):
         """Click directo = guardar inmediatamente sin pasar por el modal"""
         source_lang = self.stt.current_lang
+        target_lang = getattr(self, 'target_lang', 'es')
         def fetch_and_save():
             data = self.api.get_definition(word.lower(), source_lang=source_lang)
             if data:
                 self.api.save_flashcard({
                     'word': word, 'translation': data.get('translation', ''),
                     'definition': data.get('definition', ''), 'phonetic': data.get('phonetic', ''),
-                    'source_lang': source_lang, 'target_lang': 'es'
+                    'source_lang': source_lang, 'target_lang': target_lang
                 })
         threading.Thread(target=fetch_and_save, daemon=True).start()
 
@@ -196,6 +200,24 @@ class VocabAssistantDesktop:
 
     def run(self):
         try:
+            # Show configuration dialog before doing anything
+            dialog = LanguageSelectorDialog()
+            if dialog.exec() != QDialog.DialogCode.Accepted:
+                return  # User closed or cancelled
+
+            src_code, tgt_code = dialog.get_selection()
+            self.stt.set_language(src_code)  # This safely updates vosk lang
+            self.target_lang = tgt_code
+            
+            # Map code to readable name for UI
+            src_name = list(filter(lambda x: x["code"] == src_code, self.overlay.LANGUAGES))[0]["name"]
+            
+            # Setup initial state
+            self.overlay.current_lang_idx = [i for i, x in enumerate(self.overlay.LANGUAGES) if x["code"] == src_code][0]
+            self.overlay.lang_pill.setText(src_name)
+            self.overlay.set_status_message(f"Listo para escuchar en {src_name}...")
+            
+            # Show transparent UI and connect microphone
             self.overlay.show()
             self.stt.start()
             code = self.app.exec()
