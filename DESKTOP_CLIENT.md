@@ -35,6 +35,13 @@ Es una burbuja flotante que se superpone sobre cualquier ventana (YouTube, Netfl
 - **Problema**: La tarjeta de traducción se ocultaba al instante (en el `leaveEvent` del `WordLabel`) antes de poder hacer clic en el botón `➕`.
 - **Solución**: La `TranslationTooltip` ahora usa un `QTimer` de 200ms. Cuando el ratón entra en la tarjeta, el timer se cancela, manteniéndola abierta permanentemente hasta que el ratón salga de ella.
 
+### 11. Recorte de Modal (Altura dinámica fallida)
+- **Problema**: El modal de traducción se cortaba al final, ocultando el botón "+ Guardar". Esto ocurría porque `adjustSize()` de Qt ignora el recálculo de altura cuando un widget tiene `setFixedWidth()`. El layout pensaba que el modal era más pequeño de lo que el textoword-wrap realmente requería. Además, el encabezado cortaba frases largas.
+- **Solución**: **Forzado de Geometría por Doble Pase**.
+  - **Headers Inteligentes**: Se activó `wordWrap(True)` en `word_lbl` para que los títulos de selección se expandan.
+  - **Activación de Layout**: Se implementó una secuencia de `updateGeometry()` seguida de `layout().activate()` tanto para el contenedor interno como para el externo. Esto obliga a Qt a calcular el `sizeHint` vertical real basándose en el ancho actual.
+  - **Redimensionamiento Seguro**: Se captura la altura exacta tras la activación y se añade un margen de 20px de seguridad, permitiendo que el modal crezca verticalmente sin límites ante traducciones de múltiples párrafos.
+
 ### 6. Traducciones fallando silenciosamente
 - **Problema**: Al hacer hover, si el backend Django tardaba o fallaba, la tarjeta nunca actualizaba su texto y se veía "rota" sin ningún feedback.
 - **Solución**: La tarjeta muestra **"Cargando..."** de forma inmediata y síncrona al hacer hover. La traducción llega asíncronamente desde un hilo de fondo y actualiza el texto cuando está lista, mostrando `(Error)` o `(No encontrado)` en caso de fallo.

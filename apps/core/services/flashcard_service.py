@@ -65,6 +65,83 @@ class FlashcardService:
         }
 
     @staticmethod
+    def get_dashboard_stats():
+        """Retorna estadísticas completas para el nuevo dashboard premium"""
+        now = timezone.now()
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        all_cards = Flashcard.objects.all()
+        
+        # 1. Donut Chart Data
+        due_today = all_cards.filter(next_review__lte=now).count()
+        done_today = all_cards.filter(last_review_at__gte=today_start).count()
+        
+        total_session = due_today + done_today
+        progress = int((done_today / total_session * 100)) if total_session > 0 else 100
+        
+        # 2. Status Bars
+        next_3_days = all_cards.filter(
+            next_review__gt=now, 
+            next_review__lte=now + timezone.timedelta(days=3)
+        ).count()
+        
+        dominated_count = all_cards.filter(interval__gte=21).count()
+        
+        # 3. Forecast histogram (Next 7 days)
+        forecast = []
+        for i in range(7):
+            d_start = today_start + timezone.timedelta(days=i)
+            d_end = d_start + timezone.timedelta(days=1)
+            count = all_cards.filter(next_review__gte=d_start, next_review__lt=d_end).count()
+            forecast.append({
+                'day': d_start.strftime('%a'),
+                'count': count,
+                'full_date': d_start.strftime('%Y-%m-%d')
+            })
+
+        # 4. Streak Calculation (Simplificada)
+        streak = 0
+        check_date = today_start
+        while True:
+            day_reviews = all_cards.filter(
+                last_review_at__gte=check_date, 
+                last_review_at__lt=check_date + timezone.timedelta(days=1)
+            ).exists()
+            
+            if day_reviews:
+                streak += 1
+                check_date -= timezone.timedelta(days=1)
+            else:
+                # Si hoy no ha repasado aún, probamos desde ayer para no romper la racha
+                if check_date == today_start:
+                    check_date -= timezone.timedelta(days=1)
+                    continue
+                break
+            if streak > 365: break # Sanity check
+
+        return {
+            'session': {
+                'done': done_today,
+                'pending': due_today,
+                'total': total_session,
+                'progress': progress,
+                'streak': streak
+            },
+            'categories': {
+                'today': due_today,
+                'upcoming': next_3_days,
+                'dominated': dominated_count
+            },
+            'forecast': forecast,
+            'total_cards': all_cards.count()
+        }
+
+    @staticmethod
+    def get_reset_stats():
+        """Limpia o devuelve estadísticas básicas (compatibilidad)"""
+        return FlashcardService.get_flashcard_stats()
+
+    @staticmethod
     def get_pending_flashcards():
         """Retorna todas las palabras que NO están dominadas (calidad < 5)"""
         return Flashcard.objects.exclude(last_quality=5)

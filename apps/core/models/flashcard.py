@@ -17,6 +17,7 @@ class Flashcard(models.Model):
     interval = models.IntegerField(default=1)
     repetitions = models.IntegerField(default=0)
     last_quality = models.IntegerField(default=0)
+    last_review_at = models.DateTimeField(null=True, blank=True)
     next_review = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -30,6 +31,8 @@ class Flashcard(models.Model):
         return timezone.now() >= self.next_review
 
     def review(self, quality: int):
+        self.last_review_at = timezone.now()
+        
         if quality < 3:
             self.repetitions = 0
             self.interval = 1

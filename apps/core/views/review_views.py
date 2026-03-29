@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.utils import timezone
 from ..services.flashcard_service import FlashcardService
 
 def review_home(request):
@@ -59,9 +60,32 @@ def review_action(request, card_id):
     })
 
 def flashcards_stats(request):
-    """API que devuelve estadísticas de aprendizaje"""
+    """API que devuelve estadísticas de aprendizaje para el nuevo dashboard"""
     try:
-        stats = FlashcardService.get_flashcard_stats()
+        # 1. Dashboard core stats
+        stats = FlashcardService.get_dashboard_stats()
+        
+        # 2. Add detailed lists with timing for 'Mis Tarjetas' view
+        now = timezone.now()
+        all_cards = FlashcardService.get_all_flashcards()
+        
+        def format_timing(dt):
+            diff = (dt.date() - now.date()).days
+            if diff <= 0: return 'vence hoy'
+            if diff == 1: return 'mañana'
+            return f'en {diff} días'
+
+        detailed_cards = []
+        for c in all_cards:
+            detailed_cards.append({
+                'id': c.id,
+                'word': c.word,
+                'translation': c.translation,
+                'status': 'dominated' if c.interval >= 21 else ('upcoming' if c.next_review > now else 'today'),
+                'timing': format_timing(c.next_review)
+            })
+            
+        stats['detailed_cards'] = detailed_cards
         return JsonResponse(stats)
     except Exception as e:
         import traceback

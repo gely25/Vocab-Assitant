@@ -5,195 +5,164 @@
 {% block topbar_title %}Review Mode{% endblock %}
 
 {% block extra_css %}
-  .main { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; overflow-y: auto; background: var(--cream); }
+  .main { display: flex; flex-direction: column; align-items: center; padding: 25px 20px; overflow-y: auto; background: var(--cream); }
   
-  /* View Switcher */
-  .view-switcher { display: flex; background: var(--purple-ghost); padding: 4px; border-radius: 100px; margin-bottom: 30px; gap: 4px; border: 1px solid rgba(139,109,208,0.1); flex-shrink: 0; }
-  .view-btn { padding: 8px 20px; border-radius: 100px; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.25s; color: var(--muted); background: transparent; display: flex; align-items: center; gap: 8px; }
-  .view-btn.active { background: var(--purple-deep); color: var(--white); box-shadow: 0 4px 12px rgba(45,27,94,0.15); }
-  .view-btn svg { width: 14px; height: 14px; }
+  /* Tabs Navigation */
+  .dashboard-tabs { display: flex; background: rgba(139,109,208,0.1); padding: 5px; border-radius: 14px; margin-bottom: 30px; gap: 5px; width: 100%; max-width: 650px; }
+  .dash-tab { flex: 1; padding: 12px; border-radius: 10px; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s; color: var(--purple-mid); background: transparent; }
+  .dash-tab.active { background: var(--purple-deep); color: var(--white); box-shadow: 0 4px 15px rgba(45,27,94,0.2); }
 
-  .view-section { width: 100%; max-width: 800px; display: none; flex-direction: column; gap: 24px; animation: fadeIn 0.4s ease-out; }
-  .view-section.active { display: flex; }
+  .view-section { width: 100%; max-width: 800px; display: none; animation: fadeIn 0.4s ease-out; }
+  .view-section.active { display: flex; flex-direction: column; gap: 20px; }
 
-  /* Stats Grid */
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 10px; }
-  .stat-card { background: var(--white); padding: 24px 16px; border-radius: var(--radius-lg); border: 1.5px solid rgba(139,109,208,0.1); text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.2s; }
-  .stat-card:hover { transform: translateY(-3px); }
-  .stat-value { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--purple-deep); line-height: 1; margin-bottom: 8px; }
-  .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-  /* Accordion Style */
-  .accordion-item { background: var(--white); border-radius: var(--radius-md); border: 1.5px solid rgba(139,109,208,0.12); overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow-sm); }
-  .accordion-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s; background: var(--purple-ghost); }
-  .accordion-header:hover { background: rgba(139,109,208,0.1); }
-  .accordion-title { display: flex; align-items: center; gap: 12px; font-weight: 700; color: var(--purple-deep); font-size: 15px; }
-  .accordion-badge { background: var(--white); color: var(--purple-mid); padding: 2px 10px; border-radius: 100px; font-size: 12px; font-weight: 800; border: 1px solid rgba(139,109,208,0.15); }
-  .accordion-icon { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: var(--muted); }
-  .accordion-item.open .accordion-icon { transform: rotate(180deg); }
+  /* Dashboard Cards */
+  .dash-card { background: var(--white); border-radius: 24px; border: 1.5px solid rgba(139,109,208,0.1); padding: 28px; box-shadow: var(--shadow-sm); position: relative; width: 100%; }
+  .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .dash-title { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--purple-deep); opacity: 0.9; }
   
-  .accordion-content { display: none; padding: 20px; border-top: 1px solid rgba(139,109,208,0.08); grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; max-height: 500px; overflow-y: auto; }
-  .accordion-item.open .accordion-content { display: grid; }
+  .streak-badge { background: #FFF9EB; color: #D97706; padding: 6px 16px; border-radius: 99px; font-size: 12px; font-weight: 800; border: 1px solid rgba(217,119,6,0.1); }
 
-  .word-mini-card { background: var(--cream); border: 1px solid rgba(139,109,208,0.1); border-radius: var(--radius-sm); padding: 14px; display: flex; flex-direction: column; gap: 8px; position: relative; transition: all 0.2s; }
-  .word-mini-card:hover { border-color: var(--purple-light); box-shadow: var(--shadow-sm); transform: scale(1.02); }
-  .word-text { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: var(--purple-deep); }
-  .word-trans { font-size: 12.5px; color: var(--muted); font-style: italic; }
-  .word-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
-  .word-status { font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--purple-mid); background: rgba(139,109,208,0.1); padding: 2px 6px; border-radius: 4px; }
-  
-  .btn-reset { border: none; background: rgba(230,63,63,0.1); color: #E63F3F; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-  .btn-reset:hover { background: #E63F3F; color: var(--white); }
+  /* Donut Layout */
+  .donut-container { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
+  .donut-box { position: relative; width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; zoom: 1.1; }
+  .donut-svg { transform: rotate(-90deg); width: 160px; height: 160px; }
+  .donut-bg { fill: none; stroke: var(--purple-ghost); stroke-width: 14; }
+  .donut-fill { fill: none; stroke: var(--purple-mid); stroke-width: 14; stroke-linecap: round; transition: stroke-dasharray 1s ease-out; }
+  .donut-text { position: absolute; text-align: center; }
+  .donut-percent { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--purple-deep); display: block; }
+  .donut-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
 
-  /* Review View Specifics */
-  .repaso-ui { display: flex; flex-direction: column; gap: 32px; align-items: center; width: 100%; }
-  .progress-bar-container { width: 100%; max-width: 500px; background: var(--white); padding: 16px 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1.5px solid rgba(139,109,208,0.1); }
-  .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .progress-track { height: 8px; background: var(--purple-ghost); border-radius: 99px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--purple-mid); border-radius: 99px; transition: width .4s cubic-bezier(.4,0,.2,1); width: 0%; }
+  /* Info Bars */
+  .info-bars { flex: 1; display: flex; flex-direction: column; gap: 18px; min-width: 250px; }
+  .info-item { display: flex; align-items: center; gap: 12px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-today { background: #EF4444; }
+  .dot-upcoming { background: #D97706; }
+  .dot-done { background: var(--accent-teal); }
+  .info-label { flex: 1; font-size: 14px; font-weight: 700; color: var(--purple-deep); }
+  .info-bar-track { width: 120px; height: 6px; background: var(--purple-ghost); border-radius: 10px; overflow: hidden; position: relative; }
+  .info-bar-fill { height: 100%; border-radius: 10px; transition: width 0.8s; }
+  .info-val { width: 30px; text-align: right; font-weight: 800; color: var(--purple-deep); font-size: 15px; }
 
-  .flip-card-wrapper { width: 100%; max-width: 540px; perspective: 1500px; height: 360px; }
+  /* Forecast Chart */
+  .forecast-grid { display: flex; flex-direction: column; gap: 14px; }
+  .forecast-row { display: flex; align-items: center; gap: 14px; }
+  .forecast-day { width: 70px; font-size: 13px; font-weight: 700; color: var(--muted); }
+  .forecast-track { flex: 1; height: 18px; background: var(--purple-ghost); border-radius: 6px; position: relative; }
+  .forecast-fill { height: 100%; background: var(--purple-light); border-radius: 6px; transition: width 1s; min-width: 0; position: absolute; z-index: 1; }
+  .forecast-text { position: absolute; left: 10px; font-size: 11px; font-weight: 800; color: var(--purple-deep); z-index: 2; line-height: 18px; }
+  .forecast-val { width: 25px; text-align: right; font-weight: 800; color: var(--purple-mid); }
+
+  /* Weekly Calendar circles */
+  .calendar-week { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 1.5px solid var(--purple-ghost); }
+  .day-bubble { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+  .day-name { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+  .day-circle { width: 38px; height: 38px; border-radius: 50%; background: var(--purple-ghost); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: var(--purple-deep); border: 2px solid transparent; transition: all 0.3s; }
+  .day-circle.has-cards { background: var(--purple-mid); color: white; box-shadow: 0 4px 10px rgba(139,109,208,0.3); }
+  .day-circle.active { border-color: var(--purple-deep); transform: scale(1.1); }
+
+  /* List Table */
+  .word-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  .word-row { display: flex; align-items: center; padding: 14px 10px; border-bottom: 1.5px solid var(--purple-ghost); transition: background 0.2s; }
+  .word-row:hover { background: rgba(139,109,208,0.03); }
+  .word-col-w { flex: 2; font-family: 'DM Sans', sans-serif; font-weight: 700; color: var(--purple-deep); font-size: 15px; }
+  .word-col-t { flex: 2; font-size: 14px; color: var(--muted); font-style: italic; }
+  .word-col-m { flex: 1; display: flex; justify-content: flex-end; }
+  .timing-badge { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+  .badge-today { background: #FEE2E2; color: #EF4444; }
+  .badge-upcoming { background: #FEF3C7; color: #D97706; }
+  .badge-dominated { background: #E0F2F1; color: #00897B; }
+
+  /* Review Stage Specifics */
+  .session-stage { width: 100%; display: none; align-items: center; flex-direction: column; gap: 32px; }
+  .session-stage.active { display: flex; }
+
+  .flip-card-wrapper { width: 100%; max-width: 500px; perspective: 1500px; height: 320px; margin: 20px 0; }
   .flip-card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.4, 0, .2, 1); cursor: pointer; }
   .flip-card.flipped { transform: rotateY(180deg); }
-  .card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 32px; border: 2px solid rgba(139, 109, 208, 0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 30px; box-shadow: 0 12px 40px rgba(45, 27, 94, 0.1); background: var(--white); }
+  .card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 28px; border: 2.5px solid rgba(139, 109, 208, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; box-shadow: var(--shadow-md); background: var(--white); }
   .card-back { transform: rotateY(180deg); background: var(--purple-deep); color: var(--white); border-color: var(--purple-mid); }
   
-  .card-word { font-family: 'Syne', sans-serif; font-size: 44px; font-weight: 800; text-align: center; line-height: 1.05; color: var(--purple-deep); word-break: break-word; letter-spacing: -0.04em; }
+  /* Font requested: "mas normal" -> DM Sans */
+  .card-word { font-family: 'DM Sans', sans-serif; font-size: 42px; font-weight: 700; text-align: center; color: var(--purple-deep); }
   .card-back .card-word { color: var(--white); }
-  .card-phonetic { font-size: 16px; color: var(--purple-mid); margin-top: 10px; font-weight: 600; opacity: 0.8; font-style: normal; font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em; }
-  .card-back .card-phonetic { color: var(--purple-soft); }
-  
-  .card-translation { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 700; color: var(--white); text-align: center; line-height: 1.1; letter-spacing: -0.03em; }
-  .card-context { font-size: 15px; color: rgba(255,255,255,0.8); margin-top: 20px; font-style: italic; text-align: center; max-width: 90%; line-height: 1.6; font-weight: 400; }
+  .card-translation { font-family: 'DM Sans', sans-serif; font-size: 30px; font-weight: 600; color: var(--white); text-align: center; }
 
-  .action-btns { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 14px; }
-  .btn-primary { width: 100%; padding: 18px; border-radius: var(--radius-md); border: none; background: var(--purple-deep); color: var(--white); font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer; transition: all .2s; box-shadow: 0 8px 25px rgba(45,27,94,0.25); }
-  .btn-primary:hover { background: var(--purple-mid); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(45,27,94,0.3); }
+  .action-btns { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
+  .btn-primary { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--purple-deep); color: var(--white); font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; box-shadow: 0 8px 20px rgba(45,27,94,0.15); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(45,27,94,0.2); }
 
   .quality-btns { display: none; width: 100%; gap: 12px; }
   .quality-btns.visible { display: flex; }
-  .btn-q { flex: 1; padding: 14px; border-radius: var(--radius-md); border: none; font-weight: 800; cursor: pointer; transition: all 0.2s; font-size: 14px; font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-  .btn-q-0 { background: #fee2e2; color: #ef4444; }
-  .btn-q-3 { background: #fef3c7; color: #d97706; }
-  .btn-q-5 { background: var(--accent-teal); color: white; flex: 1.5; box-shadow: 0 6px 15px rgba(78,205,196,0.3); }
-  .btn-q:hover { transform: translateY(-2px); filter: brightness(0.95); }
-  .q-hint { font-size: 10px; font-weight: 500; opacity: 0.8; }
+  .btn-q { flex: 1; padding: 16px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; transition: all 0.2s; font-size: 18px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .btn-q:hover { transform: translateY(-3px); filter: brightness(1.05); }
+  
+  .btn-q-no { background: #FEE2E2; color: #EF4444; border: 1.5px solid rgba(239, 68, 68, 0.1); }
+  .btn-q-hard { background: #FEF3C7; color: #D97706; border: 1.5px solid rgba(217, 119, 6, 0.1); }
+  .btn-q-easy { background: var(--accent-teal); color: white; box-shadow: 0 6px 15px rgba(78,205,196,0.3); }
+
+  /* Accordion styling */
+  .accordion-header { cursor: pointer; user-select: none; transition: background 0.2s; padding: 12px 0; border-bottom: 2px solid var(--purple-ghost); margin-top: 15px; }
+  .accordion-header:hover { opacity: 0.8; }
+  .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+  .accordion-content.active { max-height: 2000px; transition: max-height 0.4s ease-in-out; }
+  .chevron { transition: transform 0.3s ease; }
+  .active .chevron { transform: rotate(180deg); }
 
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  
   .empty-state { background:white; padding:50px 40px; border-radius:24px; text-align:center; border:1.5px solid rgba(139,109,208,0.1); width:100%; max-width:520px; box-shadow: var(--shadow-md); animation: fadeIn 0.5s ease-out; }
 {% endblock %}
 
 {% block content %}
-  <!-- Switcher Tabs -->
-  <div class="view-switcher">
-    <button class="view-btn active" onclick="switchView('repaso', this)">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-      Repasar
-    </button>
-    <button class="view-btn" id="stats-tab-btn" onclick="switchView('progreso', this)">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-      Mi Progreso
-    </button>
-  </div>
+  <!-- DASHBOARD OVERLAY -->
+  <div id="dashboard-ui" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+    <div class="dashboard-tabs">
+      <button class="dash-tab active" onclick="switchTab('repasar', this)">Repasar</button>
+      <button class="dash-tab" onclick="switchTab('progreso', this)">Mi progreso</button>
+      <button class="dash-tab" onclick="switchTab('tarjetas', this)">Mis tarjetas</button>
+    </div>
 
-  <!-- VIEW: Repaso -->
-  <div id="view-repaso" class="view-section active">
-    <div class="repaso-ui">
-      <div class="progress-bar-container">
-        <div class="progress-meta">
-          <span id="session-label">SESIÓN HOY</span>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="javascript:void(0)" onclick="loadCards('all')" style="color:var(--purple-mid); text-decoration:none; font-size:10px;">Repasar Todo</a>
-            <span id="review-count">0 / 0</span>
-          </div>
+    <div id="tab-repasar" class="view-section active">
+      <div class="dash-card">
+        <div class="dash-header">
+          <span class="dash-title">SESIÓN DE HOY</span>
+          <span class="streak-badge" id="streak-val">0 días seguidos</span>
         </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="review-progress"></div>
-        </div>
-        
-        <div style="display:flex; justify-content:center; gap:20px; margin-top:12px; font-size:11px; font-weight:700; color:var(--muted);">
-          <div style="display:flex; align-items:center; gap:5px;">
-             <span style="width:8px; height:8px; border-radius:50%; background:#ef4444;"></span>
-             <span id="mini-count-pending">0</span> Pendientes
+        <div class="donut-container">
+          <div class="donut-box">
+            <svg class="donut-svg"><circle class="donut-bg" cx="80" cy="80" r="70"></circle><circle class="donut-fill" id="donut-fill" cx="80" cy="80" r="70" stroke-dasharray="0 440"></circle></svg>
+            <div class="donut-text"><span class="donut-percent" id="donut-pct">0%</span><span class="donut-label">listas</span></div>
           </div>
-          <div style="display:flex; align-items:center; gap:5px;">
-             <span style="width:8px; height:8px; border-radius:50%; background:#d97706;"></span>
-             <span id="mini-count-confirm">0</span> Casi
-          </div>
-          <div style="display:flex; align-items:center; gap:5px;">
-             <span style="width:8px; height:8px; border-radius:50%; background:var(--accent-teal);"></span>
-             <span id="mini-count-dominated">0</span> Dominadas
+          <div class="info-bars">
+            <div class="info-item"><span class="dot dot-today"></span><span class="info-label">Para hoy</span><div class="info-bar-track"><div class="info-bar-fill dot-today" id="bar-today" style="width: 0%"></div></div><span class="info-val" id="val-today">0</span></div>
+            <div class="info-item"><span class="dot dot-upcoming"></span><span class="info-label">Próximos 3 días</span><div class="info-bar-track"><div class="info-bar-fill dot-upcoming" id="bar-upcoming" style="width: 0%"></div></div><span class="info-val" id="val-upcoming">0</span></div>
+            <div class="info-item"><span class="dot dot-done"></span><span class="info-label">Dominadas</span><div class="info-bar-track"><div class="info-bar-fill dot-done" id="bar-dominated" style="width: 0%"></div></div><span class="info-val" id="val-dominated">0</span></div>
           </div>
         </div>
       </div>
+      <button class="btn-primary" id="start-session-btn" style="padding: 18px; border-radius: 16px; border: none; background: var(--purple-deep); color: white; font-weight: 700; cursor: pointer;">Repasar tarjetas</button>
+    </div>
 
-      <div id="review-stage" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:28px;">
-        <!-- Dynamic Content -->
+    <div id="tab-progreso" class="view-section">
+      <div class="dash-card">
+        <div class="dash-header"><span class="dash-title">PRÓXIMAS REVISIONES</span></div>
+        <div class="forecast-grid" id="forecast-histogram"></div>
+        <div class="calendar-week" id="week-calendar"></div>
       </div>
+    </div>
+
+    <div id="tab-tarjetas" class="view-section">
+      <div class="dash-card" id="word-list-container"></div>
     </div>
   </div>
 
-  <!-- VIEW: Progreso -->
-  <div id="view-progreso" class="view-section">
-    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="stat-card">
-        <div class="stat-value" id="count-pending">0</div>
-        <div class="stat-label">Pendientes</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="count-confirm">0</div>
-        <div class="stat-label">Casi</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="count-dominated">0</div>
-        <div class="stat-label">Dominadas</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="count-total">0</div>
-        <div class="stat-label">Total</div>
-      </div>
-    </div>
-    
-    <button class="btn-primary" style="margin-bottom:10px; background:var(--purple-mid);" onclick="switchView('repaso'); loadCards('pending');">
-      🔥 Repasar Pendientes Ahora (Extra)
-    </button>
-
-    <!-- Accordion: Pendientes -->
-    <div class="accordion-item" id="acc-pending">
-      <div class="accordion-header" onclick="toggleAccordion('acc-pending')">
-        <div class="accordion-title">
-          <span>⌛</span> Palabras Pendientes
-          <span class="accordion-badge" id="badge-pending">0</span>
-        </div>
-        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-      </div>
-      <div class="accordion-content" id="list-pending"></div>
-    </div>
-
-    <!-- Accordion: Casi -->
-    <div class="accordion-item" id="acc-confirm">
-      <div class="accordion-header" onclick="toggleAccordion('acc-confirm')">
-        <div class="accordion-title">
-          <span>🤔</span> Casi las sé (Por confirmar)
-          <span class="accordion-badge" id="badge-confirm">0</span>
-        </div>
-        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-      </div>
-      <div class="accordion-content" id="list-confirm"></div>
-    </div>
-
-    <!-- Accordion: Dominadas -->
-    <div class="accordion-item" id="acc-dominated">
-      <div class="accordion-header" onclick="toggleAccordion('acc-dominated')">
-        <div class="accordion-title">
-          <span>✓</span> Palabras Dominadas
-          <span class="accordion-badge" id="badge-dominated">0</span>
-        </div>
-        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-      </div>
-      <div class="accordion-content" id="list-dominated"></div>
-    </div>
+  <!-- STUDY SESSION STAGE -->
+  <div id="session-ui" class="session-stage">
+     <div style="width:100%; max-width:540px; display:flex; justify-content:space-between; align-items:center;">
+        <button onclick="exitSession()" style="background:none; border:none; color:var(--purple-mid); font-weight:700; cursor:pointer;">← Volver</button>
+        <div class="streak-badge" id="session-counter">0 / 0</div>
+     </div>
+     <div id="review-stage" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:28px;"></div>
   </div>
 {% endblock %}
 
@@ -201,245 +170,246 @@
 <script>
   let dueCards = [];
   let currentIndex = 0;
-  let allStats = null;
-  let currentMode = 'due'; 
+  let dashboardData = null;
 
-  // Initialize
-  loadCards('due');
+  loadDashboard();
 
-  function switchView(view, btn) {
+  function switchTab(tab, btn) {
     document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-    
-    document.getElementById(`view-${view}`).classList.add('active');
-    if (btn) btn.classList.add('active');
+    document.querySelector(`#tab-${tab}`).classList.add('active');
+    document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (tab === 'repasar') loadDashboard();
+  }
 
-    if (view === 'progreso') loadStats();
+  function loadDashboard() {
+    fetch('/api/stats/')
+      .then(r => r.json())
+      .then(data => {
+        dashboardData = data;
+        renderDashboard();
+      });
+  }
+
+  function renderDashboard() {
+    if (!dashboardData) return;
+    const { session, categories, forecast, detailed_cards, total_cards } = dashboardData;
+
+    // Handle Empty State
+    if (total_cards === 0) {
+      document.getElementById('tab-repasar').innerHTML = `
+        <div class="dash-card" style="text-align:center; padding:60px 20px;">
+           <div style="font-size:64px; margin-bottom:24px;">🌱</div>
+           <h2 style="font-family:'Syne', sans-serif; font-size:26px; color:var(--purple-deep); margin-bottom:12px;">¡Tu mazo está vacío!</h2>
+           <p style="color:var(--muted); font-size:15px; margin-bottom:32px; line-height:1.6;">Aún no has guardado palabras. Para que aparezcan aquí, <br>ve al modo <b>Mining</b> y guarda tus primeras cartas.</p>
+           <div style="display:flex; gap:10px; justify-content:center;">
+             <a href="/" class="btn-primary" style="display:inline-block; text-decoration:none; padding:15px 30px; border-radius:14px; font-size:15px;">Ir a Mining</a>
+           </div>
+        </div>
+      `;
+      document.getElementById('tab-progreso').innerHTML = `
+        <div class="dash-card" style="text-align:center; color:var(--muted); padding:40px;">
+           <p>No hay datos de progreso todavía cada vez que repases una palabra el gráfico se actualizará.</p>
+        </div>
+      `;
+      document.getElementById('tab-tarjetas').innerHTML = `
+        <div class="dash-card" style="text-align:center; color:var(--muted); padding:40px;">
+           <p>Tu lista de palabras aparecerá aquí una vez guardes la primera.</p>
+        </div>
+      `;
+      // Donut reset
+      document.getElementById('donut-pct').textContent = "0%";
+      document.getElementById('donut-fill').style.strokeDashoffset = 440;
+      return;
+    }
+
+    // Normal Rendering (Restore HTML structure if it was overwritten)
+    // We should use a container for the dynamic parts to avoid overwriting the whole tab-repasar
+    // but for now I will recreate the standard view if total > 0
+    document.getElementById('tab-repasar').innerHTML = `
+      <div class="dash-card">
+        <div class="dash-header">
+          <span class="dash-title">SESIÓN DE HOY</span>
+          <span class="streak-badge" id="streak-val">${session.streak} días seguidos</span>
+        </div>
+        <div class="donut-container">
+          <div class="donut-box">
+            <svg class="donut-svg"><circle class="donut-bg" cx="80" cy="80" r="70"></circle><circle class="donut-fill" id="donut-fill" cx="80" cy="80" r="70" stroke-dasharray="440 440" stroke-dashoffset="${440 - (440 * session.progress) / 100}"></circle></svg>
+            <div class="donut-text"><span class="donut-percent" id="donut-pct">${session.progress}%</span><span class="donut-label">listas</span></div>
+          </div>
+          <div class="info-bars">
+            <div class="info-item"><span class="dot dot-today"></span><span class="info-label">Para hoy</span><div class="info-bar-track"><div class="info-bar-fill dot-today" id="bar-today" style="width: ${(categories.today / Math.max(categories.today, categories.upcoming, categories.dominated, 1)) * 100}%"></div></div><span class="info-val" id="val-today">${categories.today}</span></div>
+            <div class="info-item"><span class="dot dot-upcoming"></span><span class="info-label">Próximos 3 días</span><div class="info-bar-track"><div class="info-bar-fill dot-upcoming" id="bar-upcoming" style="width: ${(categories.upcoming / Math.max(categories.today, categories.upcoming, categories.dominated, 1)) * 100}%"></div></div><span class="info-val" id="val-upcoming">${categories.upcoming}</span></div>
+            <div class="info-item"><span class="dot dot-done"></span><span class="info-label">Dominadas</span><div class="info-bar-track"><div class="info-bar-fill dot-done" id="bar-dominated" style="width: ${(categories.dominated / Math.max(categories.today, categories.upcoming, categories.dominated, 1)) * 100}%"></div></div><span class="info-val" id="val-dominated">${categories.dominated}</span></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" id="start-session-btn" onclick="startStudySession('due')" style="padding: 18px; border-radius: 16px; border: none; background: var(--purple-deep); color: white; font-weight: 700; cursor: pointer;">Repasar ${categories.today} tarjetas de hoy</button>
+    `;
+
+    const hist = document.getElementById('forecast-histogram');
+    if (hist) {
+      const maxF = Math.max(...forecast.map(f => f.count), 1);
+      hist.innerHTML = forecast.map((f, i) => `
+        <div class="forecast-row">
+          <span class="forecast-day">${i === 0 ? 'Hoy' : f.day}</span>
+          <div class="forecast-track"><div class="forecast-fill" style="width: ${(f.count / maxF) * 100}%"></div><span class="forecast-text">${f.count}</span></div>
+        </div>
+      `).join('');
+    }
+
+    const cal = document.getElementById('week-calendar');
+    if (cal) {
+      cal.innerHTML = forecast.map((f, i) => `
+        <div class="day-bubble"><span class="day-name">${f.day}</span><div class="day-circle ${f.count > 0 ? 'has-cards' : ''} ${i === 0 ? 'active' : ''}">${f.count}</div></div>
+      `).join('');
+    }
+
+    const listCont = document.getElementById('word-list-container');
+    if (listCont) {
+      const sections = ['today', 'upcoming', 'dominated'];
+      const sectionLabels = { today: 'Para hoy', upcoming: 'Próximas', dominated: 'Dominadas' };
+      const dotClasses = { today: 'dot-today', upcoming: 'dot-upcoming', dominated: 'dot-done' };
+      
+      listCont.innerHTML = sections.map(sec => {
+        const secCards = detailed_cards.filter(c => c.status === sec);
+        const count = secCards.length;
+        const isOpen = (sec === 'today'); // Open 'Today' by default
+        
+        return `
+          <div class="accordion-header ${isOpen ? 'active' : ''}" onclick="toggleAccordion('acc-${sec}', this)" style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="dot ${dotClasses[sec]}"></span>
+              <span class="dash-title">${sectionLabels[sec]}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="background:var(--purple-ghost); color:var(--purple-deep); padding:2px 10px; border-radius:10px; font-size:12px; font-weight:800;">${count}</span>
+              <span class="chevron" style="color:var(--muted); font-size:16px;">↓</span>
+            </div>
+          </div>
+          <div id="acc-${sec}" class="accordion-content ${isOpen ? 'active' : ''}">
+            <div class="word-table">
+              ${count === 0 ? `
+                <div style="padding: 30px; text-align: center; color: var(--muted); font-size: 14px; font-style: italic; background: rgba(139,109,208,0.02); border-radius: 12px; margin-top: 10px;">
+                  No hay tarjetas en ${sectionLabels[sec].toLowerCase()} todavía.
+                </div>
+              ` : secCards.map(word => `
+                <div class="word-row">
+                  <div class="word-col-w">${word.word}</div>
+                  <div class="word-col-t">${word.translation}</div>
+                  <div class="word-col-m"><span class="timing-badge badge-${sec}">${word.timing}</span></div>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+      }).join('');
+    }
+  }
+
+  function toggleAccordion(id, header) {
+    const content = document.getElementById(id);
+    const isOpen = content.classList.contains('active');
+    
+    // Toggle active class
+    if (isOpen) {
+      content.classList.remove('active');
+      header.classList.remove('active');
+    } else {
+      content.classList.add('active');
+      header.classList.add('active');
+    }
+  }
+
+  function startStudySession(mode) {
+    document.getElementById('dashboard-ui').style.display = 'none';
+    document.getElementById('session-ui').classList.add('active');
+    loadCards(mode);
+  }
+
+  function exitSession() {
+    document.getElementById('session-ui').classList.remove('active');
+    document.getElementById('dashboard-ui').style.display = 'flex';
+    loadDashboard();
   }
 
   function loadCards(mode = 'due') {
-    currentMode = mode;
-    const stage = document.getElementById('review-stage');
-    if (stage) stage.innerHTML = '<p style="color:var(--muted)">Preparando sesión...</p>';
-    
     fetch(`/api/due/?mode=${mode}`)
       .then(r => r.json())
       .then(data => {
         dueCards = data.flashcards || [];
+        originalTotal = dueCards.length;
         currentIndex = 0;
         renderReview();
-      })
-      .catch(e => {
-        console.error("Error loading cards:", e);
-        if (stage) stage.innerHTML = '<p style="color:var(--error)">Error al conectar con el servidor.</p>';
       });
   }
 
   function renderReview() {
     const stage = document.getElementById('review-stage');
-    if (!stage) return;
-    
     const total = dueCards.length;
-    let labelText = 'SESIÓN HOY';
-    if (currentMode === 'all') labelText = 'TODAS LAS PALABRAS';
-    if (currentMode === 'pending') labelText = 'REPASO EXTRA';
     
-    const lbl = document.getElementById('session-label');
-    const ct = document.getElementById('review-count');
-    const bar = document.getElementById('review-progress');
+    // Counter: Progress through original list
+    // If we have finished the original set but some are repeating, 
+    // we show "Repasando fallos" or similar, or just cap the counter.
+    let displayIndex = currentIndex + 1;
+    let displayTotal = originalTotal;
     
-    if (lbl) lbl.textContent = labelText;
-    if (ct) ct.textContent = `${currentIndex} / ${total}`;
-    if (bar) bar.style.width = total > 0 ? `${(currentIndex/total)*100}%` : '0%';
-
-    // CASO: No hay tarjetas (solo para modo 'due')
-    if (total === 0 && currentMode === 'due') {
-        stage.innerHTML = `
-        <div class="empty-state">
-          <div style="font-size:56px; margin-bottom:20px;">🎉</div>
-          <h2 style="font-family:'Syne', sans-serif; color:var(--purple-deep); margin-bottom:12px; font-size:28px;">¡Todo al día!</h2>
-          <p style="color:var(--muted); font-size:15px; margin-bottom:28px; line-height:1.6;">No tienes repasos pendientes para hoy. ¿Quieres hacer una sesión extra?</p>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <button class="btn-primary" onclick="loadCards('pending')">Repasar Pendientes (Extra)</button>
-            <button style="background:none; border:none; color:var(--purple-mid); font-weight:700; cursor:pointer;" onclick="switchView('progreso', document.getElementById('stats-tab-btn'))">Ver mi progreso total</button>
-          </div>
-        </div>`;
-        return;
+    if (currentIndex < originalTotal) {
+       document.getElementById('session-counter').textContent = `${displayIndex} / ${displayTotal}`;
+    } else {
+       document.getElementById('session-counter').textContent = `Refuerzo: ${currentIndex - originalTotal + 1}`;
     }
 
-    // CASO: Sesión finalizada
-    if (total > 0 && currentIndex >= total) {
-      stage.innerHTML = `
-        <div style="text-align:center; padding:30px 20px; max-width:400px; margin:0 auto;">
-          <div style="font-size:64px; margin-bottom:20px;">🏆</div>
-          <h2 style="font-family:'Syne'; color:var(--purple-deep); margin-top:10px; font-size:28px;">¡Misión cumplida!</h2>
-          <p style="color:var(--muted); font-size:14px; margin-top:8px;">Has terminado de repasar tu mazo por hoy.</p>
-          
-          <div style="margin-top:25px; padding:20px; background:var(--white); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); border:1px solid var(--purple-ghost); text-align:left;">
-            <div style="font-size:12px; font-weight:700; color:var(--purple-mid); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-               MEMORIA CALCULADA
-            </div>
-            <p style="font-size:13px; line-height:1.5; color:var(--ink);">
-               Nuestro algoritmo Anki-Style (SM-2) ha re-ajustado tu curva de olvido. Las palabras que dominaste hoy tardarán más en volver; las que fallaste, aparecerán pronto.
-            </p>
-            <div style="margin-top:15px; font-size:11px; color:var(--muted); border-top:1px solid var(--purple-ghost); padding-top:10px;">
-               🎯 Vuelve mañana o cuando recibas nuevos repasos.
-            </div>
-          </div>
+    if (total === 0) { 
+      stage.innerHTML = `<div style="text-align:center; padding:40px;"><h2>¡Todo listo!</h2><button class="btn-primary" onclick="exitSession()">Volver</button></div>`; 
+      return; 
+    }
 
-          <button class="btn-primary" style="margin-top:30px; width:100%;" onclick="switchView('progreso')">Ver mi progreso completo</button>
+    if (currentIndex >= total) { 
+      stage.innerHTML = `<div style="text-align:center; padding:40px;"><h2>🏆 ¡Sesión completada!</h2><button class="btn-primary" onclick="exitSession()">Volver al Dashboard</button></div>`; 
+      return; 
+    }
+
+    const card = dueCards[currentIndex];
+    stage.innerHTML = `
+      <div class="flip-card-wrapper">
+        <div class="flip-card" id="main-card" onclick="revealCard()">
+          <div class="card-face card-front">
+            <div class="card-word">${card.word}</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-translation">${card.translation}</div>
+          </div>
         </div>
-      `;
-      return;
-    }
-
-    // CASO: Hay tarjetas para mostrar
-    if (total > 0 && currentIndex < total) {
-      if (!document.getElementById('q-word')) {
-        stage.innerHTML = `
-          <div class="flip-card-wrapper">
-            <div class="flip-card" id="main-card" onclick="revealCard()">
-              <div class="card-face card-front">
-                <div class="card-word" id="q-word"></div>
-                <div class="card-phonetic" id="q-phonetic"></div>
-              </div>
-              <div class="card-face card-back">
-                <div class="card-translation" id="a-trans"></div>
-                <div id="a-context" class="card-context"></div>
-              </div>
-            </div>
-          </div>
-          <div class="action-btns">
-            <button class="btn-primary" id="reveal-btn" onclick="revealCard()">Revelar respuesta</button>
-            <div class="quality-btns" id="quality-btns">
-              <button class="btn-q btn-q-0" onclick="handleReview(1)">Olvidada <span class="q-hint">Repasar pronto</span></button>
-              <button class="btn-q btn-q-3" onclick="handleReview(3)">Casi <span class="q-hint">Repetir</span></button>
-              <button class="btn-q btn-q-5" onclick="handleReview(5)">¡Dominada! <span class="q-hint">Logrado</span></button>
-            </div>
-          </div>`;
-      }
-
-      const card = dueCards[currentIndex];
-      const qWord = document.getElementById('q-word');
-      const aTrans = document.getElementById('a-trans');
-      if (qWord) {
-        qWord.textContent = card.word || '---';
-        if (card.word.length > 25) qWord.style.fontSize = '24px';
-        else if (card.word.length > 15) qWord.style.fontSize = '30px';
-        else qWord.style.fontSize = '44px';
-      }
-      if (aTrans) aTrans.textContent = card.translation || '---';
-      
-      const qPhon = document.getElementById('q-phonetic');
-      const aCtx = document.getElementById('a-context');
-      if (qPhon) qPhon.textContent = card.phonetic || '';
-      if (aCtx) aCtx.textContent = card.definition || card.example || 'Sin detalles.';
-
-      const mCard = document.getElementById('main-card');
-      if (mCard) mCard.classList.remove('flipped');
-      const rBtn = document.getElementById('reveal-btn');
-      if (rBtn) rBtn.style.display = 'block';
-      const qBtns = document.getElementById('quality-btns');
-      if (qBtns) qBtns.classList.remove('visible');
-    }
+      </div>
+      <div class="action-btns">
+        <button class="btn-primary" id="reveal-btn" onclick="revealCard()">Revelar respuesta</button>
+        <div class="quality-btns" id="quality-btns">
+          <button class="btn-q btn-q-no" onclick="handleReview(2)">
+            <span class="q-icon">❌</span>
+            <span style="font-size:12px; margin-top:2px;">No recuerdo</span>
+          </button>
+          <button class="btn-q btn-q-hard" onclick="handleReview(3)">
+            <span class="q-icon">😐</span>
+            <span style="font-size:12px; margin-top:2px;">Difícil</span>
+          </button>
+          <button class="btn-q btn-q-easy" onclick="handleReview(5)">
+            <span class="q-icon">✔</span>
+            <span style="font-size:12px; margin-top:2px;">Fácil</span>
+          </button>
+        </div>
+      </div>`;
   }
 
   function revealCard() {
-    const card = document.getElementById('main-card');
-    if (card) card.classList.add('flipped');
-    const rBtn = document.getElementById('reveal-btn');
-    if (rBtn) rBtn.style.display = 'none';
-    const qBtns = document.getElementById('quality-btns');
-    if (qBtns) qBtns.classList.add('visible');
+    document.getElementById('main-card').classList.add('flipped');
+    document.getElementById('reveal-btn').style.display = 'none';
+    document.getElementById('quality-btns').classList.add('visible');
   }
 
   function handleReview(quality) {
     const card = dueCards[currentIndex];
-    if (!card) return;
-    const isExtra = (currentMode === 'pending' || currentMode === 'all');
-    
-    fetch(`/api/review/${card.id}/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-      body: JSON.stringify({ quality })
-    }).then(r => r.json()).then(data => {
-      // Re-encolar si se olvidó (Anki Style)
-      if (quality < 3) {
-          dueCards.push(card); 
-      }
-      
-      // Feedback UI
-      const statusStr = quality === 5 ? '¡Dominada!' : (quality === 3 ? 'Casi' : 'Olvidada');
-      const color = quality === 5 ? 'var(--accent-teal)' : (quality === 3 ? '#d97706' : '#ef4444');
-      const scheduleStr = quality >= 3 ? `(Repaso en ${data.interval} días)` : '(Repetir en esta sesión)';
-      showToast(`${statusStr} ${scheduleStr}`, color);
-      
-      loadStats();
-      currentIndex++;
-      renderReview();
-    });
-  }
-
-  function loadStats() {
-    fetch('/api/stats/')
-      .then(r => r.json())
-      .then(data => {
-        allStats = data;
-        document.getElementById('count-pending').textContent = data.pending_count || 0;
-        document.getElementById('count-confirm').textContent = data.to_confirm_count || 0;
-        document.getElementById('count-dominated').textContent = data.dominated_count || 0;
-        document.getElementById('count-total').textContent = data.total || 0;
-        
-        // Sync Mini-stats in review view (if present)
-        const mp = document.getElementById('mini-count-pending');
-        const mc = document.getElementById('mini-count-confirm');
-        const md = document.getElementById('mini-count-dominated');
-        if (mp) mp.textContent = data.pending_count || 0;
-        if (mc) mc.textContent = data.to_confirm_count || 0;
-        if (md) md.textContent = data.dominated_count || 0;
-        
-        document.getElementById('badge-pending').textContent = data.pending_count || 0;
-        document.getElementById('badge-confirm').textContent = data.to_confirm_count || 0;
-        document.getElementById('badge-dominated').textContent = data.dominated_count || 0;
-        
-        renderStatsList('pending');
-        renderStatsList('confirm');
-        renderStatsList('dominated');
-      })
-      .catch(e => console.error("Stats Error:", e));
-  }
-
-  function renderStatsList(type) {
-    const container = document.getElementById(`list-${type}`);
-    if (!container || !allStats) return;
-    
-    let list = [];
-    let statusLabel = '';
-    if (type === 'pending') { list = allStats.pending_list; statusLabel = 'Aprendiendo'; }
-    else if (type === 'confirm') { list = allStats.to_confirm_list; statusLabel = 'Casi'; }
-    else if (type === 'dominated') { list = allStats.dominated_list; statusLabel = 'Dominada'; }
-
-    container.innerHTML = list.map(item => `
-      <div class="word-mini-card">
-        <div class="word-text">${item.word}</div>
-        <div class="word-trans">${item.translation}</div>
-        <div class="word-meta">
-          <span class="word-status">${statusLabel}</span>
-          ${type === 'dominated' ? `<button class="btn-reset" onclick="resetWord(${item.id})">Olvidé esta</button>` : ''}
-        </div>
-      </div>
-    `).join('') || '<p style="text-align:center; color:var(--muted); font-size:12px; grid-column:1/-1; padding:20px;">Vacío</p>';
-  }
-
-  function resetWord(id) {
-    if (!confirm('¿Devolver a pendientes?')) return;
-    fetch(`/api/reset/${id}/`, { method: 'POST', headers: {'X-CSRFToken': getCookie('csrftoken')} })
-      .then(() => loadStats());
-  }
-
-  function toggleAccordion(id) {
-    document.getElementById(id).classList.toggle('open');
+    fetch(`/api/review/${card.id}/`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') }, body: JSON.stringify({ quality }) })
+      .then(() => { if (quality < 3) dueCards.push(card); currentIndex++; renderReview(); });
   }
 </script>
 {% endblock %}
