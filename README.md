@@ -1,7 +1,7 @@
 # VocabAssistant 🚀
-**Tu compañero inteligente para la lectura y el aprendizaje de idiomas — en la web y en tiempo real.**
+**Domina cualquier idioma con la técnica de "Word Mining" — ya sea leyendo textos o viendo tus videos y películas favoritas.**
 
-VocabAssistant es una aplicación web + cliente de escritorio diseñada para transformar cualquier contenido en idiomas extranjeros (texto, imágenes, audio en vivo) en una experiencia de aprendizaje fluida y productiva. Combina traducción en tiempo real, OCR, un sistema de repetición espaciada (SM-2), IA local (Ollama) y ahora un **cliente de escritorio de subtítulos en vivo con minería interactiva de vocabulario**.
+VocabAssistant es una plataforma integral diseñada para transformar el contenido nativo (video, audio, libros, imágenes) en un flujo de aprendizaje continuo. Su objetivo principal es facilitar el **Word Mining**: la captura instantánea de vocabulario desconocido en su contexto real para convertirlo en conocimiento duradero. Combina una interfaz web premium de lectura, un cliente de escritorio para subtítulos en vivo y un sistema de repetición espaciada (SM-2) potenciado por IA local.
 
 ---
 
@@ -14,8 +14,13 @@ VocabAssistant es una aplicación web + cliente de escritorio diseñada para tra
 - **Selección de Frases**: Subraya oraciones completas y obtén traducciones con contexto semántico.
 - **Diseño Premium**: UI moderna con Fraunces, Figtree y animaciones Lottie.
 
-### 🎙️ Cliente de Escritorio — Live Caption con Mining de Vocabulario *(NUEVO)*
-Un cliente nativo PyQt6 que se superpone sobre cualquier ventana (videos, reuniones, podcasts) y transcribe el audio del sistema en tiempo real.
+### 🎙️ Cliente de Escritorio — Live Caption Hub *(NUEVO)*
+Un cliente nativo PyQt6 que se sincroniza con el dashboard web para transcribir el audio del sistema en tiempo real.
+
+#### 🔗 Sincronización Web-Escritorio (Real-time Status)
+- **Latido de Conexión (Heartbeat)**: El asistente se comunica con la web cada 10 segundos.
+- **Estado Dinámico**: El dashboard web muestra una burbuja de estado en tiempo real (**Asistente en línea ✓**) cuando detecta que el cliente de escritorio está activo.
+- **Lanzamiento Remoto**: Inicia el asistente global con un solo clic directamente desde la interfaz web, sin necesidad de usar la terminal.
 
 #### 🖥️ Subtítulos en Tiempo Real (Vosk STT)
 - **Motor de STT local**: [Vosk](https://alphacephei.com/vosk/) — modelos pequeños, sin GPU, sin internet.
@@ -93,9 +98,9 @@ Un cliente nativo PyQt6 que se superpone sobre cualquier ventana (videos, reunio
 | HTML5 + Vanilla JS | Estructura e interactividad |
 | **Web Speech API** | Pronunciación de audio offline |
 | **Intl.Segmenter** | Tokenización CJK |
-| Google Fonts (Fraunces, Figtree) | Tipografía premium |
+| Google Fonts (DM Sans) | Tipografía estándar para máxima legibilidad |
 | `@dotlottie/player-component` | Animaciones Lottie |
-| Vanilla CSS | Sistema de diseño "Deep Purple" |
+| Vanilla CSS | Sistema de diseño profesional "Deep Purple & White" |
 
 ---
 
@@ -187,6 +192,12 @@ python desktop_client/main_app.py
 > 5. Haz clic en **"＋ Guardar en mis tarjetas"** — aparece en tu Modo Repaso web.
 
 ---
+
+## 🚀 Próximas Mejoras (Roadmap)
+
+- **Cola de Contexto para IA Local**: Añadir un botón secundario en el modal de subtítulos ("Enviar a IA") para mandar palabras complejas a una cola de procesamiento. Esto permitirá realizar una indagación profunda (etimología, matices de uso, 5 ejemplos adicionales) mediante la IA local sin interrumpir el flujo de visualización de la película o video.
+- **Sincronización de Audio Cloud**: Opción para guardar el fragmento de audio real de la película en la tarjeta de repaso.
+- **Modo Inmersivo de Lectura**: Soporte para formatos EPUB y PDF con minería directa.
 
 ## 👤 Autor
 Desarrollado con pasión para mejorar el viaje autodidacta en el aprendizaje de idiomas. 🌍
