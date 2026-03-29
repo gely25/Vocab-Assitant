@@ -1,8 +1,8 @@
 import sys
 from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, 
                              QFrame, QTextBrowser, QPushButton, QDialog, QComboBox, QScrollArea)
-from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer
-from PyQt6.QtGui import QColor, QFont, QTextCursor
+from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer, QEvent
+from PyQt6.QtGui import QColor, QFont, QTextCursor, QMovie
 
 class LanguageSelectorDialog(QDialog):
     """
@@ -366,12 +366,16 @@ class SelectableCaptions(QTextBrowser):
         self.setStyleSheet("""
             QTextBrowser {
                 background: transparent; 
-                color: white; 
+                color: #FFFFFF; 
                 border: none; 
                 selection-background-color: rgba(139, 109, 208, 180);
             }
         """)
-        font = QFont("Figtree", 16, QFont.Weight.Bold)
+        self.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        self.document().setDocumentMargin(0)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        font = QFont("Figtree", 15, QFont.Weight.Bold)
         font.setFamilies(["Figtree", "Segoe UI", "Arial"])
         self.setFont(font)
         self.setLineWrapMode(QTextBrowser.LineWrapMode.WidgetWidth)
@@ -432,37 +436,38 @@ class SelectableCaptions(QTextBrowser):
 
 
 class CaptionManager:
-    def __init__(self, max_words=18):
-        self.lines = []
+    def __init__(self, max_words=100):
+        self.history = [] # Flat list of words
         self.current_partial = ""
         self.max_words = max_words
 
     def add_final(self, text):
-        if text:
-            words = text.strip().split()
-            self.lines.extend(words)
-            self._prune()
+        if text and text.strip():
+            self.history.extend(text.strip().split())
+            # Keep buffer manageable
+            if len(self.history) > self.max_words:
+                self.history = self.history[-self.max_words:]
         self.current_partial = ""
+
+    def _total_word_count(self):
+        return len(self.history)
 
     def update_partial(self, text):
         self.current_partial = text.strip() if text else ""
-        self._prune()
-
-    def _prune(self):
-        # Limit the number of total words in the history
-        if len(self.lines) > self.max_words:
-            self.lines = self.lines[-self.max_words:]
 
     def get_display_text(self):
-        # Only show a limited window of words to keep it to ~1-2 lines max
-        combined = list(self.lines)
-        if self.current_partial:
-            combined.extend(self.current_partial.split())
+        all_words = self.history + self.current_partial.split()
+        if not all_words:
+            return ""
             
-        if len(combined) > self.max_words:
-            combined = combined[-self.max_words:]
+        # Group into lines of 12 words
+        words_per_line = 12
+        lines = []
+        for i in range(0, len(all_words), words_per_line):
+            lines.append(" ".join(all_words[i : i + words_per_line]))
             
-        return " ".join(combined)
+        # Return the last 2 lines joined by '\n'
+        return "\n".join(lines[-2:])
 
 class SubtitleOverlay(QWidget):
     on_word_clicked = None
@@ -488,7 +493,7 @@ class SubtitleOverlay(QWidget):
     def __init__(self):
         super().__init__()
         self.current_lang_idx = 0
-        self.caption_manager = CaptionManager(max_words=18)
+        self.caption_manager = CaptionManager(max_words=100)
         self.custom_tooltip = TranslationTooltip()
         self.initUI()
         self.mining_mode = True
@@ -508,11 +513,9 @@ class SubtitleOverlay(QWidget):
         """)
         
         self.content_layout = QHBoxLayout(self.container)
-        self.content_layout.setContentsMargins(20, 8, 20, 8)
+        self.content_layout.setContentsMargins(20, 25, 20, 0)
+        self.content_layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         self.content_layout.setSpacing(15)
-        
-        # Gear icon (Left/Right?) User said "engranaje la opcion de cmahair idioma"
-        # In Windows captions it's on the right.
         
         # Language Pill (Small)
         self.lang_pill = QLabel(self.LANGUAGES[self.current_lang_idx]["name"])
@@ -539,6 +542,7 @@ class SubtitleOverlay(QWidget):
 
         # Words Area (Selectable Captions)
         self.captions_view = SelectableCaptions()
+        self.captions_view.setFixedHeight(65) # Suficiente para 2 líneas con un salto (\n)
         self.content_layout.addWidget(self.captions_view, 1)
 
         # Gear Icon
@@ -606,14 +610,17 @@ class SubtitleOverlay(QWidget):
         """)
 
         # Conservar el cursor si no hay selección manual del usuario
-        cursor = self.captions_view.textCursor()
-        had_selection = cursor.hasSelection()
-        
-        if not had_selection:
-            # Reemplazar texto limpiamente (esto quita el HTML previo)
+        if text != self.captions_view.toPlainText():
+            had_selection = not self.captions_view.textCursor().selectedText() == ""
+            cursor = self.captions_view.textCursor()
+            pos = cursor.position()
+            
             self.captions_view.setPlainText(text)
-            # Ir al final para auto-scroll
-            self.captions_view.moveCursor(QTextCursor.MoveOperation.End)
+            self.captions_view.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+            
+            if had_selection:
+                cursor.setPosition(pos)
+                self.captions_view.setTextCursor(cursor)
 
     def set_mining_mode(self, enabled):
         self.mining_mode = enabled
