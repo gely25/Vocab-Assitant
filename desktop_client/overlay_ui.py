@@ -513,8 +513,8 @@ class SubtitleOverlay(QWidget):
         """)
         
         self.content_layout = QHBoxLayout(self.container)
-        self.content_layout.setContentsMargins(20, 25, 20, 0)
-        self.content_layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        self.content_layout.setContentsMargins(20, 0, 20, 0)
+        self.content_layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.content_layout.setSpacing(15)
         
         # Language Pill (Small)
@@ -532,32 +532,25 @@ class SubtitleOverlay(QWidget):
             QLabel:hover { background-color: rgba(255, 255, 255, 0.15); }
         """)
         self.lang_pill.mousePressEvent = lambda e: self.open_settings.emit()
-        self.content_layout.addWidget(self.lang_pill)
-
-        # Status Label (The "Title" style from image)
-        self.status_label = QLabel("")
-        self.status_label.setStyleSheet("color: white; font-size: 15px; font-weight: 400;")
-        self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.content_layout.addWidget(self.status_label) 
-
+        self.content_layout.addWidget(self.lang_pill, 0, Qt.AlignmentFlag.AlignVCenter)
         # Words Area (Selectable Captions)
         self.captions_view = SelectableCaptions()
         self.captions_view.setFixedHeight(65) # Suficiente para 2 líneas con un salto (\n)
-        self.content_layout.addWidget(self.captions_view, 1)
+        self.content_layout.addWidget(self.captions_view, 1, Qt.AlignmentFlag.AlignVCenter)
 
         # Gear Icon
         self.settings_btn = QLabel("⚙")
         self.settings_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.settings_btn.setStyleSheet("color: rgba(255,255,255,0.6); font-size: 18px;")
         self.settings_btn.mousePressEvent = lambda e: self.open_settings.emit()
-        self.content_layout.addWidget(self.settings_btn)
+        self.content_layout.addWidget(self.settings_btn, 0, Qt.AlignmentFlag.AlignVCenter)
         
         # Close Area
         self.close_btn = QLabel("✕")
         self.close_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.close_btn.setStyleSheet("color: rgba(255,255,255,0.4); font-size: 14px; padding: 4px;")
         self.close_btn.mousePressEvent = lambda e: QApplication.instance().quit()
-        self.content_layout.addWidget(self.close_btn)
+        self.content_layout.addWidget(self.close_btn, 0, Qt.AlignmentFlag.AlignVCenter)
         
         self.layout.addWidget(self.container)
         self.setLayout(self.layout)
@@ -570,16 +563,14 @@ class SubtitleOverlay(QWidget):
 
     def set_status_message(self, msg: str):
         """Muestra un estado inicial con estilo tenue e itálico usando HTML."""
-        self.status_label.hide()
         self.captions_view.show()
         self.captions_view.setStyleSheet("QTextBrowser { background: transparent; border: none; }")
         self.captions_view.setHtml(f"<div style='color: rgba(255,255,255,0.5); font-style: italic; font-size: 16px;'>{msg}</div>")
 
 
     def set_status(self, text):
-        self.captions_view.hide()
-        self.status_label.show()
-        self.status_label.setText(text)
+        self.captions_view.show()
+        self.captions_view.setHtml(f"<div style='color: rgba(255,255,255,0.5); font-style: italic; font-size: 15px;'>{text}</div>")
 
     def set_partial(self, partial_text):
         if not partial_text: return
@@ -596,7 +587,6 @@ class SubtitleOverlay(QWidget):
         self._render_words_ui(self.caption_manager.get_display_text())
 
     def _render_words_ui(self, text):
-        self.status_label.hide()
         self.captions_view.show()
         
         # Restaurar estilos intensos (100% opacidad)
