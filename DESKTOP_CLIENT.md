@@ -50,14 +50,6 @@ Es una burbuja flotante que se superpone sobre cualquier ventana (YouTube, Netfl
 - **Problema**: La señal de clic no llegaba nunca tras un rediseño de UI porque se estaba instanciando erróneamente una lambda con referencias muertas, y porque el atributo de ventana `Qt.WindowDoesNotAcceptFocus` bloqueaba todo input de usuario en el modal.
 - **Solución**: Se eliminó la etiqueta restrictiva del OS y se arregló el sistema de propagación de eventos (`super().eventFilter()`). La interfaz ahora recibe y procesa interacciones correctamente sobre el overlay en Windows sin robar foco activo.
 
-### 10. Subtítulos que "bailan", se cortan o se amontonan
-- **Problema**: Inicialmente, borrar palabras viejas una por una causaba un "temblor" horizontal constante (jitter) que hacía imposible leer. Además, el texto a veces se desbordaba en 3 líneas o se le cortaba la "cabeza" o la "cola" a las letras (descenders/ascenders).
-- **Solución**: **Discrete Rolling Captions (Desplazamiento por Línea)**.
-  - **Lógica de Ventana Discreta**: El `CaptionManager` ahora segmenta el buffer de palabras en "líneas virtuales" de 12 palabras. Solo se muestran las últimas 2 líneas unidas por un `\n`.
-  - **Estabilidad Total**: Mientras hablas, la línea actual está fija y la de abajo se va llenando. Solo cuando se llena la segunda línea, la primera desaparece y la segunda "sube" a su lugar en un solo salto limpio. No hay movimiento palabra-a-palabra.
-  - **Fijación Geométrica**: El área de texto se fijó a **65px de alto**. Esto es el tamaño exacto para 2 líneas de 15px con holgura para letras como la 'g', 'p', 'y', haciendo físicamente imposible que asome una tercera línea por debajo.
-  - **Alineación Top-Left**: Se ancló el texto a la esquina superior izquierda (`AlignTop | AlignLeft`) para que el punto de inicio de lectura sea siempre el mismo.
-
 ---
 
 ## Arquitectura
@@ -78,9 +70,9 @@ main_app.py (Orquestador)
 │   │   ├── show_loading()   → aparece inmediatamente
 │   │   └── show_translation() → actualiza con traducción real
 │   └── CaptionManager
-│       ├── add_final(text)       → agrega palabras finales al buffer circular
+│       ├── add_final(text)       → agrega oración confirmada al buffer
 │       ├── update_partial(text)  → actualiza la frase en progreso
-│       └── get_display_text()    → segmenta en líneas y retorna ventana de 2 líneas (Rolling Window)
+│       └── get_display_text()    → retorna últimas 2 oraciones + partial
 │
 └── HoverWorker (QObject)
     └── translation_ready signal → actualiza tooltip desde hilo de fondo de forma thread-safe

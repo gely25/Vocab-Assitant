@@ -130,8 +130,8 @@ class TranslationTooltip(QWidget):
         hdr = QHBoxLayout()
         self.word_lbl = QLabel()
         self.word_lbl.setObjectName("word_lbl")
-        self.word_lbl.setWordWrap(False)
-        self.word_lbl.setMaximumWidth(220)
+        self.word_lbl.setWordWrap(True)   # permite wrap si la frase es larga
+        self.word_lbl.setMaximumWidth(240)
         hdr.addWidget(self.word_lbl, 1)
         
         close_lbl = QLabel("✕")
@@ -216,19 +216,30 @@ class TranslationTooltip(QWidget):
 
     def _place(self, global_pos):
         """Position ABOVE with adaptive height and safety margin."""
-        # Force layout to recalculate the height for our fixed width
-        h = self.layout().heightForWidth(self.FIXED_W) + 20
-        self.setFixedSize(self.FIXED_W, h)
+        
+        # 1. Asegurar que los labels conozcan su ancho para calcular el alto
+        target_w = self.FIXED_W - 32  # margen de 16px cada lado
+        self.trans_lbl.setFixedWidth(target_w)
+        self.def_lbl.setFixedWidth(target_w)
+        
+        # 2. Forzar recálculo real del layout
+        self.trans_lbl.updateGeometry()
+        self.def_lbl.updateGeometry()
+        self.card_vbox.activate()          # recalcula el layout del card
+        self.layout().activate()           # recalcula el layout exterior
+        
+        # 3. Calcular altura real usando sizeHint tras el activate()
+        total_h = self.layout().sizeHint().height() + 20  # +20 de padding seguro
+        self.setFixedSize(self.FIXED_W, total_h)
 
         screen = QApplication.primaryScreen().availableGeometry()
         x = max(screen.left() + 8,
                 min(global_pos.x() - self.FIXED_W // 2,
                     screen.right() - self.FIXED_W - 8))
         
-        # Position further up (60px offset) to avoid covering the subtitle bar
-        y = global_pos.y() - h - 60
+        y = global_pos.y() - total_h - 60
         if y < screen.top() + 8:
-            y = global_pos.y() + 40    # fallback below if near top
+            y = global_pos.y() + 40
         self.move(x, y)
 
     # ── public API ───────────────────────────────────────────────────
@@ -513,8 +524,8 @@ class SubtitleOverlay(QWidget):
         """)
         
         self.content_layout = QHBoxLayout(self.container)
-        self.content_layout.setContentsMargins(20, 0, 20, 0)
-        self.content_layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        self.content_layout.setContentsMargins(20, 22, 20, 0) # 22 is exact visual middle for 65px block in 110px total
+        self.content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.content_layout.setSpacing(15)
         
         # Language Pill (Small)
@@ -533,10 +544,18 @@ class SubtitleOverlay(QWidget):
         """)
         self.lang_pill.mousePressEvent = lambda e: self.open_settings.emit()
         self.content_layout.addWidget(self.lang_pill, 0, Qt.AlignmentFlag.AlignVCenter)
+
+        # Status Label (The "Title" style from image)
+        self.status_label = QLabel("")
+        self.status_label.setStyleSheet("color: white; font-size: 15px; font-weight: 400;")
+        self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.status_label.hide() # Ensure hidden by default
+        self.content_layout.addWidget(self.status_label) 
+
         # Words Area (Selectable Captions)
         self.captions_view = SelectableCaptions()
         self.captions_view.setFixedHeight(65) # Suficiente para 2 líneas con un salto (\n)
-        self.content_layout.addWidget(self.captions_view, 1, Qt.AlignmentFlag.AlignVCenter)
+        self.content_layout.addWidget(self.captions_view, 1, Qt.AlignmentFlag.AlignTop)
 
         # Gear Icon
         self.settings_btn = QLabel("⚙")
@@ -563,14 +582,16 @@ class SubtitleOverlay(QWidget):
 
     def set_status_message(self, msg: str):
         """Muestra un estado inicial con estilo tenue e itálico usando HTML."""
+        self.status_label.hide()
         self.captions_view.show()
         self.captions_view.setStyleSheet("QTextBrowser { background: transparent; border: none; }")
         self.captions_view.setHtml(f"<div style='color: rgba(255,255,255,0.5); font-style: italic; font-size: 16px;'>{msg}</div>")
 
 
     def set_status(self, text):
-        self.captions_view.show()
-        self.captions_view.setHtml(f"<div style='color: rgba(255,255,255,0.5); font-style: italic; font-size: 15px;'>{text}</div>")
+        self.captions_view.hide()
+        self.status_label.show()
+        self.status_label.setText(text)
 
     def set_partial(self, partial_text):
         if not partial_text: return
@@ -587,6 +608,7 @@ class SubtitleOverlay(QWidget):
         self._render_words_ui(self.caption_manager.get_display_text())
 
     def _render_words_ui(self, text):
+        self.status_label.hide()
         self.captions_view.show()
         
         # Restaurar estilos intensos (100% opacidad)
