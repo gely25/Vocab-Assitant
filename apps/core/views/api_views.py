@@ -179,25 +179,38 @@ def launch_desktop_client(request):
     import subprocess
     import sys
     import os
+    from django.conf import settings
     
-    # Ruta absoluta al script
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    # Usar settings.BASE_DIR si está disponible para mayor fiabilidad
+    base_dir = getattr(settings, 'BASE_DIR', None)
+    if not base_dir:
+        # Fallback manual: apps/core/views/api_views.py -> 4 niveles arriba
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    
     script_path = os.path.join(base_dir, 'desktop_client', 'main_app.py')
+    
+    if not os.path.exists(script_path):
+        return JsonResponse({
+            'status': 'error', 
+            'message': f'No se encontró el ejecutable en: {script_path}'
+        })
     
     try:
         command = [sys.executable, script_path]
-        print(f"DEBUG: Intentando lanzar -> {' '.join(command)}")
+        print(f"DEBUG: Lanzando asistente -> {' '.join(command)}")
         
-        # Popen para no bloquear el proceso de Django
+        # Popen desvinculado
+        # creationflags solo en Windows para evitar ventana de consola si se desea
         process = subprocess.Popen(command, 
                          stdout=subprocess.DEVNULL, 
                          stderr=None, 
+                         cwd=base_dir,
                          creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0)
         
         return JsonResponse({
             'status': 'ok', 
-            'message': 'Asistente iniciado',
+            'message': 'Asistente de escritorio lanzado ✓',
             'pid': process.pid
         })
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return JsonResponse({'status': 'error', 'message': f'Error al lanzar: {str(e)}'})

@@ -7,142 +7,160 @@
 
 {% block extra_css %}
 <style>
-    .hub-container {
-        max-width: 650px;
-        margin: auto;
-        padding: 40px 24px;
-        background: transparent;
-        text-align: center;
-    }
-    .hub-icon {
-        width: 80px;
-        height: 80px;
-        background: var(--purple-ghost);
-        border-radius: 28px;
+    /* Full Center Layout override */
+    .full-center-wrapper {
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 20px;
-        color: var(--purple-mid);
+        height: 100%;
+        width: 100%;
+        background: var(--cream);
     }
-    .hub-icon svg { width: 40px; height: 40px; }
+    
+    /* Override grid defined in base.html specifically for this view */
+    /* This removes the 340px side column that was offsetting the center */
+    @media screen and (min-width: 1px) {
+        .main {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    .hub-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 40px 24px;
+        background: transparent;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        font-family: 'DM Sans', sans-serif;
+    }
+    .hub-icon {
+        width: 100px;
+        height: 100px;
+        background: var(--purple-ghost);
+        border-radius: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--purple-mid);
+        box-shadow: 0 10px 30px rgba(139,109,208,0.1);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .hub-icon:hover { transform: scale(1.1) rotate(5deg); }
+    .hub-icon svg { width: 50px; height: 50px; }
+    
     .hub-title {
-        font-family: 'Syne', sans-serif;
-        font-size: 24px;
-        font-weight: 800;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 34px;
+        font-weight: 700;
         color: var(--purple-deep);
-        margin-bottom: 12px;
-        letter-spacing: -0.5px;
+        margin: 0;
+        letter-spacing: -1px;
     }
     .hub-desc {
-        font-size: 14px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 16px;
         line-height: 1.6;
         color: var(--muted);
-        margin-bottom: 32px;
-        max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0;
+        max-width: 520px;
     }
     .instruction-card {
         background: var(--white);
-        border: 1px solid rgba(139, 109, 208, 0.12);
-        border-radius: var(--radius-md);
-        padding: 24px;
-        text-align: left;
-        margin-bottom: 24px;
-        box-shadow: var(--shadow-sm);
-    }
-    .code-block {
-        background: var(--purple-deep);
-        color: #C8B8F0;
-        padding: 10px 14px;
-        border-radius: 8px;
-        font-family: 'DM Sans', monospace;
-        font-size: 13px;
-        margin: 10px 0;
-        display: block;
-        overflow-x: auto;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1.5px solid rgba(139, 109, 208, 0.1);
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        width: 100%;
+        box-shadow: var(--shadow-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
     }
     .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 6px 16px;
+        gap: 10px;
+        padding: 10px 24px;
         border-radius: 100px;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
         background: var(--purple-ghost);
         color: var(--purple-mid);
+        border: 1px solid rgba(139, 109, 208, 0.1);
     }
     .status-dot {
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         background: #F7B731;
         border-radius: 50%;
-        animation: pulse 1.5s infinite;
+        animation: pulse 2s infinite;
     }
     @keyframes pulse {
-        0% { opacity: 0.4; }
-        50% { opacity: 1; }
-        100% { opacity: 0.4; }
+        0% { transform: scale(0.95); opacity: 0.6; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(0.95); opacity: 0.6; }
     }
     .launch-btn {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        padding: 14px 28px;
+        justify-content: center;
+        gap: 12px;
+        padding: 18px 36px;
         background: var(--purple-mid);
         color: var(--white);
         border: none;
-        border-radius: 14px;
-        font-size: 15px;
+        border-radius: 18px;
+        font-size: 16px;
         font-weight: 700;
+        font-family: 'DM Sans', sans-serif;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 4px 15px rgba(91,63,166,0.3);
+        box-shadow: 0 6px 20px rgba(91,63,166,0.3);
     }
     .launch-btn:hover {
         background: var(--purple-deep);
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(91,63,166,0.4);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 30px rgba(91,63,166,0.4);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div style="flex: 1; overflow-y: auto;">
+<div class="full-center-wrapper">
     <div class="hub-container">
         <div class="hub-icon">
-            <svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="3"/><path d="M16 3l-4 4-4-4"/><path d="M7 13h4M7 17h10" stroke-linecap="round"/></svg>
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="3"/><path d="M16 3l-4 4-4-4"/><path d="M7 13h4M7 17h10" stroke-linecap="round"/></svg>
         </div>
-        <h1 class="hub-title">Live Caption Global</h1>
-        <p class="hub-desc">Traduce cualquier video, videollamada o audio de tu sistema en tiempo real con nuestra aplicación de escritorio.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:center;">
+            <h1 class="hub-title">Live Caption Global</h1>
+            <p class="hub-desc">Traduce cualquier video, audio o videollamada de tu sistema en tiempo real.</p>
+        </div>
         
         <div class="instruction-card">
-            <h3 style="margin-bottom: 8px; font-size: 16px; color: var(--purple-mid);">🚀 ¿Cómo funciona?</h3>
-            <p style="font-size: 13px; color: var(--ink); line-height: 1.5;">
-                Para capturar audio de <strong>cualquier aplicación</strong>, necesitamos un pequeño asistente que se ejecute en tu PC.
+            <div style="width:50px; height:50px; background:var(--purple-ghost); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--purple-mid); font-size:24px; margin-bottom:10px;">🚀</div>
+            <h3 style="font-family:'DM Sans', sans-serif; font-size: 20px; color: var(--purple-deep); font-weight:700;">¿Cómo funciona?</h3>
+            <p style="font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 400px;">
+                Necesitamos lanzar un pequeño asistente flotante en tu escritorio para capturar el audio del sistema.
             </p>
             
-            <div style="margin-top: 24px; text-align: center;">
-                <button class="launch-btn" onclick="launchAssistant()">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
-                    Iniciar Asistente Global
-                </button>
-                <p style="font-size: 11px; color: var(--muted); margin-top: 12px;">Solo disponible en ejecución local (127.0.0.1)</p>
-            </div>
+            <button class="launch-btn" onclick="launchAssistant()" style="margin-top:10px;">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                Iniciar Asistente Global
+            </button>
+            <p style="font-size: 11px; color: var(--muted); opacity: 0.7;">Solo disponible en modo local</p>
         </div>
 
-        <div class="status-badge">
+        <div class="status-badge" style="margin-top:10px;">
             <div class="status-dot"></div>
-            Esperando conexión del cliente...
+            <span>Esperando conexión del cliente...</span>
         </div>
-
-        <p style="margin-top: 24px; font-size: 13px; color: var(--muted);">
-            Una vez abierto, verás una barra transparente sobre tus aplicaciones.<br>
-            ¡Haz clic en cualquier palabra para minarla al instante!
-        </p>
     </div>
 </div>
 {% endblock %}
