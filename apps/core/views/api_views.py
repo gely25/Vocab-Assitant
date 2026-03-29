@@ -1,4 +1,10 @@
 import json
+import subprocess
+import sys
+import os
+import time
+from django.conf import settings
+from django.core.cache import cache
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ..services.translation_service import TranslationService
@@ -176,10 +182,6 @@ def generate_examples(request):
 
 def launch_desktop_client(request):
     """Lanza el cliente de escritorio (solo funciona localmente)"""
-    import subprocess
-    import sys
-    import os
-    from django.conf import settings
     
     # Usar settings.BASE_DIR si está disponible para mayor fiabilidad
     base_dir = getattr(settings, 'BASE_DIR', None)
@@ -209,8 +211,20 @@ def launch_desktop_client(request):
         
         return JsonResponse({
             'status': 'ok', 
-            'message': 'Asistente de escritorio lanzado ✓',
+            'message': 'Asistente de escritorio lanzado',
             'pid': process.pid
         })
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': f'Error al lanzar: {str(e)}'})
+
+@csrf_exempt
+def client_ping(request):
+    """Recibe un 'latido' del cliente de escritorio para marcarlo como online"""
+    cache.set('client_last_seen', time.time(), 30) # Expira en 30s por seguridad
+    return JsonResponse({'status': 'ok'})
+
+def client_status(request):
+    """Devuelve si el cliente de escritorio está actualmente conectado"""
+    last_seen = cache.get('client_last_seen', 0)
+    is_online = (time.time() - last_seen) < 15
+    return JsonResponse({'online': is_online})

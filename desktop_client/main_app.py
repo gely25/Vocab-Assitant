@@ -72,6 +72,11 @@ class VocabAssistantDesktop:
         self._hover_timer.timeout.connect(self._fire_hover_request)
         self._hover_pending = None   # (word, pos, source_lang, my_id, is_pinned)
 
+        # Heartbeat: Avisa al servidor que estamos en línea
+        self._ping_timer = QTimer()
+        self._ping_timer.timeout.connect(lambda: threading.Thread(target=self.api.ping, daemon=True).start())
+        self._ping_timer.start(10000) # Cada 10 segundos
+
     def handle_status(self, msg):
         print(f"DEBUG: {msg}")
         

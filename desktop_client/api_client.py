@@ -40,3 +40,11 @@ class VocabAPIClient:
         except Exception as e:
             print(f"API Error (get_stats): {e}")
             return None
+
+    def ping(self):
+        """Envía un latido al servidor para indicar que está en línea"""
+        try:
+            requests.post(f"{self.base_url}/api/client/ping/", timeout=2)
+            return True
+        except:
+            return False

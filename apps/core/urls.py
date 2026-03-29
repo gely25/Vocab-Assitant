@@ -2,7 +2,7 @@ from django.urls import path
 from .views.home import home, live_caption
 from .views.api_views import (
     define_word, save_word, ocr_upload, explain_context, 
-    generate_examples, launch_desktop_client
+    generate_examples, launch_desktop_client, client_ping, client_status
 )
 from .views.review_views import review_home, flashcards_due, review_action, flashcards_stats, reset_card
 
@@ -12,6 +12,8 @@ urlpatterns = [
     path('', home, name='home'),
     path('live/', live_caption, name='live_caption'),
     path('api/launch/', launch_desktop_client, name='launch_desktop'),
+    path('api/client/ping/', client_ping, name='client_ping'),
+    path('api/client/status/', client_status, name='client_status'),
     path('define/', define_word, name='define_word'),
     path('save/', save_word, name='save_word'),
     path('ocr/', ocr_upload, name='ocr_upload'),

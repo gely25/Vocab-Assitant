@@ -173,14 +173,40 @@
             .then(r => r.json())
             .then(data => {
                 if (data.status === 'ok') {
-                    showToast("¡Asistente en línea! ✓");
+                    showToast("¡Asistente lanzado! ✓");
                 } else {
                     showToast("Error al iniciar: " + data.message, "#F7B731");
                 }
-            })
-            .catch(err => {
-                showToast("Fallo de conexión", "#F7B731");
             });
     }
+
+    // Polling de estado del cliente
+    function checkClientStatus() {
+        fetch("{% url 'core:client_status' %}")
+            .then(r => r.json())
+            .then(data => {
+                const badge = document.querySelector('.status-badge');
+                const dot = document.querySelector('.status-dot');
+                const text = badge.querySelector('span');
+
+                if (data.online) {
+                    dot.style.background = 'var(--accent-teal)';
+                    dot.style.animation = 'none';
+                    text.textContent = 'Asistente en línea ✓';
+                    badge.style.background = 'rgba(78, 205, 196, 0.1)';
+                    badge.style.color = '#00897B';
+                } else {
+                    dot.style.background = '#F7B731';
+                    dot.style.animation = 'pulse 2s infinite';
+                    text.textContent = 'Esperando conexión del cliente...';
+                    badge.style.background = 'var(--purple-ghost)';
+                    badge.style.color = 'var(--purple-mid)';
+                }
+            })
+            .catch(() => {});
+    }
+
+    setInterval(checkClientStatus, 3000);
+    checkClientStatus();
 </script>
 {% endblock %}

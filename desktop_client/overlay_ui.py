@@ -359,7 +359,7 @@ class TranslationTooltip(QWidget):
         payload = dict(self._word_data) if self._word_data else {}
         if 'original' not in payload and 'word' not in payload:
             payload['word'] = word
-        print(f"[SAVE] → emitiendo save_requested: word='{word}'")
+        print(f"[SAVE] -> emitiendo save_requested: word='{word}'")
         self.save_btn.setText("Guardando…")
         self.save_btn.setEnabled(False)
         self.save_requested.emit(payload)
