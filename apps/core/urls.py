@@ -4,7 +4,7 @@ from .views.api_views import (
     define_word, save_word, ocr_upload, explain_context, 
     generate_examples, launch_desktop_client, client_ping, client_status
 )
-from .views.review_views import review_home, flashcards_due, review_action, flashcards_stats, reset_card
+from .views.review_views import review_home, flashcards_due, review_action, flashcards_stats, reset_card, ai_explore
 
 app_name = 'core'
 
@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/reset/<int:card_id>/', reset_card, name='reset_card'),
     path('api/ai/explain/', explain_context, name='ai_explain'),
     path('api/ai/examples/', generate_examples, name='ai_examples'),
+    path('api/ai/explore/', ai_explore, name='ai_explore_generic'),
 ]

@@ -20,7 +20,7 @@ def flashcards_due(request):
         else:
             due_cards = FlashcardService.get_due_flashcards()
             
-        data = []
+            data = []
         for card in due_cards:
             data.append({
                 'id': card.id,
@@ -29,7 +29,11 @@ def flashcards_due(request):
                 'definition': card.definition,
                 'phonetic': card.phonetic,
                 'example': card.example,
-                'synonyms': card.synonyms
+                'synonyms': card.synonyms,
+                'part_of_speech': card.part_of_speech,
+                'category': card.category,
+                'source_lang': card.source_lang,
+                'target_lang': card.target_lang
             })
         return JsonResponse({'flashcards': data, 'is_all_mode': mode == 'all'})
     except Exception as e:
@@ -101,3 +105,40 @@ def reset_card(request, card_id):
         return JsonResponse({'error': 'Flashcard no encontrada'}, status=404)
         
     return JsonResponse({'status': 'ok', 'message': 'Progreso reiniciado'})
+
+def ai_explore(request):
+    """Explora a fondo una palabra usando diferentes herramientas de IA"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+    try:
+        body = json.loads(request.body)
+        word = body.get('word', '').strip()
+        action = body.get('action', 'chat').strip()
+        context = body.get('context', '').strip()
+        query = body.get('query', '').strip()
+        source_lang = body.get('source_lang', 'en')
+        target_lang = body.get('target_lang', 'es')
+        
+        if not word:
+            return JsonResponse({'error': 'Falta la palabra'}, status=400)
+            
+        from ..services.ai_service import AIService
+        
+        if action == 'synonyms':
+            result = AIService.get_synonyms(word, context, source_lang, target_lang)
+        elif action == 'caution':
+            result = AIService.get_usage_caution(word, source_lang, target_lang)
+        elif action == 'etymology':
+            result = AIService.get_etymology(word, target_lang)
+        elif action == 'chat':
+            result = AIService.chat_about_word(word, query or "Cuéntame más sobre esta palabra", source_lang, target_lang)
+        elif action == 'examples':
+            result = AIService.generate_examples(word, context, source_lang, target_lang)
+        else:
+            return JsonResponse({'error': 'Acción no válida'}, status=400)
+            
+        return JsonResponse(result)
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

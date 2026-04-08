@@ -73,34 +73,6 @@
   .badge-upcoming { background: #FEF3C7; color: #D97706; }
   .badge-dominated { background: #E0F2F1; color: #00897B; }
 
-  /* Review Stage Specifics */
-  .session-stage { width: 100%; display: none; align-items: center; flex-direction: column; gap: 32px; }
-  .session-stage.active { display: flex; }
-
-  .flip-card-wrapper { width: 100%; max-width: 500px; perspective: 1500px; height: 320px; margin: 20px 0; }
-  .flip-card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.4, 0, .2, 1); cursor: pointer; }
-  .flip-card.flipped { transform: rotateY(180deg); }
-  .card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 28px; border: 2.5px solid rgba(139, 109, 208, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; box-shadow: var(--shadow-md); background: var(--white); }
-  .card-back { transform: rotateY(180deg); background: var(--purple-deep); color: var(--white); border-color: var(--purple-mid); }
-  
-  /* Font requested: "mas normal" -> DM Sans */
-  .card-word { font-family: 'DM Sans', sans-serif; font-size: 42px; font-weight: 700; text-align: center; color: var(--purple-deep); }
-  .card-back .card-word { color: var(--white); }
-  .card-translation { font-family: 'DM Sans', sans-serif; font-size: 30px; font-weight: 600; color: var(--white); text-align: center; }
-
-  .action-btns { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
-  .btn-primary { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--purple-deep); color: var(--white); font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; box-shadow: 0 8px 20px rgba(45,27,94,0.15); }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(45,27,94,0.2); }
-
-  .quality-btns { display: none; width: 100%; gap: 12px; }
-  .quality-btns.visible { display: flex; }
-  .btn-q { flex: 1; padding: 16px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; transition: all 0.2s; font-size: 18px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .btn-q:hover { transform: translateY(-3px); filter: brightness(1.05); }
-  
-  .btn-q-no { background: #FEE2E2; color: #EF4444; border: 1.5px solid rgba(239, 68, 68, 0.1); }
-  .btn-q-hard { background: #FEF3C7; color: #D97706; border: 1.5px solid rgba(217, 119, 6, 0.1); }
-  .btn-q-easy { background: var(--accent-teal); color: white; box-shadow: 0 6px 15px rgba(78,205,196,0.3); }
-
   /* Accordion styling */
   .accordion-header { cursor: pointer; user-select: none; transition: background 0.2s; padding: 12px 0; border-bottom: 2px solid var(--purple-ghost); margin-top: 15px; }
   .accordion-header:hover { opacity: 0.8; }
@@ -109,7 +81,270 @@
   .chevron { transition: transform 0.3s ease; }
   .active .chevron { transform: rotate(180deg); }
 
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  /* Deep Purple Premium Theme Updates */
+  :root {
+    --purple-deep: #2D1B5E;
+    --purple-mid: #6C5CE7;
+    --purple-light: #A29BFE;
+    --purple-ghost: #F4F2FF;
+    --accent-teal: #00B894;
+    --accent-red: #FF7675;
+    --accent-yellow: #FDCB6E;
+  }
+
+  .session-stage { width: 100%; display: none; align-items: center; flex-direction: column; gap: 32px; background: #F8F9FE; min-height: 100vh; padding-top: 40px; }
+  .session-stage.active { display: flex; }
+  
+  /* Context Card Styling */
+  .context-card {
+    background: white;
+    border-radius: 32px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    border: 1px solid rgba(139,109,208,0.1);
+    position: relative;
+    animation: slideUp 0.5s ease-out;
+  }
+
+  .context-label {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--purple-light);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .card-word-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--purple-deep);
+    margin: 0 0 10px 0;
+    line-height: 1.1;
+  }
+
+  .card-pos-tag {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--purple-mid);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    display: flex;
+    gap: 8px;
+    opacity: 0.8;
+  }
+
+  .definition-text {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #4A4A68;
+    margin-bottom: 30px;
+  }
+
+  .example-box {
+    background: var(--purple-ghost);
+    border-radius: 20px;
+    padding: 24px;
+    border-left: 4px solid var(--purple-mid);
+    margin-bottom: 20px;
+  }
+
+  .example-text {
+    font-size: 16px;
+    color: var(--purple-deep);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .example-text b, .example-text strong {
+    color: var(--purple-mid);
+    text-decoration: underline;
+  }
+
+  /* Action Buttons Refresh */
+  .quality-btns-grid {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .btn-q-revamp {
+    flex: 1;
+    border-radius: 24px;
+    padding: 24px 15px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+  }
+
+  .btn-q-revamp:hover { transform: translateY(-8px); }
+  .btn-q-revamp i { font-size: 24px; }
+
+  .btn-no { background: #FFF0F0; color: #D63031; }
+  .btn-hard { background: #FFF9E6; color: #E17055; }
+  .btn-easy { background: #E6FFF9; color: var(--accent-teal); }
+
+  /* AI Explore Button */
+  .ai-explore-btn {
+    background: white;
+    border: 1.5px solid var(--purple-light);
+    color: var(--purple-mid);
+    padding: 14px 28px;
+    border-radius: 99px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(139,109,208,0.1);
+  }
+
+  .ai-explore-btn:hover {
+    background: var(--purple-mid);
+    color: white;
+    transform: scale(1.05);
+  }
+
+  /* Modal Deep Dive */
+  .ai-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(45, 27, 94, 0.4);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+
+  .ai-modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+
+  .ai-modal-content {
+    background: white;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+
+  .ai-modal-header {
+    background: var(--purple-deep);
+    padding: 30px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .ai-modal-body {
+    padding: 30px;
+    overflow-y: auto;
+    flex: 1;
+    background: white;
+  }
+
+  .ai-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .shortcut-chip {
+    padding: 8px 16px;
+    background: var(--purple-ghost);
+    color: var(--purple-mid);
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .shortcut-chip:hover {
+    border-color: var(--purple-mid);
+    background: white;
+  }
+
+  .ai-chat-input-box {
+    padding: 20px 30px;
+    border-top: 1px solid var(--purple-ghost);
+    display: flex;
+    gap: 12px;
+  }
+
+  .ai-input {
+    flex: 1;
+    border: 1.5px solid var(--purple-ghost);
+    padding: 12px 20px;
+    border-radius: 16px;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-input:focus { border-color: var(--purple-mid); }
+
+  .chat-bubble {
+    padding: 14px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 85%;
+    margin-bottom: 12px;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .user-bubble {
+    background: var(--purple-mid);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 12px rgba(91, 63, 166, 0.2);
+  }
+
+  .ai-bubble {
+    background: var(--purple-ghost);
+    color: var(--purple-deep);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(139, 109, 208, 0.1);
+  }
+
+  .loading-msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .btn-primary { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--purple-deep); color: var(--white); font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; box-shadow: 0 8px 20px rgba(45,27,94,0.15); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(45,27,94,0.2); }
   .empty-state { background:white; padding:50px 40px; border-radius:24px; text-align:center; border:1.5px solid rgba(139,109,208,0.1); width:100%; max-width:520px; box-shadow: var(--shadow-md); animation: fadeIn 0.5s ease-out; }
 {% endblock %}
 
@@ -158,11 +393,46 @@
 
   <!-- STUDY SESSION STAGE -->
   <div id="session-ui" class="session-stage">
-     <div style="width:100%; max-width:540px; display:flex; justify-content:space-between; align-items:center;">
-        <button onclick="exitSession()" style="background:none; border:none; color:var(--purple-mid); font-weight:700; cursor:pointer;">← Volver</button>
-        <div class="streak-badge" id="session-counter">0 / 0</div>
+     <div style="width:100%; max-width:600px; display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <button onclick="exitSession()" style="background:none; border:none; color:var(--purple-mid); font-weight:700; cursor:pointer; display: flex; align-items: center; gap: 6px;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Volver
+        </button>
+        <div class="streak-badge" id="session-counter" style="background: var(--purple-ghost); color: var(--purple-deep);">0 / 0</div>
      </div>
-     <div id="review-stage" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:28px;"></div>
+     <div id="review-stage" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:32px;"></div>
+  </div>
+
+  <!-- AI EXPLORE MODAL -->
+  <div class="ai-modal-overlay" id="ai-modal">
+    <div class="ai-modal-content">
+      <div class="ai-modal-header">
+        <div>
+          <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">IA · OLLAMA LLAMA3.2</span>
+          <h2 id="ai-modal-word" style="margin: 5px 0 0 0; font-family: 'DM Sans', sans-serif;">word</h2>
+        </div>
+        <button onclick="closeAIModal()" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer;">×</button>
+      </div>
+      <div class="ai-modal-body">
+        <div class="ai-shortcuts">
+          <div class="shortcut-chip" onclick="executeAIAction('examples')">Dame 3 ejemplos más</div>
+          <div class="shortcut-chip" onclick="executeAIAction('synonyms')">¿Sinónimos?</div>
+          <div class="shortcut-chip" onclick="executeAIAction('caution')">¿Cuándo NO se usa?</div>
+          <div class="shortcut-chip" onclick="executeAIAction('etymology')">Etimología</div>
+        </div>
+        <div id="ai-response-area" style="display: flex; flex-direction: column;">
+           <div style="text-align: center; padding: 40px 20px; color: var(--muted);">
+              Usa los accesos rápidos o escribe tu pregunta sobre <span id="ai-word-span" style="font-weight: 800; color: var(--purple-mid);"></span>
+           </div>
+        </div>
+      </div>
+      <div class="ai-chat-input-box">
+        <input type="text" id="ai-chat-input" class="ai-input" placeholder="Pregunta sobre esta palabra..." onkeypress="if(event.key==='Enter') executeAIAction('chat')">
+        <button id="ai-send-btn" onclick="executeAIAction('chat')" style="background: var(--purple-mid); border: none; color: white; width: 48px; height: 48px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 {% endblock %}
 
@@ -347,9 +617,6 @@
     const stage = document.getElementById('review-stage');
     const total = dueCards.length;
     
-    // Counter: Progress through original list
-    // If we have finished the original set but some are repeating, 
-    // we show "Repasando fallos" or similar, or just cap the counter.
     let displayIndex = currentIndex + 1;
     let displayTotal = originalTotal;
     
@@ -370,46 +637,289 @@
     }
 
     const card = dueCards[currentIndex];
-    stage.innerHTML = `
-      <div class="flip-card-wrapper">
-        <div class="flip-card" id="main-card" onclick="revealCard()">
-          <div class="card-face card-front">
-            <div class="card-word">${card.word}</div>
+    const hasDef = !!card.definition.trim();
+    
+    // Auto-detect if it's a phrase or single word
+    const isPhrase = card.word.trim().split(/\s+/).length > 1;
+    const itemType = isPhrase ? (card.part_of_speech || 'Frase / Phrasal Verb') : (card.part_of_speech || 'Palabra');
+    const definitionLabel = isPhrase ? 'SENTIDO / CONTEXTO' : 'DEFINICIÓN';
+
+    if (!hasDef) {
+      // WORD-FIRST layout (for phrases/phrasal verbs without definitions)
+      stage.innerHTML = `
+        <div class="context-card" id="main-context-card">
+          <span class="context-label">${isPhrase ? 'FRASE / PHRASAL VERB' : 'PALABRA'}</span>
+          <h2 class="card-word-title" style="${isPhrase ? 'font-size: 32px;' : ''}">${card.word}</h2>
+          <div class="card-pos-tag">
+            <span>${itemType}</span>
+            ${card.category ? `<span>·</span> <span>${card.category}</span>` : ''}
           </div>
-          <div class="card-face card-back">
-            <div class="card-translation">${card.translation}</div>
+
+          <div id="reveal-area" style="text-align: center; margin-top: 20px;">
+             <button class="btn-primary" id="reveal-btn" onclick="revealCard()" style="max-width: 300px;">Revelar traducción</button>
+          </div>
+
+          <div id="answer-area" style="display: none; animation: fadeIn 0.5s;">
+             <hr style="border: none; border-top: 1.5px solid var(--purple-ghost); margin: 30px 0;">
+             <span class="context-label">TRADUCCIÓN</span>
+             <div class="example-box" style="background: var(--purple-deep); border-left-color: var(--accent-teal);">
+               <p class="example-text" style="color: white; font-weight: 600; font-family: 'DM Sans', sans-serif;">${card.translation}</p>
+             </div>
+
+             ${card.example ? `
+               <span class="context-label">EJEMPLO</span>
+               <div class="example-box" style="background: var(--purple-ghost); border-left: none; padding-left: 20px;">
+                 <p class="example-text" style="color: var(--purple-deep); font-style: italic;">${card.example}</p>
+               </div>
+             ` : ''}
+
+             <div style="display: flex; justify-content: center; margin-top: 25px;">
+                <button class="ai-explore-btn" onclick="openAIModal()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                  Explorar con IA
+                </button>
+             </div>
           </div>
         </div>
-      </div>
-      <div class="action-btns">
-        <button class="btn-primary" id="reveal-btn" onclick="revealCard()">Revelar respuesta</button>
-        <div class="quality-btns" id="quality-btns">
-          <button class="btn-q btn-q-no" onclick="handleReview(2)">
-            <span class="q-icon">❌</span>
-            <span style="font-size:12px; margin-top:2px;">No recuerdo</span>
-          </button>
-          <button class="btn-q btn-q-hard" onclick="handleReview(3)">
-            <span class="q-icon">😐</span>
-            <span style="font-size:12px; margin-top:2px;">Difícil</span>
-          </button>
-          <button class="btn-q btn-q-easy" onclick="handleReview(5)">
-            <span class="q-icon">✔</span>
-            <span style="font-size:12px; margin-top:2px;">Fácil</span>
-          </button>
+
+        <div class="quality-btns-grid" id="quality-btns" style="display: none;">
+          <button class="btn-q-revamp btn-no" onclick="handleReview(2)"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg> No recuerdo</button>
+          <button class="btn-q-revamp btn-hard" onclick="handleReview(3)"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 21a9 9 0 100-18 9 9 0 000 18z"/><path d="M9 10h.01M15 10h.01"/><path d="M8 15h8"/></svg> Difícil</button>
+          <button class="btn-q-revamp btn-easy" onclick="handleReview(5)"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Fácil</button>
+        </div>`;
+    } else {
+      // CONTEXT-FIRST layout (standard behavior with definition)
+      stage.innerHTML = `
+        <div class="context-card" id="main-context-card">
+          <span class="context-label">${definitionLabel}</span>
+          <div class="definition-text">${card.definition}</div>
+          
+          ${card.example ? `
+            <div id="example-section">
+              <span class="context-label">EJEMPLO DE USO</span>
+              <div class="example-box">
+                <p class="example-text">${card.example}</p>
+              </div>
+            </div>
+          ` : ''}
+
+          <div id="reveal-area" style="text-align: center; margin-top: 20px;">
+             <button class="btn-primary" id="reveal-btn" onclick="revealCard()" style="max-width: 300px;">Revelar respuesta</button>
+          </div>
+
+          <div id="answer-area" style="display: none; animation: fadeIn 0.5s;">
+             <hr style="border: none; border-top: 1.5px solid var(--purple-ghost); margin: 30px 0;">
+             <span class="context-label">${isPhrase ? 'FRASE / PHRASAL VERB' : 'PALABRA'}</span>
+             <h2 class="card-word-title" style="${isPhrase ? 'font-size: 32px;' : ''}">${card.word}</h2>
+             <div class="card-pos-tag">
+               <span>${itemType}</span>
+               ${card.category ? `<span>·</span> <span>${card.category}</span>` : ''}
+             </div>
+             
+             <div class="example-box" style="background: var(--purple-deep); border-left-color: var(--accent-teal);">
+               <p class="example-text" style="color: white; font-weight: 600; font-family: 'DM Sans', sans-serif;">${card.translation}</p>
+             </div>
+
+             <div style="display: flex; justify-content: center; margin-top: 25px;">
+                <button class="ai-explore-btn" onclick="openAIModal()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                  Explorar con IA
+                </button>
+             </div>
+          </div>
         </div>
-      </div>`;
+
+        <div class="quality-btns-grid" id="quality-btns" style="display: none;">
+          <button class="btn-q-revamp btn-no" onclick="handleReview(2)"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg> No recuerdo</button>
+          <button class="btn-q-revamp btn-hard" onclick="handleReview(3)"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 21a9 9 0 100-18 9 9 0 000 18z"/><path d="M9 10h.01M15 10h.01"/><path d="M8 15h8"/></svg> Difícil</button>
+          <button class="btn-q-revamp btn-easy" onclick="handleReview(5)"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Fácil</button>
+        </div>`;
+    }
   }
 
   function revealCard() {
-    document.getElementById('main-card').classList.add('flipped');
-    document.getElementById('reveal-btn').style.display = 'none';
-    document.getElementById('quality-btns').classList.add('visible');
+    document.getElementById('reveal-area').style.display = 'none';
+    document.getElementById('answer-area').style.display = 'block';
+    document.getElementById('quality-btns').style.display = 'flex';
+    
+    // Smooth scroll to bottom if needed
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   }
 
   function handleReview(quality) {
     const card = dueCards[currentIndex];
-    fetch(`/api/review/${card.id}/`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') }, body: JSON.stringify({ quality }) })
-      .then(() => { if (quality < 3) dueCards.push(card); currentIndex++; renderReview(); });
+    fetch(`/api/review/${card.id}/`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') }, 
+      body: JSON.stringify({ quality }) 
+    }).then(() => { 
+      if (quality < 3) dueCards.push(card); 
+      currentIndex++; 
+      renderReview(); 
+    });
+  }
+
+  // --- AI MODAL LOGIC ---
+  let lastExploredCardId = null;
+
+  function openAIModal() {
+    const card = dueCards[currentIndex];
+    const modalWord = document.getElementById('ai-modal-word');
+    if (modalWord) modalWord.textContent = card.word;
+    
+    document.getElementById('ai-modal').classList.add('active');
+
+    // Only reset if it's a different card than before
+    if (lastExploredCardId !== card.id) {
+      lastExploredCardId = card.id;
+      document.getElementById('ai-chat-input').value = '';
+      document.getElementById('ai-response-area').innerHTML = `
+        <div style="text-align: center; padding: 40px 20px; color: var(--muted); animation: fadeIn 0.4s;">
+          Usa los accesos rápidos o escribe tu pregunta sobre <span style="font-weight: 800; color: var(--purple-mid);">${card.word}</span>
+        </div>
+      `;
+    }
+  }
+
+  function closeAIModal() {
+    document.getElementById('ai-modal').classList.remove('active');
+  }
+
+  function executeAIAction(action) {
+    const card = dueCards[currentIndex];
+    const responseArea = document.getElementById('ai-response-area');
+    const input = document.getElementById('ai-chat-input');
+    const query = input.value;
+    const btn = document.getElementById('ai-send-btn');
+    
+    if (action === 'chat' && !query.trim()) return;
+
+    // Loading State on Button
+    if (action === 'chat') {
+      btn.disabled = true;
+      btn.innerHTML = `<div class="loading-spinner" style="width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>`;
+      
+      // Append User Bubble
+      responseArea.insertAdjacentHTML('beforeend', `<div class="chat-bubble user-bubble">${query}</div>`);
+      input.value = '';
+    } else {
+      // For chips, we usually want to clear or show specifically
+      responseArea.innerHTML = '';
+    }
+
+    // Append Loading Lottie in response area
+    const loadingId = 'loading-' + Date.now();
+    responseArea.insertAdjacentHTML('beforeend', `
+      <div class="loading-msg" id="${loadingId}">
+        <dotlottie-player src="/static/core/loading.lottie?v=2" background="transparent" speed="1.5" style="width: 100px; height: 100px;" loop autoplay></dotlottie-player>
+        <span style="font-size: 11px; color: var(--purple-mid); font-weight: 700; margin-top: -30px;">IA está pensando...</span>
+      </div>
+    `);
+
+    // Scroll to bottom
+    responseArea.scrollTop = responseArea.scrollHeight;
+
+    fetch('/api/ai/explore/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+      body: JSON.stringify({
+        word: card.word,
+        action: action,
+        context: card.example,
+        query: query,
+        source_lang: card.source_lang,
+        target_lang: card.target_lang
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      // Remove loading
+      document.getElementById(loadingId)?.remove();
+
+      // Restore Button
+      if (action === 'chat') {
+        btn.disabled = false;
+        btn.innerHTML = `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>`;
+      }
+      
+      if (data.error) throw new Error(data.error);
+      renderAIResponse(action, data);
+      
+      // Scroll to bottom
+      responseArea.scrollTop = responseArea.scrollHeight;
+    })
+    .catch(err => {
+      document.getElementById(loadingId)?.remove();
+      if (action === 'chat') {
+        btn.disabled = false;
+        btn.innerHTML = `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>`;
+      }
+      responseArea.insertAdjacentHTML('beforeend', `<div class="chat-bubble ai-bubble" style="color: var(--accent-red); background: #FFF0F0;">Error: ${err.message}</div>`);
+    });
+  }
+
+  function renderAIResponse(action, data) {
+    const area = document.getElementById('ai-response-area');
+    let html = '';
+
+    if (action === 'chat') {
+      html = `<div class="chat-bubble ai-bubble">${data.answer}</div>`;
+      area.insertAdjacentHTML('beforeend', html);
+    } else {
+      // For chips, render the specialized views
+      if (action === 'synonyms') {
+        html = `
+          <div class="ai-bubble" style="width: 100%; border-radius: 20px; padding: 20px;">
+            <h4 style="margin: 0 0 15px 0; color: var(--purple-deep); display: flex; align-items: center; gap: 8px;">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+               Sinónimos y matices
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              ${data.synonyms.map(s => `
+                <div style="background: white; padding: 12px; border-radius: 12px; border: 1px solid rgba(139, 109, 208, 0.1);">
+                  <b style="color: var(--purple-mid); font-size: 15px;">${s.word}</b>
+                  <p style="margin: 4px 0 0 0; font-size: 13px; color: #4A4A68; line-height: 1.4;">${s.nuance}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (action === 'caution') {
+        html = `
+          <div class="ai-bubble" style="width: 100%; border-radius: 20px; padding: 20px; border-left: 4px solid #D63031;">
+            <h4 style="margin: 0 0 15px 0; color: #D63031; display: flex; align-items: center; gap: 8px;">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
+               ¡Cuidado al usar!
+            </h4>
+            <ul style="margin: 0; padding-left: 20px; color: #4A4A68; font-size: 14px;">
+              ${data.caution_points.map(p => `<li style="margin-bottom: 8px;">${p}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      } else if (action === 'etymology') {
+        html = `
+          <div class="chat-bubble ai-bubble">
+            <p style="margin-top:0;"><b>Origen:</b> ${data.origin}</p>
+            <p style="margin-bottom:0;"><b>Historia:</b> ${data.history}</p>
+          </div>
+        `;
+      } else if (action === 'examples') {
+        html = `
+          <div class="ai-bubble" style="width: 100%; border-radius: 20px; padding: 20px;">
+            <h4 style="margin: 0 0 15px 0; color: var(--purple-deep);">Ejemplos Adicionales</h4>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              ${data.examples.map(ex => `
+                <div style="background: white; padding: 15px; border-radius: 12px; border: 1px solid rgba(139, 109, 208, 0.1);">
+                  <p style="margin: 0; font-size: 14px; font-weight: 700; color: var(--purple-deep);">${ex.sentence}</p>
+                  <p style="margin: 5px 0 0 0; font-size: 13px; color: var(--purple-light); font-style: italic;">${ex.translation}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      area.innerHTML = html;
+    }
   }
 </script>
 {% endblock %}

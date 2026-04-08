@@ -1,8 +1,20 @@
 print("=== SYSTEM START: MAIN APP SCRIPT LOADED ===", flush=True)
 
 import sys
-import threading
 import os
+
+# CONFIGURACIÓN DE CODIFICACIÓN PARA WINDOWS CONSOLE
+# Esto evita que el asistente se cierre por errores de impresión de caracteres Unicode.
+if sys.platform == 'win32':
+    try:
+        if sys.stdout and hasattr(sys.stdout, 'reconfigure'):
+            sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        if sys.stderr and hasattr(sys.stderr, 'reconfigure'):
+            sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except:
+        pass
+
+import threading
 import logging
 from PyQt6.QtWidgets import QApplication, QMessageBox, QDialog
 from PyQt6.QtCore import QObject, pyqtSignal, Qt, QTimer, QPoint, pyqtSlot
@@ -168,12 +180,20 @@ class VocabAssistantDesktop:
                 'target_lang': getattr(self, 'target_lang', 'es')
             }
             def do_save():
-                print(f"[do_save] POST /save/ word='{word}'")
-                result = self.api.save_flashcard(payload)
-                print(f"[do_save] Respuesta del servidor: {result}")
-                if not isinstance(result, dict):
-                    result = {'status': 'error', 'message': 'Respuesta inválida del servidor'}
-                self.hover_worker.save_result.emit(result)
+                try:
+                    print(f"[do_save] POST /save/ word='{word}'")
+                    result = self.api.save_flashcard(payload)
+                    # Use a safe print to avoid Unicode issues in the thread
+                    try: print(f"[do_save] Respuesta del servidor: {result}")
+                    except: pass 
+                    
+                    if not isinstance(result, dict):
+                        result = {'status': 'error', 'message': 'Respuesta inválida del servidor'}
+                    self.hover_worker.save_result.emit(result)
+                except Exception as e:
+                    print(f"[do_save] Thread Error: {e}")
+                    self.hover_worker.save_result.emit({'status': 'error', 'message': str(e)})
+
             threading.Thread(target=do_save, daemon=True).start()
         except Exception as ex:
             print(f"[handle_save] CRITICAL ERROR: {ex}")

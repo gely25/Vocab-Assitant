@@ -11,6 +11,8 @@ class Flashcard(models.Model):
     phonetic = models.CharField(max_length=100, blank=True)
     source_lang = models.CharField(max_length=10, default='en')
     target_lang = models.CharField(max_length=10, default='es')
+    part_of_speech = models.CharField(max_length=50, blank=True, null=True)
+    category = models.CharField(max_length=100, blank=True, null=True)
 
     # SM-2 logic
     ease_factor = models.FloatField(default=2.5)

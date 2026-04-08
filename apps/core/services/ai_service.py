@@ -97,3 +97,81 @@ Do not write anything else outside the JSON block."""
         except Exception as e:
             print(f"Ollama API Error (Explain): {e}")
             return {"error": str(e)}
+
+    @classmethod
+    def get_synonyms(cls, word, context_sentence="", source_lang="en", target_lang="es"):
+        url = cls.get_ollama_url()
+        prompt = f"""Provide a list of 5-8 synonyms for the word '{word}'.
+Context (if any): '{context_sentence}'.
+For each synonym, provide a very short explanation of the nuance difference in '{target_lang}'.
+
+Output strictly in JSON format:
+{{
+    "synonyms": [
+        {{"word": "synonym1", "nuance": "short explanation in {target_lang}"}},
+        ...
+    ]
+}}"""
+        data = {"model": cls.get_model(), "prompt": prompt, "format": "json", "stream": False}
+        try:
+            response = requests.post(url, json=data, timeout=60)
+            return json.loads(response.json().get("response", "{}"))
+        except Exception as e: return {"error": str(e)}
+
+    @classmethod
+    def get_usage_caution(cls, word, source_lang="en", target_lang="es"):
+        url = cls.get_ollama_url()
+        prompt = f"""Explain when the word '{word}' should NOT be used. Mention common mistakes, social faux pas, or tone issues (e.g., too formal, too slang).
+Provide the explanation as a list of points in '{target_lang}'.
+
+Output strictly in JSON format:
+{{
+    "caution_points": ["Point 1", "Point 2"]
+}}"""
+        data = {"model": cls.get_model(), "prompt": prompt, "format": "json", "stream": False}
+        try:
+            response = requests.post(url, json=data, timeout=60)
+            return json.loads(response.json().get("response", "{}"))
+        except Exception as e: return {"error": str(e)}
+
+    @classmethod
+    def get_etymology(cls, word, target_lang="es"):
+        url = cls.get_ollama_url()
+        prompt = f"""Provide the etymology (origin and history) of the word '{word}'.
+Explain it simply in '{target_lang}'.
+
+Output strictly in JSON format:
+{{
+    "origin": "Short summary of origin",
+    "history": "Brief history of how it evolved"
+}}"""
+        data = {"model": cls.get_model(), "prompt": prompt, "format": "json", "stream": False}
+        try:
+            response = requests.post(url, json=data, timeout=60)
+            return json.loads(response.json().get("response", "{}"))
+        except Exception as e: return {"error": str(e)}
+
+    @classmethod
+    def chat_about_word(cls, word, user_query, source_lang="en", target_lang="es"):
+        url = cls.get_ollama_url()
+        prompt = f"""Act as a professional and helpful language tutor. 
+The user is learning the following word/phrase: '{word}'.
+The user has asked this question: '{user_query}'
+
+Instructions:
+1. Provide a clear, educational, and accurate answer regarding '{word}'.
+2. You MUST write your response entirely in '{target_lang}'. 
+3. Do NOT use fake personas, strange regional slangs, or weird special characters.
+4. If the user's question is about meaning or usage, provide clear examples.
+5. Keep a professional but encouraging tone.
+6. Ensure any non-standard characters from other languages are used only when necessary for linguistic explanation.
+
+Output strictly in JSON format:
+{{
+    "answer": "Your detailed teaching response"
+}}"""
+        data = {"model": cls.get_model(), "prompt": prompt, "format": "json", "stream": False}
+        try:
+            response = requests.post(url, json=data, timeout=60)
+            return json.loads(response.json().get("response", "{}"))
+        except Exception as e: return {"error": str(e)}

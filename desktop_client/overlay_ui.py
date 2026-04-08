@@ -1,4 +1,17 @@
 import sys
+import os
+
+# CONFIGURACIÓN DE CODIFICACIÓN PARA WINDOWS CONSOLE
+# Esto evita que el asistente se cierre por errores de impresión de caracteres Unicode.
+if sys.platform == 'win32':
+    try:
+        if sys.stdout and hasattr(sys.stdout, 'reconfigure'):
+            sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        if sys.stderr and hasattr(sys.stderr, 'reconfigure'):
+            sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except:
+        pass
+
 from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, 
                              QFrame, QTextBrowser, QPushButton, QDialog, QComboBox, QScrollArea)
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QRect, QSize, QTimer, QEvent
@@ -359,7 +372,9 @@ class TranslationTooltip(QWidget):
         payload = dict(self._word_data) if self._word_data else {}
         if 'original' not in payload and 'word' not in payload:
             payload['word'] = word
-        print(f"[SAVE] -> emitiendo save_requested: word='{word}'")
+        # Limpiar caracteres especiales que rompen la consola de Windows (como \u2029)
+        safe_word = word.replace('\u2029', ' ').replace('\u2028', ' ').strip()
+        print(f"[SAVE] -> emitiendo save_requested: word='{safe_word}'")
         self.save_btn.setText("Guardando…")
         self.save_btn.setEnabled(False)
         self.save_requested.emit(payload)

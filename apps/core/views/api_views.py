@@ -115,7 +115,9 @@ def save_word(request):
             synonyms=str(body.get('synonyms') or ''),
             phonetic=str(body.get('phonetic') or ''),
             source_lang=str(body.get('source_lang', 'en') or 'en'),
-            target_lang=str(body.get('target_lang', 'es') or 'es')
+            target_lang=str(body.get('target_lang', 'es') or 'es'),
+            part_of_speech=str(body.get('part_of_speech') or ''),
+            category=str(body.get('category') or '')
         )
 
         if not created:
@@ -126,7 +128,7 @@ def save_word(request):
 
         return JsonResponse({
             'status': 'ok',
-            'message': f'"{word}" guardado en flashcards ✓'
+            'message': f'"{word}" guardado en flashcards'
         })
     except Exception as e:
         print("Error saving flashcard:", e)
